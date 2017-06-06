@@ -14,6 +14,14 @@ BasicData::BasicData(const double ab2, const double res, const double sd, QObjec
     mStandardDeviation = sd;
 }
 
+BasicData::BasicData(const BasicData &bd)
+{
+    mAb2Distance = bd.ab2Distance();
+    mResistivity = bd.resistivity();
+    mStandardDeviation = bd.standardDeviation();
+    this->setParent(bd.parent());
+}
+
 BasicData::~BasicData()
 {
 
@@ -54,14 +62,34 @@ bool BasicData::isValid() const
     return (mAb2Distance > 0.0 && mResistivity > 0.0);
 }
 
-bool BasicData::operator ==(const BasicData rhs) const
+bool BasicData::operator ==(const BasicData &rhs) const
 {
-    return (this->ab2Distance() == rhs.ab2Distance());
+    return (mAb2Distance == rhs.mAb2Distance);
 }
 
-bool BasicData::operator !=(const BasicData rhs) const
+bool BasicData::operator !=(const BasicData &rhs) const
 {
-    return (this->ab2Distance() != rhs.ab2Distance());
+    return (mAb2Distance != rhs.mAb2Distance);
+}
+
+bool BasicData::operator >=(const BasicData &rhs) const
+{
+    return (mAb2Distance >= rhs.mAb2Distance);
+}
+
+bool BasicData::operator >(const BasicData &rhs) const
+{
+    return (mAb2Distance > rhs.mAb2Distance);
+}
+
+bool BasicData::operator <=(const BasicData &rhs) const
+{
+    return (mAb2Distance <= rhs.mAb2Distance);
+}
+
+bool BasicData::operator <(const BasicData &rhs) const
+{
+    return (mAb2Distance < rhs.mAb2Distance);
 }
 
 

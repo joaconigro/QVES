@@ -28,14 +28,16 @@ SOURCES += \
         VESCore.cpp \
     BasicData.cpp \
     SpliceData.cpp \
-    ModelData.cpp
+    ModelData.cpp \
+    LocationData.cpp
 
 HEADERS += \
         VESCore.h \
         ves-core_global.h \ 
     BasicData.h \
     SpliceData.h \
-    ModelData.h
+    ModelData.h \
+    LocationData.h
 
 #unix {
 #    target.path = /usr/lib

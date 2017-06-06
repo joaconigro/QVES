@@ -19,6 +19,22 @@ class VESCORESHARED_EXPORT ModelData : public QObject
 public:
     explicit ModelData(QObject *parent = nullptr);
 
+    double from() const;
+    double until() const;
+    double resistivity() const;
+    double thickness() const;
+    double depth() const;
+    double transverseResistence() const;
+    double longitudinalConductance() const;
+
+    void setFrom(const double value);
+    void setUntil(const double value);
+    void setResistivity(const double value);
+    void setThickness(const double value);
+    void setDepth(const double value);
+    void setTransverseResistence(const double value);
+    void setLongitudinalConductance(const double value);
+
 signals:
 
 public slots:

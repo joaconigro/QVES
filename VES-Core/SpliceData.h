@@ -10,7 +10,8 @@ class VESCORESHARED_EXPORT SpliceData : public BasicData
     quint8 mSection;
 
 public:
-    SpliceData();
+    explicit SpliceData(QObject *parent = nullptr);
+    explicit SpliceData(const double ab2, const double res, const double sd = 0.0, QObject *parent = nullptr);
 
     quint8 section() const;
 

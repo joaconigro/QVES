@@ -15,6 +15,7 @@ class VESCORESHARED_EXPORT BasicData : public QObject
 public:
     explicit BasicData(QObject *parent = nullptr);
     explicit BasicData(const double ab2, const double res, const double sd = 0.0, QObject *parent = nullptr);
+    explicit BasicData(const BasicData& bd);
     ~BasicData();
 
     double ab2Distance() const;
@@ -27,8 +28,12 @@ public:
 
     bool isValid() const;
 
-    bool operator ==(const BasicData rhs) const;
-    bool operator !=(const BasicData rhs) const;
+    bool operator ==(const BasicData &rhs) const;
+    bool operator !=(const BasicData &rhs) const;
+    bool operator >=(const BasicData &rhs) const;
+    bool operator >(const BasicData &rhs) const;
+    bool operator <=(const BasicData &rhs) const;
+    bool operator <(const BasicData &rhs) const;
 
 
 
