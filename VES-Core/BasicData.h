@@ -3,11 +3,16 @@
 
 #include <QObject>
 #include "ves-core_global.h"
+#include "Serializable.h"
 
-class VESCORESHARED_EXPORT BasicData : public QObject
+class VESCORESHARED_EXPORT BasicData : public QObject, public Serializable
 {
     Q_OBJECT
 
+    QVariant toVariant() const override;
+    void fromVariant(const QVariant& variant) override;
+
+protected:
     double mAb2Distance;
     double mResistivity;
     double mStandardDeviation;
@@ -41,5 +46,7 @@ signals:
 
 public slots:
 };
+
+Q_DECLARE_METATYPE(BasicData)
 
 #endif // BASICDATA_H

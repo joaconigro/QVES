@@ -29,7 +29,13 @@ SOURCES += \
     BasicData.cpp \
     SpliceData.cpp \
     ModelData.cpp \
-    LocationData.cpp
+    LocationData.cpp \
+    VfsaParameters.cpp \
+    VfsaParameterLimit.cpp \
+    VfsaData.cpp \
+    InversionModel.cpp \
+    VES.cpp \
+    XmlSerializer.cpp
 
 HEADERS += \
         VESCore.h \
@@ -37,7 +43,15 @@ HEADERS += \
     BasicData.h \
     SpliceData.h \
     ModelData.h \
-    LocationData.h
+    LocationData.h \
+    VfsaParameters.h \
+    VfsaParameterLimit.h \
+    VfsaData.h \
+    InversionModel.h \
+    VES.h \
+    Serializable.h \
+    Serializer.h \
+    XmlSerializer.h
 
 #unix {
 #    target.path = /usr/lib

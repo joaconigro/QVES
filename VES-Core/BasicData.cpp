@@ -1,5 +1,22 @@
 #include "BasicData.h"
 
+QVariant BasicData::toVariant() const
+{
+    QVariantMap map;
+    map.insert("mAb2Distance", mAb2Distance);
+    map.insert("mResistivity", mResistivity);
+    map.insert("mStandardDeviation", mStandardDeviation);
+    return map;
+}
+
+void BasicData::fromVariant(const QVariant &variant)
+{
+     QVariantMap map = variant.toMap();
+     mAb2Distance = map.value("mAb2Distance").toDouble();
+     mResistivity = map.value("mResistivity").toDouble();
+     mStandardDeviation = map.value("mStandardDeviation").toDouble();
+}
+
 BasicData::BasicData(QObject *parent) : QObject(parent)
 {
     mAb2Distance = 0.0;
