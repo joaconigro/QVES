@@ -2,10 +2,10 @@
 #define SERIALIZATION_H
 
 #include <QString>
-
+#include "ves-core_global.h"
 #include "Serializable.h"
 
-class Serializer
+class VESCORESHARED_EXPORT Serializer
 {
 public:
     virtual ~Serializer() {}

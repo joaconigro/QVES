@@ -5,8 +5,9 @@
 #include <QXmlStreamReader>
 
 #include "Serializer.h"
+#include "ves-core_global.h"
 
-class XmlSerializer : public Serializer
+class VESCORESHARED_EXPORT XmlSerializer : public Serializer
 {
 public:
     XmlSerializer();

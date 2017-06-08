@@ -3,8 +3,9 @@
 
 #include "ves-core_global.h"
 #include <QObject>
+#include "Serializable.h"
 
-class VESCORESHARED_EXPORT ModelData : public QObject
+class VESCORESHARED_EXPORT ModelData : public QObject, public Serializable
 {
     Q_OBJECT
 
@@ -18,6 +19,11 @@ class VESCORESHARED_EXPORT ModelData : public QObject
 
 public:
     explicit ModelData(QObject *parent = nullptr);
+    explicit ModelData(const ModelData &md);
+    ~ModelData();
+
+    QVariant toVariant() const override;
+    void fromVariant(const QVariant& variant) override;
 
     double from() const;
     double until() const;
@@ -39,5 +45,7 @@ signals:
 
 public slots:
 };
+
+Q_DECLARE_METATYPE(ModelData)
 
 #endif // MODELDATA_H

@@ -9,9 +9,6 @@ class VESCORESHARED_EXPORT BasicData : public QObject, public Serializable
 {
     Q_OBJECT
 
-    QVariant toVariant() const override;
-    void fromVariant(const QVariant& variant) override;
-
 protected:
     double mAb2Distance;
     double mResistivity;
@@ -22,6 +19,9 @@ public:
     explicit BasicData(const double ab2, const double res, const double sd = 0.0, QObject *parent = nullptr);
     explicit BasicData(const BasicData& bd);
     ~BasicData();
+
+    QVariant toVariant() const override;
+    void fromVariant(const QVariant& variant) override;
 
     double ab2Distance() const;
     double resistivity() const;

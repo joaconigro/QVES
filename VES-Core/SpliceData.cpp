@@ -1,5 +1,24 @@
 #include "SpliceData.h"
 
+QVariant SpliceData::toVariant() const
+{
+    QVariantMap map;
+    map.insert("mAb2Distance", mAb2Distance);
+    map.insert("mResistivity", mResistivity);
+    map.insert("mStandardDeviation", mStandardDeviation);
+    map.insert("mSection", mSection);
+    return map;
+}
+
+void SpliceData::fromVariant(const QVariant &variant)
+{
+    QVariantMap map = variant.toMap();
+    mAb2Distance = map.value("mAb2Distance").toDouble();
+    mResistivity = map.value("mResistivity").toDouble();
+    mStandardDeviation = map.value("mStandardDeviation").toDouble();
+    mSection = map.value("mSection").toInt();
+}
+
 SpliceData::SpliceData(QObject *parent) :
     BasicData(parent)
 {
