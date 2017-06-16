@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,13 +25,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        MainWindow.cpp
+        MainWindow.cpp \
+    DataPanel.cpp \
+    MainChart.cpp
 
 HEADERS += \
-        MainWindow.h
+        MainWindow.h \
+    DataPanel.h \
+    MainChart.h
 
 FORMS += \
-        MainWindow.ui
+        MainWindow.ui \
+    DataPanel.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core

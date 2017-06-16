@@ -16,8 +16,8 @@ public:
     explicit VfsaData(const double value, const double pdf = 0.0, QObject *parent = nullptr);
 
     //Getters
-    double Value() const;
-    double Pdf() const;
+    double value() const;
+    double pdf() const;
 
     //Setters
     void setValue(const double value);

@@ -42,6 +42,19 @@ ModelData::ModelData(const ModelData &md)
     this->setParent(md.parent());
 }
 
+ModelData &ModelData::operator=(const ModelData &rhs)
+{
+    mFrom = rhs.from();
+    mUntil = rhs.until();
+    mResistivity = rhs.resistivity();
+    mThickness = rhs.thickness();
+    mDepth = rhs.depth();
+    mTransverseResistence = rhs.transverseResistence();
+    mLongitudinalConductance = rhs.longitudinalConductance();
+    this->setParent(rhs.parent());
+    return *this;
+}
+
 ModelData::~ModelData()
 {
 

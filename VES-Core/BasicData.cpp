@@ -109,4 +109,13 @@ bool BasicData::operator <(const BasicData &rhs) const
     return (mAb2Distance < rhs.mAb2Distance);
 }
 
+BasicData &BasicData::operator =(const BasicData &rhs)
+{
+    mAb2Distance = rhs.ab2Distance();
+    mResistivity = rhs.resistivity();
+    mStandardDeviation = rhs.standardDeviation();
+    this->setParent(rhs.parent());
+    return *this;
+}
+
 

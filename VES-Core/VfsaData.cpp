@@ -11,12 +11,12 @@ VfsaData::VfsaData(const double value, const double pdf, QObject *parent) : QObj
     mPdf = pdf;
 }
 
-double VfsaData::Value() const
+double VfsaData::value() const
 {
     return mValue;
 }
 
-double VfsaData::Pdf() const
+double VfsaData::pdf() const
 {
     return mPdf;
 }

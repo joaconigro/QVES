@@ -20,6 +20,7 @@ class VESCORESHARED_EXPORT ModelData : public QObject, public Serializable
 public:
     explicit ModelData(QObject *parent = nullptr);
     explicit ModelData(const ModelData &md);
+
     ~ModelData();
 
     QVariant toVariant() const override;
@@ -40,6 +41,8 @@ public:
     void setDepth(const double value);
     void setTransverseResistence(const double value);
     void setLongitudinalConductance(const double value);
+
+    ModelData& operator=(const ModelData &rhs);
 
 signals:
 

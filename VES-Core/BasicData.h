@@ -17,7 +17,7 @@ protected:
 public:
     explicit BasicData(QObject *parent = nullptr);
     explicit BasicData(const double ab2, const double res, const double sd = 0.0, QObject *parent = nullptr);
-    explicit BasicData(const BasicData& bd);
+    BasicData(const BasicData& bd);
     ~BasicData();
 
     QVariant toVariant() const override;
@@ -39,6 +39,7 @@ public:
     bool operator >(const BasicData &rhs) const;
     bool operator <=(const BasicData &rhs) const;
     bool operator <(const BasicData &rhs) const;
+    BasicData& operator =(const BasicData &rhs);
 
 
 
