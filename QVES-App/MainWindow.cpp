@@ -2,8 +2,10 @@
 #include "ui_MainWindow.h"
 
 #include <QSplitter>
+#include <QTabWidget>
 #include "DataPanel.h"
 #include "MainChart.h"
+#include "VESPropertiesPanel.h"
 #include <QtCharts/QChartView>
 
 //#include "../VES-Core/SpliceData.h"
@@ -21,12 +23,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     QSplitter *splitter = new QSplitter(this);
+    QTabWidget *mainTabs = new QTabWidget;
+
+
     DataPanel *dataPanel = new DataPanel;
+    VESPropertiesPanel *propertiesPanel = new VESPropertiesPanel;
+
     MainChart *mainChart = new MainChart;
+    mainTabs->addTab(dataPanel, tr("Datos del SEV"));
+    mainTabs->addTab(propertiesPanel, tr("Propiedades del SEV"));
+    mainTabs->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     QChartView *chartView = new QChartView(mainChart->chart);
     chartView->setRenderHint(QPainter::Antialiasing);
-    splitter->addWidget(dataPanel);
+
+    mainTabs->adjustSize();
+    splitter->addWidget(mainTabs);
     splitter->addWidget(chartView);
+
 
     this->setCentralWidget(splitter);
 

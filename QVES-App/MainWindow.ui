@@ -20,9 +20,69 @@
      <x>0</x>
      <y>0</y>
      <width>697</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Archivo</string>
+    </property>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionRecentProjects"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionImport"/>
+    <addaction name="actionExport"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edición</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+   </widget>
+   <widget class="QMenu" name="menuVES">
+    <property name="title">
+     <string>SEV</string>
+    </property>
+    <widget class="QMenu" name="menuNewVES">
+     <property name="title">
+      <string>SEV nuevo</string>
+     </property>
+     <addaction name="actionEmptyVES"/>
+     <addaction name="actionVESFromExcel"/>
+     <addaction name="actionVESFromAresVES"/>
+     <addaction name="actionVESFromAnotherProject"/>
+    </widget>
+    <addaction name="menuNewVES"/>
+    <addaction name="actionDeleteVES"/>
+    <addaction name="actionVESProperties"/>
+   </widget>
+   <widget class="QMenu" name="menuInversion">
+    <property name="title">
+     <string>Inversión</string>
+    </property>
+    <addaction name="actionV_F_S_A"/>
+    <addaction name="separator"/>
+    <addaction name="actionZohdy"/>
+    <addaction name="actionMergeBeds"/>
+    <addaction name="separator"/>
+    <addaction name="actionEmptyModel"/>
+    <addaction name="separator"/>
+    <addaction name="actionInversionOptions"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuVES"/>
+   <addaction name="menuInversion"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -33,6 +93,121 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNewProject">
+   <property name="text">
+    <string>Proyecto nuevo...</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Abrir...</string>
+   </property>
+  </action>
+  <action name="actionRecentProjects">
+   <property name="text">
+    <string>Proyectos recientes</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Guardar</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Guardar como...</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Importar...</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Exportar...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Salir</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Deshacer</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Rehacer</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="text">
+    <string>Copiar</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="text">
+    <string>Pegar</string>
+   </property>
+  </action>
+  <action name="actionEmptyVES">
+   <property name="text">
+    <string>En blanco</string>
+   </property>
+  </action>
+  <action name="actionVESFromExcel">
+   <property name="text">
+    <string>Desde archivo Excel</string>
+   </property>
+  </action>
+  <action name="actionVESFromAresVES">
+   <property name="text">
+    <string>Desde archivo Ares II VES</string>
+   </property>
+  </action>
+  <action name="actionVESFromAnotherProject">
+   <property name="text">
+    <string>Desde otro proyecto</string>
+   </property>
+  </action>
+  <action name="actionDeleteVES">
+   <property name="text">
+    <string>Eliminar</string>
+   </property>
+  </action>
+  <action name="actionVESProperties">
+   <property name="text">
+    <string>Propiedades</string>
+   </property>
+  </action>
+  <action name="actionV_F_S_A">
+   <property name="text">
+    <string>V.F.S.A.</string>
+   </property>
+  </action>
+  <action name="actionZohdy">
+   <property name="text">
+    <string>Zohdy</string>
+   </property>
+  </action>
+  <action name="actionMergeBeds">
+   <property name="text">
+    <string>Agrupar capas</string>
+   </property>
+  </action>
+  <action name="actionEmptyModel">
+   <property name="text">
+    <string>Modelo vacío</string>
+   </property>
+  </action>
+  <action name="actionInversionOptions">
+   <property name="text">
+    <string>Opciones...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

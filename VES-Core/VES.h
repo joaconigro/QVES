@@ -12,6 +12,11 @@
 class VESCORESHARED_EXPORT VES : public QObject
 {
     Q_OBJECT
+
+private:
+    QString mName;
+    QString mId;
+
 public:
     explicit VES(QObject *parent = nullptr);
 

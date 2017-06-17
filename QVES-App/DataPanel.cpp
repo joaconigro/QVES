@@ -6,6 +6,8 @@ DataPanel::DataPanel(QWidget *parent) :
     ui(new Ui::DataPanel)
 {
     ui->setupUi(this);
+
+
 }
 
 DataPanel::~DataPanel()
