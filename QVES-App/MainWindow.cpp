@@ -23,22 +23,27 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     QSplitter *splitter = new QSplitter(this);
-    QTabWidget *mainTabs = new QTabWidget;
+    QTabWidget *mainTabs = new QTabWidget(splitter);
 
 
     DataPanel *dataPanel = new DataPanel;
+    dataPanel->setMaximumWidth(dataPanel->sizeHint().width());
     VESPropertiesPanel *propertiesPanel = new VESPropertiesPanel;
+    propertiesPanel->setMaximumWidth(dataPanel->sizeHint().width());
 
     MainChart *mainChart = new MainChart;
     mainTabs->addTab(dataPanel, tr("Datos del SEV"));
     mainTabs->addTab(propertiesPanel, tr("Propiedades del SEV"));
-    mainTabs->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+    mainTabs->setMaximumWidth(mainTabs->sizeHint().width());
     QChartView *chartView = new QChartView(mainChart->chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    mainTabs->adjustSize();
+
+
     splitter->addWidget(mainTabs);
     splitter->addWidget(chartView);
+
 
 
     this->setCentralWidget(splitter);
