@@ -6,7 +6,7 @@ double LocationData::gmsToDecimal(const QString &value)
 {
     QString resultValue;
     QChar signChar;
-    QChar decimalChar = mQLoc.decimalPoint();
+    QChar decimalChar = mQLoc->decimalPoint();
     resultValue.clear();
 
     //Make a clean QString to convert to number.
@@ -37,7 +37,7 @@ double LocationData::gmsToDecimal(const QString &value)
         QString tempNumber = tempList.at(i);
         tempNumber = tempNumber.replace('.', decimalChar);
         tempNumber = tempNumber.replace(',', decimalChar);
-        result = result + mQLoc.toDouble(tempNumber) / pow(60.0, i);
+        result = result + mQLoc->toDouble(tempNumber) / pow(60.0, i);
     }
 
     //Sign for degrees.
@@ -73,9 +73,9 @@ QString LocationData::decimalToGms(const double value, bool isLatitude)
     }
 
     //Make a QString
-    QString result = mQLoc.toString(abs(degrees)) + "º " +
-            mQLoc.toString(minutes) + "\' " +
-            mQLoc.toString(seconds, 'f', 3) + "\'' " + letter;
+    QString result = mQLoc->toString(abs(degrees)) + "º " +
+            mQLoc->toString(minutes) + "\' " +
+            mQLoc->toString(seconds, 'f', 3) + "\'' " + letter;
 
     return result;
 }
@@ -168,6 +168,7 @@ LocationData::LocationData(QObject *parent) : QObject(parent)
     mOnlyLocals = true;
     mGmsLatitude.clear();
     mGmsLongitude.clear();
+    mQLoc = new QLocale();
 }
 
 LocationData::LocationData(const QString &lat, const QString &lng, const double z, QObject *parent) : QObject(parent)
@@ -188,6 +189,8 @@ LocationData::LocationData(const QString &lat, const QString &lng, const double 
     mUtmZone = trunc(mDecimalLongitude / 6.0 + 31.0);
     geographicToTransverseMercator();
     mOnlyLocals = false;
+
+    mQLoc = new QLocale();
 }
 
 LocationData::LocationData(const double yOrlLat, const double xOrLng, const LocationData::CoordinateType cType, const double z, QObject *parent) : QObject(parent)
@@ -219,6 +222,8 @@ LocationData::LocationData(const double yOrlLat, const double xOrLng, const Loca
         mOnlyLocals = true;
         break;
     }
+
+    mQLoc = new QLocale();
 }
 
 LocationData::LocationData(const double x, const double y, const int zone, const LocationData::Hemisphere hem, const double z, QObject *parent) : QObject(parent)
@@ -236,6 +241,25 @@ LocationData::LocationData(const double x, const double y, const int zone, const
     mGmsLatitude = decimalToGms(mDecimalLatitude, true);
     mGmsLongitude = decimalToGms(mDecimalLongitude, false);
     mOnlyLocals = false;
+
+    mQLoc = new QLocale();
+}
+
+LocationData::LocationData(const LocationData &ld)
+{
+    mGmsLatitude = ld.gmsLatitude();
+    mGmsLongitude = ld.gmsLongitude();
+    mDecimalLatitude = ld.decimalLatitude();
+    mDecimalLongitude = ld.decimalLongitude();
+    mUtmX = ld.utmX();
+    mUtmY = ld.utmY();
+    mUtmZone = ld.utmZone();
+    mLocalX = ld.localX();
+    mLocalY = ld.localY();
+    mZ = ld.z();
+    mHem = ld.Hem();
+    mOnlyLocals = ld.onlyLocals();
+    this->setParent(ld.parent());
 }
 
 QString LocationData::gmsLatitude() const
@@ -293,6 +317,11 @@ bool LocationData::onlyLocals() const
     return mOnlyLocals;
 }
 
+LocationData::Hemisphere LocationData::Hem() const
+{
+    return mHem;
+}
+
 void LocationData::setGmsLatitude(const QString &value)
 {
     mGmsLatitude = value;
@@ -343,8 +372,48 @@ void LocationData::setZ(const double value)
     mZ = value;
 }
 
+void LocationData::setHem(const LocationData::Hemisphere value)
+{
+    mHem = value;
+}
+
 bool LocationData::isEmpty() const
 {
     return mDecimalLatitude == 0.0 && mDecimalLongitude == 0.0 && mUtmX == 0.0 && mUtmY == 0.0
             && mZ == 0.0 && mLocalX == 0.0 && mLocalY == 0.0 && mGmsLatitude.isEmpty() && mGmsLongitude.isEmpty();
+}
+
+QVariant LocationData::toVariant() const
+{
+    QVariantMap map;
+    map.insert("mDecimalLatitude", mDecimalLatitude);
+    map.insert("mDecimalLongitude", mDecimalLongitude);
+    map.insert("mGmsLatitude", mGmsLatitude);
+    map.insert("mGmsLongitude", mGmsLongitude);
+    map.insert("mUtmX", mUtmX);
+    map.insert("mUtmY", mUtmY);
+    map.insert("mUtmZone", mUtmZone);
+    map.insert("mLocalX", mLocalX);
+    map.insert("mLocalY", mLocalY);
+    map.insert("mZ", mZ);
+    map.insert("mHem", static_cast<int>(mHem));
+    map.insert("mOnlyLocals", mOnlyLocals);
+    return map;
+}
+
+void LocationData::fromVariant(const QVariant &variant)
+{
+    QVariantMap map = variant.toMap();
+    mGmsLatitude = map.value("mGmsLatitude").toString();
+    mGmsLongitude = map.value("mGmsLongitude").toString();
+    mDecimalLatitude = map.value("mDecimalLatitude").toDouble();
+    mDecimalLongitude = map.value("mDecimalLongitude").toDouble();
+    mUtmX = map.value("mUtmX").toDouble();
+    mUtmY = map.value("mUtmY").toDouble();
+    mUtmZone = map.value("mUtmZone").toInt();
+    mLocalX = map.value("mLocalX").toDouble();
+    mLocalY = map.value("mLocalY").toDouble();
+    mZ = map.value("mZ").toDouble();
+    mOnlyLocals = map.value("mOnlyLocals").toBool();
+    mHem = static_cast<Hemisphere>(map.value("mHem").toInt());
 }

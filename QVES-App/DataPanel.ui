@@ -110,7 +110,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QTableWidget" name="tableWidget"/>
+       <widget class="QTableView" name="tableView"/>
       </item>
      </layout>
     </widget>

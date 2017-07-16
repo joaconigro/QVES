@@ -27,8 +27,6 @@ private:
     ZohdyFilters mZohdyFilter;
     QList<BasicData> mCalculatedData;
     QList<ModelData> mModel;
-    VfsaParameters mPreviousParameters;
-    VfsaParameters mCurrentParameters;
 
     //Zohdy inversion functions
     void chooseFilter(const InversionModel::ZohdyFilters filter, QVector<double> &a, double &w, double &s, double &dx);
@@ -38,13 +36,27 @@ private:
     double calculateModelError(const QList<BasicData> &fieldData, const QList<BasicData> &calculatedData) const;
 
 public:
+    explicit InversionModel(QObject *parent = nullptr);
     explicit InversionModel(const QString &name, QObject *parent = nullptr);
+    InversionModel(const InversionModel& im);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
 
+    //Getters
+    QString name() const;
+    QString id() const;
+    double errorResult() const;
+    QString errorString() const;
+    InversionAlgorithm usedAlgorithm() const;
+    ZohdyFilters zohdyFilter() const;
+    QList<BasicData> calculatedData() const;
+    QList<ModelData> model() const;
 
-
+    //Setters
+    void setName(const QString value);
+    void setUsedAlgorithm(const InversionAlgorithm value);
+    void setZohdyFilter(const ZohdyFilters value);
 
 
     //Zohdy inversion functions
@@ -55,5 +67,7 @@ signals:
 
 public slots:
 };
+
+Q_DECLARE_METATYPE(InversionModel)
 
 #endif // INVERSIONMODEL_H

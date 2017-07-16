@@ -152,11 +152,30 @@ double InversionModel::calculateModelError(const QList<BasicData> &fieldData, co
     return (sqrt(sum / fieldData.count()) * 100.0);
 }
 
+InversionModel::InversionModel(QObject *parent) : QObject(parent)
+{
+    mId = QUuid::createUuid().toString();
+}
+
 InversionModel::InversionModel(const QString &name, QObject *parent) :
     QObject(parent),
     mName(name)
 {
     mId = QUuid::createUuid().toString();
+}
+
+InversionModel::InversionModel(const InversionModel& im)
+{
+    mId = QUuid::createUuid().toString();
+
+    mName = im.name();
+    mErrorResult = im.errorResult();
+    mErrorString = im.errorString();
+    mUsedAlgorithm = im.usedAlgorithm();
+    mZohdyFilter = im.zohdyFilter();
+    mCalculatedData = im.calculatedData();
+    mModel = im.model();
+    this->setParent(im.parent());
 }
 
 QVariant InversionModel::toVariant() const
@@ -170,6 +189,61 @@ QVariant InversionModel::toVariant() const
 void InversionModel::fromVariant(const QVariant &variant)
 {
 
+}
+
+QString InversionModel::name() const
+{
+    return mName;
+}
+
+QString InversionModel::id() const
+{
+    return mId;
+}
+
+double InversionModel::errorResult() const
+{
+    return mErrorResult;
+}
+
+QString InversionModel::errorString() const
+{
+    return mErrorString;
+}
+
+InversionModel::InversionAlgorithm InversionModel::usedAlgorithm() const
+{
+    return mUsedAlgorithm;
+}
+
+InversionModel::ZohdyFilters InversionModel::zohdyFilter() const
+{
+    return mZohdyFilter;
+}
+
+QList<BasicData> InversionModel::calculatedData() const
+{
+    return mCalculatedData;
+}
+
+QList<ModelData> InversionModel::model() const
+{
+    return mModel;
+}
+
+void InversionModel::setName(const QString value)
+{
+    mName = value;
+}
+
+void InversionModel::setUsedAlgorithm(const InversionModel::InversionAlgorithm value)
+{
+    mUsedAlgorithm = value;
+}
+
+void InversionModel::setZohdyFilter(const InversionModel::ZohdyFilters value)
+{
+    mZohdyFilter = value;
 }
 
 void InversionModel::zohdyInversion(const QList<BasicData> &fieldData, const InversionModel::ZohdyFilters filter)

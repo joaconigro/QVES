@@ -36,7 +36,8 @@ SOURCES += \
     InversionModel.cpp \
     VES.cpp \
     XmlSerializer.cpp \
-    VfsaModel.cpp
+    VfsaModel.cpp \
+    Project.cpp
 
 HEADERS += \
         VESCore.h \
@@ -53,7 +54,8 @@ HEADERS += \
     Serializable.h \
     Serializer.h \
     XmlSerializer.h \
-    VfsaModel.h
+    VfsaModel.h \
+    Project.h
 
 #unix {
 #    target.path = /usr/lib

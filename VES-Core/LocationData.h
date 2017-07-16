@@ -5,8 +5,9 @@
 #include <QObject>
 #include <QString>
 #include <QLocale>
+#include "Serializable.h"
 
-class VESCORESHARED_EXPORT LocationData : public QObject
+class VESCORESHARED_EXPORT LocationData : public QObject, public Serializable
 {
     Q_OBJECT
 
@@ -25,7 +26,7 @@ private:
     double mLocalX;
     double mLocalY;
     double mZ;
-    QLocale mQLoc;
+    QLocale *mQLoc;
     LocationData::Hemisphere mHem;
     bool mOnlyLocals;
 
@@ -40,6 +41,7 @@ public:
     explicit LocationData(const QString &lat, const QString &lng, const double z = 0.0, QObject *parent = nullptr);
     explicit LocationData(const double yOrlLat, const double xOrLng, const CoordinateType cType, const double z = 0.0, QObject *parent = nullptr);
     explicit LocationData(const double x, const double y, const int zone, const Hemisphere hem, const double z = 0.0, QObject *parent = nullptr);
+    LocationData(const LocationData& ld);
 
     //Getters
     QString gmsLatitude() const;
@@ -53,6 +55,7 @@ public:
     double localY() const;
     double z() const;
     bool onlyLocals() const;
+    Hemisphere Hem() const;
     
     //Setters
     void setGmsLatitude(const QString &value);
@@ -65,12 +68,18 @@ public:
     void setLocalX(const double value);
     void setLocalY(const double value);
     void setZ(const double value);
+    void setHem(const Hemisphere value);
 
     bool isEmpty() const;
+
+    QVariant toVariant() const override;
+    void fromVariant(const QVariant& variant) override;
 
 signals:
 
 public slots:
 };
+
+Q_DECLARE_METATYPE(LocationData)
 
 #endif // LOCATIONDATA_H
