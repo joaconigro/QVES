@@ -125,11 +125,77 @@ QVariant VES::toVariant() const
 {
     QVariantMap map;
     map.insert("mName", mName);
+    map.insert("mId", mId);
+    map.insert("mFieldOperator", mFieldOperator);
+    map.insert("mEquipment", mEquipment);
+    map.insert("mComment", mComment);
+    map.insert("mDate", date());
+    map.insert("mLocation", &mLocation);
+    map.insert("mCurrentModel", &mCurrentModel);
+    map.insert("mPreviousParameters", &mPreviousParameters);
+    map.insert("mCurrentParameters", &mCurrentParameters);
+
+    QVariantList basic;
+    for (const auto& cd : mFieldData) {
+    basic.append(cd.toVariant());
+    }
+    map.insert("mFieldData", basic);
+
+    QVariantList spli;
+    for (const auto& cd : mSplices) {
+    spli.append(cd.toVariant());
+    }
+    map.insert("mSplices", spli);
+
+    QVariantList modeled;
+    for (const auto& md : mModels) {
+    modeled.append(md.toVariant());
+    }
+    map.insert("mModels", modeled);
 
     return map;
 }
 
 void VES::fromVariant(const QVariant &variant)
 {
+    QVariantMap map = variant.toMap();
+    mName = map.value("mName").toString();
+    mId = map.value("mId").toString();
+    mFieldOperator = map.value("mFieldOperator").toString();
+    mEquipment = map.value("mEquipment").toString();
+    mComment = map.value("mComment").toString();
+    setDate(map.value("mDate").toString());
+    mLocation = new LocationData(this);
+    mLocation->fromVariant(map.value("mLocation"));
 
+    mCurrentModel = new InversionModel(this);
+    mCurrentModel->fromVariant(map.value("mCurrentModel"));
+
+    mPreviousParameters = new VfsaParameters(this);
+    mPreviousParameters->fromVariant(map.value("mPreviousParameters"));
+
+    mCurrentParameters = new VfsaParameters(this);
+    mCurrentParameters->fromVariant(map.value("mCurrentParameters"));
+
+
+    QVariantList basic = map.value("mFieldData").toList();
+    for(const QVariant& data : basic) {
+        BasicData calc;
+        calc.fromVariant(data);
+        mFieldData.append(calc);
+    }
+
+    QVariantList spli = map.value("mSplices").toList();
+    for(const QVariant& data : spli) {
+        SpliceData calc;
+        calc.fromVariant(data);
+        mSplices.append(calc);
+    }
+
+    QVariantList modeled = map.value("mModels").toList();
+    for(const QVariant& data : modeled) {
+        InversionModel mod;
+        mod.fromVariant(data);
+        mModels.append(mod);
+    }
 }

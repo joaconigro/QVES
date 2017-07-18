@@ -182,13 +182,50 @@ QVariant InversionModel::toVariant() const
 {
     QVariantMap map;
     map.insert("mName", mName);
+    map.insert("mId", mId);
+    map.insert("mErrorResult", mErrorResult);
+    map.insert("mErrorString", mErrorString);
+    map.insert("mUsedAlgorithm", static_cast<int>(mUsedAlgorithm));
+    map.insert("mZohdyFilter", static_cast<int>(mZohdyFilter));
+
+    QVariantList calculated;
+    for (const auto& cd : mCalculatedData) {
+    calculated.append(cd.toVariant());
+    }
+    map.insert("mCalculatedData", calculated);
+
+    QVariantList modeled;
+    for (const auto& md : mModel) {
+    modeled.append(md.toVariant());
+    }
+    map.insert("mModel", modeled);
 
     return map;
 }
 
 void InversionModel::fromVariant(const QVariant &variant)
 {
+    QVariantMap map = variant.toMap();
+    mName = map.value("mName").toString();
+    mId = map.value("mId").toString();
+    mErrorResult = map.value("mErrorResult").toDouble();
+    mErrorString = map.value("mErrorString").toString();
+    mUsedAlgorithm = static_cast<InversionModel::InversionAlgorithm>(map.value("mUsedAlgorithm").toInt());
+    mZohdyFilter = static_cast<InversionModel::ZohdyFilters>(map.value("mZohdyFilter").toInt());
 
+    QVariantList calculated = map.value("mCalculatedData").toList();
+    for(const QVariant& data : calculated) {
+        BasicData calc;
+        calc.fromVariant(data);
+        mCalculatedData.append(calc);
+    }
+
+    QVariantList modeled = map.value("mModel").toList();
+    for(const QVariant& data : modeled) {
+        ModelData mod;
+        mod.fromVariant(data);
+        mModel.append(mod);
+    }
 }
 
 QString InversionModel::name() const
