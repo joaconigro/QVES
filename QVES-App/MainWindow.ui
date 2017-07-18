@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>697</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -144,115 +144,184 @@
    <property name="text">
     <string>Proyecto nuevo...</string>
    </property>
+   <property name="toolTip">
+    <string>Crea un proyecto nuevo donde se pueden cargar los SEVs.</string>
+   </property>
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Abrir...</string>
+    <string>Abrir proyecto...</string>
+   </property>
+   <property name="toolTip">
+    <string>Carga un proyecto al programa.</string>
    </property>
   </action>
   <action name="actionRecentProjects">
    <property name="text">
     <string>Proyectos recientes</string>
    </property>
+   <property name="toolTip">
+    <string>Proyectos abiertos recientemente,.</string>
+   </property>
   </action>
   <action name="actionSave">
    <property name="text">
     <string>Guardar</string>
+   </property>
+   <property name="toolTip">
+    <string>Guardar.</string>
    </property>
   </action>
   <action name="actionSaveAs">
    <property name="text">
     <string>Guardar como...</string>
    </property>
+   <property name="toolTip">
+    <string>Guardar como un archivo nuevo.</string>
+   </property>
   </action>
   <action name="actionImport">
    <property name="text">
     <string>Importar...</string>
+   </property>
+   <property name="toolTip">
+    <string>Importar proyectos de otros formatos ajenos a QVES.</string>
    </property>
   </action>
   <action name="actionExport">
    <property name="text">
     <string>Exportar...</string>
    </property>
+   <property name="toolTip">
+    <string>Exportar el proyecto a diferentes formatos.</string>
+   </property>
   </action>
   <action name="actionQuit">
    <property name="text">
     <string>Salir</string>
+   </property>
+   <property name="toolTip">
+    <string>Salir.</string>
    </property>
   </action>
   <action name="actionUndo">
    <property name="text">
     <string>Deshacer</string>
    </property>
+   <property name="toolTip">
+    <string>Deshacer.</string>
+   </property>
   </action>
   <action name="actionRedo">
    <property name="text">
     <string>Rehacer</string>
+   </property>
+   <property name="toolTip">
+    <string>Rehacer.</string>
    </property>
   </action>
   <action name="actionCopy">
    <property name="text">
     <string>Copiar</string>
    </property>
+   <property name="toolTip">
+    <string>Copiar.</string>
+   </property>
   </action>
   <action name="actionPaste">
    <property name="text">
     <string>Pegar</string>
    </property>
+   <property name="toolTip">
+    <string>Pegar.</string>
+   </property>
   </action>
   <action name="actionEmptyVES">
    <property name="text">
-    <string>En blanco</string>
+    <string>SEV vacío</string>
+   </property>
+   <property name="toolTip">
+    <string>Genera un SEV en blanco que debe llenar manualmente.</string>
    </property>
   </action>
   <action name="actionVESFromExcel">
    <property name="text">
     <string>Desde archivo Excel</string>
    </property>
+   <property name="toolTip">
+    <string>Crea un SEV nuevo desde un archivo Excel.</string>
+   </property>
   </action>
   <action name="actionVESFromAresVES">
    <property name="text">
     <string>Desde archivo Ares II VES</string>
+   </property>
+   <property name="toolTip">
+    <string>Crea un SEV nuevo desde archivo Ares II VES.</string>
    </property>
   </action>
   <action name="actionVESFromAnotherProject">
    <property name="text">
     <string>Desde otro proyecto</string>
    </property>
+   <property name="toolTip">
+    <string>Carga un SEV existente en otro proyecto.</string>
+   </property>
   </action>
   <action name="actionDeleteVES">
    <property name="text">
     <string>Eliminar</string>
+   </property>
+   <property name="toolTip">
+    <string>Elimina el SEV seleccionado.</string>
    </property>
   </action>
   <action name="actionVESProperties">
    <property name="text">
     <string>Propiedades</string>
    </property>
+   <property name="toolTip">
+    <string>Propiedades del SEV seleccionado.</string>
+   </property>
   </action>
   <action name="actionV_F_S_A">
    <property name="text">
     <string>V.F.S.A.</string>
+   </property>
+   <property name="toolTip">
+    <string>Algoritmo de inversión &quot;Very Fast Simulated Annealing&quot;.</string>
    </property>
   </action>
   <action name="actionZohdy">
    <property name="text">
     <string>Zohdy</string>
    </property>
+   <property name="toolTip">
+    <string>Algoritmo de inversión Zohdy.</string>
+   </property>
   </action>
   <action name="actionMergeBeds">
    <property name="text">
     <string>Agrupar capas</string>
+   </property>
+   <property name="toolTip">
+    <string>Agrupa las capas seleccionadas por el algoritmo deDar Zarrouk.</string>
    </property>
   </action>
   <action name="actionEmptyModel">
    <property name="text">
     <string>Modelo vacío</string>
    </property>
+   <property name="toolTip">
+    <string>Crea un modelo en blanco que debe completar manualmente.</string>
+   </property>
   </action>
   <action name="actionInversionOptions">
    <property name="text">
     <string>Opciones...</string>
+   </property>
+   <property name="toolTip">
+    <string>Opciones de la inversión de datos.</string>
    </property>
   </action>
   <action name="actionChartOptions">
@@ -265,6 +334,9 @@
    <property name="text">
     <string>Opciones...</string>
    </property>
+   <property name="toolTip">
+    <string>Opciones del gráfico.</string>
+   </property>
   </action>
   <action name="actionShowFieldData">
    <property name="checkable">
@@ -275,6 +347,9 @@
    </property>
    <property name="text">
     <string>Mostrar datos de campo</string>
+   </property>
+   <property name="toolTip">
+    <string>Mostrar/ocultar datos de campo.</string>
    </property>
   </action>
   <action name="actionShowSplices">
@@ -287,6 +362,9 @@
    <property name="text">
     <string>Mostrar datos empalmados</string>
    </property>
+   <property name="toolTip">
+    <string>Mostrar/ocultar datos empalmados.</string>
+   </property>
   </action>
   <action name="actionShowCalculatedData">
    <property name="checkable">
@@ -297,6 +375,9 @@
    </property>
    <property name="text">
     <string>Mostrar datos calculados</string>
+   </property>
+   <property name="toolTip">
+    <string>Mostrar/ocultar datos calculados.</string>
    </property>
   </action>
   <action name="actionShowModels">
@@ -309,6 +390,9 @@
    <property name="text">
     <string>Mostrar modelos</string>
    </property>
+   <property name="toolTip">
+    <string>Mostrar/ocultar modelos.</string>
+   </property>
   </action>
   <action name="actionShowCurrentModel">
    <property name="checkable">
@@ -316,6 +400,9 @@
    </property>
    <property name="text">
     <string>El seleccionado</string>
+   </property>
+   <property name="toolTip">
+    <string>Muestra en el gráfico solamente el seleccionado.</string>
    </property>
   </action>
   <action name="actionShowSeveralModels">
@@ -325,40 +412,64 @@
    <property name="text">
     <string>Varios modelos</string>
    </property>
+   <property name="toolTip">
+    <string>Muestra en el gráfico varios modelos a la vez.</string>
+   </property>
   </action>
   <action name="actionExportChart">
    <property name="text">
     <string>Exportar gráfico</string>
+   </property>
+   <property name="toolTip">
+    <string>Exportar gráfico.</string>
    </property>
   </action>
   <action name="actionNewSection">
    <property name="text">
     <string>Nueva sección</string>
    </property>
+   <property name="toolTip">
+    <string>Crea una nueva sección a partir de dos o más SEVs.</string>
+   </property>
   </action>
   <action name="actionShowSection">
    <property name="text">
     <string>Ver sección</string>
+   </property>
+   <property name="toolTip">
+    <string>Abre la sección en una ventana independiente.</string>
    </property>
   </action>
   <action name="actionAdminSections">
    <property name="text">
     <string>Administrar secciones...</string>
    </property>
+   <property name="toolTip">
+    <string>Administrar secciones.</string>
+   </property>
   </action>
   <action name="actionGeneralOptions">
    <property name="text">
     <string>Opciones generales...</string>
+   </property>
+   <property name="toolTip">
+    <string>Opciones generales de QVES.</string>
    </property>
   </action>
   <action name="actionUserManual">
    <property name="text">
     <string>Manual del usuario</string>
    </property>
+   <property name="toolTip">
+    <string>Manual del usuario.</string>
+   </property>
   </action>
   <action name="actionAboutQVES">
    <property name="text">
     <string>Acerca de QVES</string>
+   </property>
+   <property name="toolTip">
+    <string>Acerca de QVES.</string>
    </property>
   </action>
  </widget>

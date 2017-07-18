@@ -28,13 +28,19 @@ SOURCES += \
         MainWindow.cpp \
     DataPanel.cpp \
     MainChart.cpp \
-    VESPropertiesPanel.cpp
+    VESPropertiesPanel.cpp \
+    MainDelegate.cpp \
+    PanelDelegate.cpp \
+    ChartDelegate.cpp
 
 HEADERS += \
         MainWindow.h \
     DataPanel.h \
     MainChart.h \
-    VESPropertiesPanel.h
+    VESPropertiesPanel.h \
+    MainDelegate.h \
+    PanelDelegate.h \
+    ChartDelegate.h
 
 FORMS += \
         MainWindow.ui \
