@@ -27,6 +27,9 @@ public:
     //Setters
     void setLower(const double value);
     void setUpper(const double value);
+
+    VfsaParameterLimit& operator =(const VfsaParameterLimit &rhs);
+
 signals:
 
 public slots:

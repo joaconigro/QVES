@@ -2,6 +2,8 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     VES-Core \
-    QVES-App
+    QVES-App \
+    QVES-ModelDelegate
 
-QVES-App.depends = VES-Core
+QVES-ModelDelegate.depends = VES-Core
+QVES-App.depends = QVES-ModelDelegate

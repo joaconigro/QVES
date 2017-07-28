@@ -199,3 +199,24 @@ void VES::fromVariant(const QVariant &variant)
         mModels.append(mod);
     }
 }
+
+VES &VES::operator =(const VES &rhs)
+{
+    mId = QUuid::createUuid().toString();
+
+    mName = rhs.name();
+    mFieldOperator = rhs.fieldOperator();
+    mEquipment = rhs.equipment();
+    mComment = rhs.comment();
+    QLocale qLoc;
+    mDate = qLoc.toDate(rhs.date(), "dd/MM/yyyy");
+    mFieldData = rhs.fieldData();
+    mSplices = rhs.splices();
+    mLocation = rhs.location();
+    mModels = rhs.models();
+    mCurrentModel = rhs.currentModel();
+    mPreviousParameters = rhs.previousParameters();
+    mCurrentParameters = rhs.currentParameters();
+    this->setParent(rhs.parent());
+    return *this;
+}

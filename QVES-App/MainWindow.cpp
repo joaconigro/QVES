@@ -13,6 +13,9 @@
 //#include "../VES-Core/XmlSerializer.h"
 //#include "../VES-Core/Serializer.h"
 
+#include "../QVES-ModelDelegate/QVESModelDelegate.h"
+#include "../QVES-ModelDelegate/TableModel.h"
+
 QT_CHARTS_USE_NAMESPACE
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -47,6 +50,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     this->setCentralWidget(splitter);
+
+
+    QVESModelDelegate *del = new QVESModelDelegate(this);
+    del->setDataTableModel();
+    dataPanel->setMyModel(del->model());
 
 //    SpliceData a1(3.0, 18.2);
 //    a1.setSection(9);

@@ -52,3 +52,11 @@ void VfsaParameterLimit::setUpper(const double value)
 {
     mUpper = value;
 }
+
+VfsaParameterLimit &VfsaParameterLimit::operator =(const VfsaParameterLimit &rhs)
+{
+    mLower = rhs.lower();
+    mUpper = rhs.upper();
+    this->setParent(rhs.parent());
+    return *this;
+}

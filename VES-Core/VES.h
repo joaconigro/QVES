@@ -59,6 +59,9 @@ public:
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
+
+    VES& operator =(const VES &rhs);
+
 signals:
 
 public slots:

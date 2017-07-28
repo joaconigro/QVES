@@ -28,28 +28,23 @@ SOURCES += \
         MainWindow.cpp \
     DataPanel.cpp \
     MainChart.cpp \
-    VESPropertiesPanel.cpp \
-    MainDelegate.cpp \
-    PanelDelegate.cpp \
-    ChartDelegate.cpp
+    VESPropertiesPanel.cpp
 
 HEADERS += \
         MainWindow.h \
     DataPanel.h \
     MainChart.h \
-    VESPropertiesPanel.h \
-    MainDelegate.h \
-    PanelDelegate.h \
-    ChartDelegate.h
+    VESPropertiesPanel.h
 
 FORMS += \
         MainWindow.ui \
     DataPanel.ui \
     VESPropertiesPanel.ui
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core
-else:unix: LIBS += -L$$OUT_PWD/../VES-Core/ -lVES-Core
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/release/ -lQVES-ModelDelegate
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/debug/ -lQVES-ModelDelegate
+else:linux: LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
+else:mac: DYLD_LIBRARY_PATH += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
 
-INCLUDEPATH += $$PWD/../VES-Core
-DEPENDPATH += $$PWD/../VES-Core
+INCLUDEPATH += $$PWD/../QVES-ModelDelegate
+DEPENDPATH += $$PWD/../QVES-ModelDelegate

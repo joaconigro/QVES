@@ -63,6 +63,8 @@ public:
     void zohdyInversion(const QList<BasicData> &fieldData, const InversionModel::ZohdyFilters filter);
 
 
+    InversionModel& operator =(const InversionModel &rhs);
+
 signals:
 
 public slots:

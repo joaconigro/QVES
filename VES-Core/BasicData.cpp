@@ -31,7 +31,7 @@ BasicData::BasicData(const double ab2, const double res, const double sd, QObjec
     mStandardDeviation = sd;
 }
 
-BasicData::BasicData(const BasicData &bd)
+BasicData::BasicData(const BasicData &bd) : QObject(bd.parent())
 {
     mAb2Distance = bd.ab2Distance();
     mResistivity = bd.resistivity();

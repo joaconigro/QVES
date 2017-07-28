@@ -14,3 +14,12 @@ DataPanel::~DataPanel()
 {
     delete ui;
 }
+
+void DataPanel::setMyModel(TableModel *mod)
+{
+    ui->tableView->setModel(mod);
+    for (int c = 0; c < ui->tableView->horizontalHeader()->count(); ++c)
+    {
+        ui->tableView->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
+    }
+}

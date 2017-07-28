@@ -402,3 +402,18 @@ void InversionModel::zohdyInversion(const QList<BasicData> &fieldData, const Inv
     mErrorResult = error1;
     mZohdyFilter = filter;
 }
+
+InversionModel &InversionModel::operator =(const InversionModel &rhs)
+{
+    mId = QUuid::createUuid().toString();
+
+    mName = rhs.name();
+    mErrorResult = rhs.errorResult();
+    mErrorString = rhs.errorString();
+    mUsedAlgorithm = rhs.usedAlgorithm();
+    mZohdyFilter = rhs.zohdyFilter();
+    mCalculatedData = rhs.calculatedData();
+    mModel = rhs.model();
+    this->setParent(rhs.parent());
+    return *this;
+}
