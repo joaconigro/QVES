@@ -4,6 +4,7 @@
 #include "ves-core_global.h"
 #include <QObject>
 #include "BasicData.h"
+#include "SpliceData.h"
 #include "ModelData.h"
 #include "VfsaParameters.h"
 #include <QList>
@@ -32,8 +33,8 @@ private:
     void chooseFilter(const InversionModel::ZohdyFilters filter, QVector<double> &a, double &w, double &s, double &dx);
     void calculateDepths(QList<ModelData> &model);
     void calculateThicknesses(QList<ModelData> &model);
-    void TRS(const QList<BasicData> &field, QList<BasicData> &calculated, QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx);
-    double calculateModelError(const QList<BasicData> &fieldData, const QList<BasicData> &calculatedData) const;
+    void TRS(const QList<SpliceData> &field, QList<BasicData> &calculated, QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx);
+    double calculateModelError(const QList<SpliceData> &fieldData, const QList<BasicData> &calculatedData) const;
 
 public:
     explicit InversionModel(QObject *parent = nullptr);
@@ -61,8 +62,8 @@ public:
     void setModelData(const QList<ModelData> &list);
 
     //Zohdy inversion functions
-    void zohdyInversion(const QList<BasicData> &fieldData, const InversionModel::ZohdyFilters filter);
-
+    void zohdyInversion(const QList<SpliceData> &fieldData, const InversionModel::ZohdyFilters filter);
+    void updateModelError(const QList<SpliceData> &list);
 
     InversionModel& operator =(const InversionModel &rhs);
 

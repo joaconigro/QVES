@@ -80,7 +80,7 @@ void InversionModel::calculateThicknesses(QList<ModelData> &model)
 
 }
 
-void InversionModel::TRS(const QList<BasicData> &field, QList<BasicData> &calculated, QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx)
+void InversionModel::TRS(const QList<SpliceData> &field, QList<BasicData> &calculated, QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx)
 {
     //Necessary variables.
     QVector<double> x(a.size());
@@ -138,7 +138,7 @@ void InversionModel::TRS(const QList<BasicData> &field, QList<BasicData> &calcul
 
 }
 
-double InversionModel::calculateModelError(const QList<BasicData> &fieldData, const QList<BasicData> &calculatedData) const
+double InversionModel::calculateModelError(const QList<SpliceData> &fieldData, const QList<BasicData> &calculatedData) const
 {
     double sum = 0.0;
     double aux;
@@ -299,7 +299,7 @@ void InversionModel::setModelData(const QList<ModelData> &list)
     }
 }
 
-void InversionModel::zohdyInversion(const QList<BasicData> &fieldData, const InversionModel::ZohdyFilters filter)
+void InversionModel::zohdyInversion(const QList<SpliceData> &fieldData, const InversionModel::ZohdyFilters filter)
 {
     double w, s, dx;
     QVector<double> a;
@@ -417,6 +417,11 @@ void InversionModel::zohdyInversion(const QList<BasicData> &fieldData, const Inv
     mCalculatedData.append(tempCalculated);
     mErrorResult = error1;
     mZohdyFilter = filter;
+}
+
+void InversionModel::updateModelError(const QList<SpliceData> &list)
+{
+    mErrorResult = calculateModelError(list, mCalculatedData);
 }
 
 InversionModel &InversionModel::operator =(const InversionModel &rhs)

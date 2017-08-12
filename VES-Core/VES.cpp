@@ -1,6 +1,69 @@
 #include "VES.h"
 #include <QUuid>
 
+int VES::searchSections()
+{
+    int section = 1;
+    int repeaterCounter = 0;
+    double auxAB = mSplices.at(0).ab2Distance();
+
+    //This loops finds all sections on field data
+    //There must be two splices by section, to work well
+    for (int i = 1; i < mSplices.count(); i++){
+        if (auxAB == mSplices.at(i).ab2Distance()){
+            repeaterCounter++;
+            if (repeaterCounter == 1){
+                mSplices[i].setSection(section + 1);
+            } else if (repeaterCounter == 2) {
+                section++;
+                repeaterCounter = 0;
+                mSplices[i].setSection(section);
+            }
+        } else {
+            mSplices[i].setSection(section);
+            auxAB = mSplices.at(i).ab2Distance();
+        }
+    }
+    return section;
+}
+
+void VES::correctSplices(int maxSections)
+{
+    double correctFactor, auxAB;
+    double auxFactor = 1.0;
+    bool alredyCalculated;
+
+    while (maxSections > 0) {
+        alredyCalculated = false;
+        correctFactor = auxFactor;
+        for (int i = mSplices.count() - 1; i > 0 ; i--){
+            if (mSplices.at(i).section() == maxSections){
+                mSplices[i].setResistivity(mSplices.at(i).resistivity() * correctFactor);
+                auxAB = mSplices.at(i).ab2Distance();
+            }
+            if ((mSplices.at(i).section() == maxSections-1) && (mSplices.at(i).ab2Distance() == auxAB)){
+                if (alredyCalculated == false){
+                    auxFactor = mSplices.at(i+1).resistivity() / mSplices.at(i).resistivity();
+                    alredyCalculated = true;
+                }
+            }
+        }
+        --maxSections;
+    }
+}
+
+void VES::cleanDuplicatedSplices()
+{
+//    bool remove = true;
+//    while (remove) {
+        for (int i = mSplices.count() - 1; i > 0 ; i--){
+            if (mSplices.at(i).ab2Distance() == mSplices.at(i-1).ab2Distance()){
+                mSplices.removeAt(i-1);
+            }
+        }
+//    }
+}
+
 VES::VES(QObject *parent) : QObject(parent)
 {
     mId = QUuid::createUuid().toString();
@@ -254,4 +317,19 @@ VES &VES::operator =(const VES &rhs)
     mCurrentParameters = rhs.currentParameters();
     this->setParent(rhs.parent());
     return *this;
+}
+
+void VES::createSplices()
+{
+    mSplices.clear();
+
+    foreach (const BasicData &bd, mFieldData) {
+        SpliceData sd(bd);
+        mSplices.append(sd);
+    }
+
+    int maxSection = searchSections();
+    correctSplices(maxSection);
+    cleanDuplicatedSplices();
+
 }

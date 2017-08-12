@@ -44,6 +44,8 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
             } else if (reader->name() == "modeloSeleccionado") {
                 QVariant temp = reader->readElementText();
                 newVes.setCurrentIndexModel(temp.toInt());
+            } else {
+                reader->readNextStartElement();
             }
             reader->readNext();
             break;
@@ -59,6 +61,10 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
         }
     }
 
+    newVes.createSplices();
+    for (int i = 0; i < newVes.models().count(); i++) {
+        newVes.models()[i].updateModelError(newVes.splices());
+    }
     newProject->addVES(newVes);
 }
 
@@ -266,7 +272,7 @@ QList<ModelData> OldProject::readOldModeloSEVs(QXmlStreamReader *reader)
 
 OldProject::OldProject(QObject *parent) : QObject(parent)
 {
-    QString testFile = "patron.sev";
+    QString testFile = "proy_nuevo.sev"; //"patron.sev";
     Project *newProj = readOldProject(testFile);
 }
 
@@ -308,6 +314,8 @@ Project *OldProject::readOldProject(const QString &filename)
             } else if (reader->name() == "sevSeleccionado") {
                 QVariant index = reader->readElementText();
                 newProject->setCurrentIndex(index.toInt());
+            } else {
+                reader->readNextStartElement();
             }
         case QXmlStreamReader::TokenType::EndElement:
             if (reader->name() == "proyectoSEVs"){

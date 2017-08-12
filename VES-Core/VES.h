@@ -32,6 +32,12 @@ private:
     VfsaParameters *mPreviousParameters;
     VfsaParameters *mCurrentParameters;
 
+
+    //Splices methods
+    int searchSections();
+    void correctSplices(int maxSections);
+    void cleanDuplicatedSplices();
+
 public:
     explicit VES(QObject *parent = nullptr);
     VES(const VES& ve);
@@ -71,6 +77,7 @@ public:
 signals:
 
 public slots:
+    void createSplices();
 };
 
 Q_DECLARE_METATYPE(VES)

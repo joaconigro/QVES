@@ -25,6 +25,12 @@ SpliceData::SpliceData(QObject *parent) :
     mSection = 1;
 }
 
+SpliceData::SpliceData(const BasicData &bd) :
+    BasicData(bd)
+{
+     mSection = 1;
+}
+
 SpliceData::SpliceData(const double ab2, const double res, const double sd, QObject *parent) :
     BasicData(ab2, res, sd, parent)
 {
