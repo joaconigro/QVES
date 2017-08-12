@@ -41,10 +41,18 @@ FORMS += \
     DataPanel.ui \
     VESPropertiesPanel.ui
 
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core
+else:unix: LIBS += -L$$OUT_PWD/../VES-Core/ -lVES-Core
+#else:mac: DYLD_LIBRARY_PATH += -L$$OUT_PWD/../VES-Core/ -lVES-Core
+
+INCLUDEPATH += $$PWD/../VES-Core
+DEPENDPATH += $$PWD/../VES-Core
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/release/ -lQVES-ModelDelegate
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/debug/ -lQVES-ModelDelegate
-else:linux: LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
-else:mac: DYLD_LIBRARY_PATH += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
+else:unix: LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
+#else:mac: DYLD_LIBRARY_PATH += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
 
 INCLUDEPATH += $$PWD/../QVES-ModelDelegate
 DEPENDPATH += $$PWD/../QVES-ModelDelegate

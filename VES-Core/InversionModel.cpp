@@ -283,6 +283,22 @@ void InversionModel::setZohdyFilter(const InversionModel::ZohdyFilters value)
     mZohdyFilter = value;
 }
 
+void InversionModel::setCalculatedData(const QList<BasicData> &list)
+{
+    foreach (const BasicData &bd, list) {
+        BasicData newBd(bd.ab2Distance(), bd.resistivity(), bd.standardDeviation(), this);
+        mCalculatedData.append(newBd);
+    }
+}
+
+void InversionModel::setModelData(const QList<ModelData> &list)
+{
+    foreach (const ModelData &md, list) {
+        ModelData newMd(md);
+        mModel.append(newMd);
+    }
+}
+
 void InversionModel::zohdyInversion(const QList<BasicData> &fieldData, const InversionModel::ZohdyFilters filter)
 {
     double w, s, dx;

@@ -35,8 +35,8 @@ HEADERS += \
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core
-else:linux: LIBS += -L$$OUT_PWD/../VES-Core/ -lVES-Core
-else:mac: DYLD_LIBRARY_PATH += -L$$OUT_PWD/../VES-Core/ -lVES-Core
+else:unix: LIBS += -L$$OUT_PWD/../VES-Core/ -lVES-Core
+#else:mac: DYLD_LIBRARY_PATH += -L$$OUT_PWD/../VES-Core/ -lVES-Core
 
 INCLUDEPATH += $$PWD/../VES-Core
 DEPENDPATH += $$PWD/../VES-Core

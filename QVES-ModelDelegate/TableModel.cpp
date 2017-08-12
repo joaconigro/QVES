@@ -46,7 +46,4 @@ void TableModel::setTableFromVes(const QList<ModelDataTable *> &table)
     for (int i = 0; i<table.count(); i++){
         mTable.append(table.at(i));
     }
-//    foreach (const ModelDataTable &v, table) {
-//        mTable.append(v);
-//    }
 }

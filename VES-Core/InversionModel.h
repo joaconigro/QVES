@@ -57,7 +57,8 @@ public:
     void setName(const QString value);
     void setUsedAlgorithm(const InversionAlgorithm value);
     void setZohdyFilter(const ZohdyFilters value);
-
+    void setCalculatedData(const QList<BasicData> &list);
+    void setModelData(const QList<ModelData> &list);
 
     //Zohdy inversion functions
     void zohdyInversion(const QList<BasicData> &fieldData, const InversionModel::ZohdyFilters filter);

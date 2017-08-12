@@ -34,12 +34,14 @@ public:
     //Setters
     void setName(const QString value);
     void setCurrentePath(const QString value);
+    void setCurrentIndex(const int value);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
 signals:
 
 public slots:
+    void addVES(VES &ves);
 };
 
 Q_DECLARE_METATYPE(Project)

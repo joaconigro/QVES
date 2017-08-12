@@ -37,7 +37,8 @@ SOURCES += \
     VES.cpp \
     XmlSerializer.cpp \
     VfsaModel.cpp \
-    Project.cpp
+    Project.cpp \
+    OldProject.cpp
 
 HEADERS += \
         VESCore.h \
@@ -55,7 +56,8 @@ HEADERS += \
     Serializer.h \
     XmlSerializer.h \
     VfsaModel.h \
-    Project.h
+    Project.h \
+    OldProject.h
 
 #unix {
 #    target.path = /usr/lib

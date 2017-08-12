@@ -56,6 +56,15 @@ void Project::setCurrentePath(const QString value)
     mCurrentePath = value;
 }
 
+void Project::setCurrentIndex(const int value)
+{
+    if (mCurrentIndex != value) {
+        mCurrentIndex = value;
+        mCurrentVES = &(mVESs[mCurrentIndex]);
+    }
+
+}
+
 QVariant Project::toVariant() const
 {
     QVariantMap map;
@@ -88,4 +97,10 @@ void Project::fromVariant(const QVariant &variant)
         v.fromVariant(data);
         mVESs.append(v);
     }
+}
+
+void Project::addVES(VES &ves)
+{
+    ves.setParent(this);
+    mVESs.append(ves);
 }

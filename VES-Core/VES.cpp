@@ -85,6 +85,11 @@ InversionModel *VES::currentModel() const
     return mCurrentModel;
 }
 
+int VES::currentIndexModel() const
+{
+    return mCurrentIndexModel;
+}
+
 VfsaParameters *VES::previousParameters() const
 {
     return mPreviousParameters;
@@ -119,6 +124,36 @@ void VES::setDate(const QString stringDate)
 {
     QLocale qLoc;
     mDate = qLoc.toDate(stringDate, "dd/MM/yyyy");
+}
+
+void VES::setLocation(LocationData *loc)
+{
+    loc->setParent(this);
+    mLocation = loc;
+}
+
+void VES::setCurrentIndexModel(const int value)
+{
+    if (mCurrentIndexModel != value){
+        mCurrentIndexModel = value;
+        mCurrentModel = &(mModels[mCurrentIndexModel]);
+    }
+}
+
+void VES::setFieldData(const QList<BasicData> &list)
+{
+    foreach (const BasicData &bd, list) {
+        BasicData newBd(bd.ab2Distance(), bd.resistivity(), bd.standardDeviation(), this);
+        mFieldData.append(newBd);
+    }
+}
+
+void VES::setModels(const QList<InversionModel> &list)
+{
+    foreach (const InversionModel &im, list) {
+        InversionModel newIm = im;
+        mModels.append(newIm);
+    }
 }
 
 QVariant VES::toVariant() const

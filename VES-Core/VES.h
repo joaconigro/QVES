@@ -28,6 +28,7 @@ private:
     LocationData *mLocation;
     QList<InversionModel> mModels;
     InversionModel *mCurrentModel;
+    int mCurrentIndexModel;
     VfsaParameters *mPreviousParameters;
     VfsaParameters *mCurrentParameters;
 
@@ -47,6 +48,7 @@ public:
     LocationData *location() const;
     QList<InversionModel> models() const;
     InversionModel *currentModel() const;
+    int currentIndexModel() const;
     VfsaParameters *previousParameters() const;
     VfsaParameters *currentParameters() const;
 
@@ -56,6 +58,10 @@ public:
     void setEquipment(const QString equip);
     void setComment(const QString comm);
     void setDate(const QString stringDate);
+    void setLocation(LocationData *loc);
+    void setCurrentIndexModel(const int value);
+    void setFieldData(const QList<BasicData> &list);
+    void setModels(const QList<InversionModel> &list);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
