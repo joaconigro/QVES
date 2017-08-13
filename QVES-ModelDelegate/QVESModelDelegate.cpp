@@ -3,7 +3,7 @@
 
 //borrar
 #include "OldProject.h"
-//#include "Project.h"
+#include "Project.h"
 #include <QString>
 //#include "SpliceData.h"
 //#include "../VES-Core/SpliceData.h"
@@ -19,20 +19,11 @@ QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
     //connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::currentProjectChanged);
 
     //Borrar
-    OldProject *old;
-    old = new OldProject;
-//    QString testFile = "patron.sev";
-//    Project *newProj = old->readOldProject(testFile);
-//   SpliceData a1(3.5, 12.1);
-//    a1.setSection(9);
-//    a1.setStandardDeviation(3.0);
-
-//    BasicData a2(4.6, 99.1);
-//    XmlSerializer mSerializer;
-//    mSerializer.save(a1, "a1.xml", "SpliceData");
-
-//    SpliceData a3;
-//    mSerializer.load(a3, "a1.xml");
+    QString testFile = "proy_nuevo.sev"; //"patron.sev";
+    OldProject *old = new OldProject;
+    Project *proj = old->readOldProject(testFile);
+    XmlSerializer ser;
+    ser.save(*proj, "newProj.qvs", "Project");
 }
 
 TableModel *QVESModelDelegate::model()

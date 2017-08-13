@@ -3,10 +3,11 @@
 #include <QString>
 #include "LocationData.h"
 #include <QVariant>
+#include "XmlSerializer.h"
 
 void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
 {
-    VES newVes(nullptr);
+    VES *newVes = new VES(nullptr);
     bool read = true;
     reader->readNextStartElement();
 
@@ -17,35 +18,40 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
             break;
         case QXmlStreamReader::TokenType::StartElement:
             if (reader->name() == "nombre"){
-                newVes.setName(reader->readElementText());
+                newVes->setName(reader->readElementText());
             } else if (reader->name() == "vacio") {
                 QString empty = reader->readElementText().toLower();
                 if (empty == "true"){
-                    newProject->addVES(newVes);
+                    newProject->addVES(*newVes);
                     return;
                 }
             } else if (reader->name() == "coord") {
                 readOldCoordinates(reader, newVes);
             } else if (reader->name() == "listaPuntoCampo") {
-                newVes.setFieldData(readOldListaPuntoCampo(reader, "listaPuntoCampo"));
+                newVes->setFieldData(readOldListaPuntoCampo(reader, "listaPuntoCampo"));
+                newVes->createSplices();
             } else if (reader->name() == "listaModelos") {
                 QList<InversionModel> tempList;
                 bool modelRead = true;
+                reader->readNextStartElement();
                 while (modelRead) {
                     if (reader->name() == "listaModelos" && reader->tokenType() == QXmlStreamReader::TokenType::EndElement) {
                         modelRead = false;
                     } else {
-                        InversionModel im = readOldModelo(reader);
-                        tempList.append(im);
+                        InversionModel *im = readOldModelo(reader);
+                        if (im){
+                            im->updateModelError(newVes->splices());
+                            tempList.append(*im);
+                        }
                     }
                     reader->readNext();
                 }
-                newVes.setModels(tempList);
+                newVes->setModels(tempList);
             } else if (reader->name() == "modeloSeleccionado") {
                 QVariant temp = reader->readElementText();
-                newVes.setCurrentIndexModel(temp.toInt());
+                newVes->setCurrentIndexModel(temp.toInt());
             } else {
-                reader->readNextStartElement();
+                reader->skipCurrentElement();
             }
             reader->readNext();
             break;
@@ -61,16 +67,12 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
         }
     }
 
-    newVes.createSplices();
-    for (int i = 0; i < newVes.models().count(); i++) {
-        newVes.models()[i].updateModelError(newVes.splices());
-    }
-    newProject->addVES(newVes);
+    newProject->addVES(*newVes);
 }
 
-void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES &ves)
+void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES *ves)
 {
-    LocationData *newLoc = new LocationData(&ves);
+    LocationData *newLoc = new LocationData(ves);
     QVariant tempVariant;
 
     bool read = true;
@@ -96,6 +98,8 @@ void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES &ves)
             } else if (reader->name() == "lng") {
                 tempVariant = reader->readElementText();
                 newLoc->setDecimalLongitude(tempVariant.toDouble());
+            } else {
+                reader->skipCurrentElement();
             }
             reader->readNext();
             break;
@@ -110,7 +114,7 @@ void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES &ves)
             break;
         }
     }
-    ves.setLocation(newLoc);
+    ves->setLocation(newLoc);
 }
 
 QList<BasicData> OldProject::readOldListaPuntoCampo(QXmlStreamReader *reader, const QString &stopName)
@@ -157,13 +161,16 @@ QList<BasicData> OldProject::readOldListaPuntoCampo(QXmlStreamReader *reader, co
     return list;
 }
 
-InversionModel OldProject::readOldModelo(QXmlStreamReader *reader)
+InversionModel *OldProject::readOldModelo(QXmlStreamReader *reader)
 {
-    InversionModel tempModel;
+    InversionModel *tempModel = new InversionModel();
     QVariant tempVariant;
 
     bool read = true;
     reader->readNextStartElement();
+    if (reader->isEndElement()){
+        return nullptr;
+    }
     while (read) {
         switch (reader->tokenType()) {
         case QXmlStreamReader::TokenType::Characters:
@@ -171,18 +178,20 @@ InversionModel OldProject::readOldModelo(QXmlStreamReader *reader)
             break;
         case QXmlStreamReader::TokenType::StartElement:
             if (reader->name() == "nombre"){
-                tempModel.setName(reader->readElementText());
+                tempModel->setName(reader->readElementText());
             } else if (reader->name() == "tipo") {
                 tempVariant = reader->readElementText();
                 if (tempVariant.toInt() == 0) {
-                    tempModel.setUsedAlgorithm(InversionModel::InversionAlgorithm::Zohdy);
+                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Zohdy);
                 } else {
-                    tempModel.setUsedAlgorithm(InversionModel::InversionAlgorithm::Vfsa);
+                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Vfsa);
                 }
             } else if (reader->name() == "listaPuntoCalculado"){
-                tempModel.setCalculatedData(readOldListaPuntoCampo(reader, "listaPuntoCalculado"));
+                tempModel->setCalculatedData(readOldListaPuntoCampo(reader, "listaPuntoCalculado"));
             } else if (reader->name() == "listaModeloSEVs"){
-                tempModel.setModelData(readOldModeloSEVs(reader));
+                tempModel->setModelData(readOldModeloSEVs(reader));
+            } else {
+                reader->skipCurrentElement();
             }
             reader->readNext();
             break;
@@ -272,8 +281,7 @@ QList<ModelData> OldProject::readOldModeloSEVs(QXmlStreamReader *reader)
 
 OldProject::OldProject(QObject *parent) : QObject(parent)
 {
-    QString testFile = "proy_nuevo.sev"; //"patron.sev";
-    Project *newProj = readOldProject(testFile);
+
 }
 
 Project *OldProject::readOldProject(const QString &filename)
@@ -283,12 +291,11 @@ Project *OldProject::readOldProject(const QString &filename)
     if (file.exists() && file.open(QFile::ReadOnly | QFile::Text)){
         reader = new QXmlStreamReader(file.readAll());
     }else {
-        //return;
+        return nullptr;
     }
 
 
     Project *newProject = new Project;
-    //newProject()->setParent(this->parent());
     reader->readNextStartElement();
     reader->readNextStartElement();
     bool read = true;
@@ -315,7 +322,7 @@ Project *OldProject::readOldProject(const QString &filename)
                 QVariant index = reader->readElementText();
                 newProject->setCurrentIndex(index.toInt());
             } else {
-                reader->readNextStartElement();
+                reader->skipCurrentElement();
             }
         case QXmlStreamReader::TokenType::EndElement:
             if (reader->name() == "proyectoSEVs"){
@@ -327,30 +334,6 @@ Project *OldProject::readOldProject(const QString &filename)
             reader->readNext();
             break;
         }
-
-        //        if (reader->name() == "listaSEVs"){
-        //            reader->readNextStartElement();
-        //            while (!reader->atEnd()) {
-        //                if (reader->name() == "SEV"){
-        //                    readOldSev(reader, newProject);
-        //                }
-        //            }
-        //            reader->readNext();
-
-        //        } else if (reader->name() == "nombre") {
-        //            newProject->setName(reader->readElementText());
-        //        } else if (reader->name() == "sevSeleccionado") {
-        //            QVariant index = reader->readElementText();
-        //            newProject->setCurrentIndex(index.toInt());
-        //        }
-        //        reader->readNext();
-        //        } else {
-        //            reader->readNextStartElement();
-        //        }
-
-        //        red = reader->name().toString();
-        //        reader->readNext();
-        //        red = reader->name().toString();
     }
 
     return newProject;

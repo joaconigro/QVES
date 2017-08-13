@@ -58,11 +58,12 @@ void Project::setCurrentePath(const QString value)
 
 void Project::setCurrentIndex(const int value)
 {
-    if (mCurrentIndex != value) {
-        mCurrentIndex = value;
-        mCurrentVES = &(mVESs[mCurrentIndex]);
+    if (value >= 0 && value < mVESs.count()){
+        if (mCurrentIndex != value) {
+            mCurrentIndex = value;
+            mCurrentVES = &(mVESs[mCurrentIndex]);
+        }
     }
-
 }
 
 QVariant Project::toVariant() const
@@ -71,7 +72,6 @@ QVariant Project::toVariant() const
     map.insert("mName", mName);
     map.insert("mCurrentIndex", mCurrentIndex);
     map.insert("mCurrentePath", mCurrentePath);
-    map.insert("mCurrentVES", &mCurrentVES);
 
     QVariantList list;
     for (const auto& v : mVESs) {
@@ -88,8 +88,6 @@ void Project::fromVariant(const QVariant &variant)
     mName = map.value("mName").toString();
     mCurrentIndex = map.value("mCurrentIndex").toInt();
     mCurrentePath = map.value("mCurrentePath").toString();
-    mCurrentVES = new VES(this);
-    mCurrentVES->fromVariant(map.value("mCurrentVES"));
 
     QVariantList list = map.value("mVESs").toList();
     for(const QVariant& data : list) {

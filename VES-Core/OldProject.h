@@ -15,9 +15,9 @@ class VESCORESHARED_EXPORT OldProject : public QObject
     Q_OBJECT
 
     void readOldSev(QXmlStreamReader *reader, Project *newProject);
-    void readOldCoordinates(QXmlStreamReader *reader, VES &ves);
+    void readOldCoordinates(QXmlStreamReader *reader, VES *ves);
     QList<BasicData> readOldListaPuntoCampo(QXmlStreamReader *reader, const QString &stopName);
-    InversionModel readOldModelo(QXmlStreamReader *reader);
+    InversionModel *readOldModelo(QXmlStreamReader *reader);
     QList<ModelData> readOldModeloSEVs(QXmlStreamReader *reader);
 
 public:

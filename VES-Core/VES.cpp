@@ -36,7 +36,7 @@ void VES::correctSplices(int maxSections)
     while (maxSections > 0) {
         alredyCalculated = false;
         correctFactor = auxFactor;
-        for (int i = mSplices.count() - 1; i > 0 ; i--){
+        for (int i = mSplices.count() - 1; i >= 0 ; --i){
             if (mSplices.at(i).section() == maxSections){
                 mSplices[i].setResistivity(mSplices.at(i).resistivity() * correctFactor);
                 auxAB = mSplices.at(i).ab2Distance();
@@ -54,14 +54,11 @@ void VES::correctSplices(int maxSections)
 
 void VES::cleanDuplicatedSplices()
 {
-//    bool remove = true;
-//    while (remove) {
-        for (int i = mSplices.count() - 1; i > 0 ; i--){
-            if (mSplices.at(i).ab2Distance() == mSplices.at(i-1).ab2Distance()){
-                mSplices.removeAt(i-1);
-            }
+    for (int i = mSplices.count() - 1; i > 0 ; --i){
+        if (mSplices.at(i).ab2Distance() == mSplices.at(i-1).ab2Distance()){
+            mSplices.removeAt(i-1);
         }
-//    }
+    }
 }
 
 VES::VES(QObject *parent) : QObject(parent)
@@ -70,6 +67,8 @@ VES::VES(QObject *parent) : QObject(parent)
     mName = mFieldOperator = mEquipment = mComment = "";
     mLocation = new LocationData(this);
     mDate = QDate::currentDate();
+    mCurrentParameters = new VfsaParameters(this);
+    mPreviousParameters = new VfsaParameters(this);
 }
 
 VES::VES(const VES &ve)
@@ -197,9 +196,11 @@ void VES::setLocation(LocationData *loc)
 
 void VES::setCurrentIndexModel(const int value)
 {
-    if (mCurrentIndexModel != value){
-        mCurrentIndexModel = value;
-        mCurrentModel = &(mModels[mCurrentIndexModel]);
+    if (value >= 0 && value < mModels.count()){
+        if (mCurrentIndexModel != value){
+            mCurrentIndexModel = value;
+            mCurrentModel = &(mModels[mCurrentIndexModel]);
+        }
     }
 }
 
@@ -228,10 +229,10 @@ QVariant VES::toVariant() const
     map.insert("mEquipment", mEquipment);
     map.insert("mComment", mComment);
     map.insert("mDate", date());
-    map.insert("mLocation", &mLocation);
-    map.insert("mCurrentModel", &mCurrentModel);
-    map.insert("mPreviousParameters", &mPreviousParameters);
-    map.insert("mCurrentParameters", &mCurrentParameters);
+    map.insert("mLocation", mLocation->toVariant());
+    map.insert("mCurrentIndexModel", mCurrentIndexModel);
+    map.insert("mPreviousParameters", mPreviousParameters->toVariant());
+    map.insert("mCurrentParameters", mCurrentParameters->toVariant());
 
     QVariantList basic;
     for (const auto& cd : mFieldData) {
