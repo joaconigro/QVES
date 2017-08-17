@@ -18,7 +18,7 @@ public:
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
 
-    void setTableFromVes(const QList<ModelDataTable*> &table);
+    void setTableFromVES(const QList<ModelDataTable*> &table);
 };
 
 #endif // TABLEMODEL_H

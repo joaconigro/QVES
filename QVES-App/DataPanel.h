@@ -2,7 +2,8 @@
 #define DATAPANEL_H
 
 #include <QWidget>
-#include "../QVES-ModelDelegate/TableModel.h"
+#include "TableModel.h"
+#include <QStringList>
 
 namespace Ui {
 class DataPanel;
@@ -21,6 +22,12 @@ public:
 
 private:
     Ui::DataPanel *ui;
+
+public slots:
+    void loadVESNames(const QStringList &list);
+    void loadModelNames(const QStringList &list);
+private slots:
+    void on_comboBoxCurrentVes_currentIndexChanged(int index);
 };
 
 #endif // DATAPANEL_H

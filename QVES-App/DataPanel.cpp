@@ -23,3 +23,20 @@ void DataPanel::setMyModel(TableModel *mod)
         ui->tableView->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
     }
 }
+
+void DataPanel::loadVESNames(const QStringList &list)
+{
+    ui->comboBoxCurrentVes->clear();
+    ui->comboBoxCurrentVes->addItems(list);
+}
+
+void DataPanel::loadModelNames(const QStringList &list)
+{
+    ui->comboBoxVesModel->clear();
+    ui->comboBoxVesModel->addItems(list);
+}
+
+void DataPanel::on_comboBoxCurrentVes_currentIndexChanged(int index)
+{
+
+}

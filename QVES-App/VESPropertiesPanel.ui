@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>293</width>
-     <height>269</height>
+     <height>278</height>
     </rect>
    </property>
    <attribute name="label">
@@ -104,7 +104,7 @@
      <x>0</x>
      <y>0</y>
      <width>293</width>
-     <height>269</height>
+     <height>278</height>
     </rect>
    </property>
    <attribute name="label">
@@ -223,6 +223,14 @@
    </layout>
   </widget>
   <widget class="QWidget" name="pageCurrentModel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>293</width>
+     <height>278</height>
+    </rect>
+   </property>
    <attribute name="label">
     <string>Propiedades del modelo seleccionado</string>
    </attribute>

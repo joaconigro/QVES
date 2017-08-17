@@ -3,7 +3,7 @@
 
 //borrar
 #include "OldProject.h"
-#include "Project.h"
+//#include "Project.h"
 #include <QString>
 //#include "SpliceData.h"
 //#include "../VES-Core/SpliceData.h"
@@ -11,19 +11,34 @@
 //#include "../VES-Core/XmlSerializer.h"
 //#include "../VES-Core/Serializer.h"
 
+void QVESModelDelegate::readVESNames()
+{
+    foreach (const VES &ves, mCurrentProject->vess()) {
+        mVESNames.append(ves.name());
+    }
+}
+
+void QVESModelDelegate::readModelNames()
+{
+    foreach (const auto &item, mCurrentVES->models()) {
+        mModelNames.append(item.name());
+    }
+}
+
 QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
 {
-    //mCore = new VESCore(this);
+    mCore = new VESCore(this);
     mTableModel = new TableModel(this);
-
-    //connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::currentProjectChanged);
+    mShowedTableData = DataForTable::Field;
+    mChartDelegate = new ChartDelegate(this);
+    connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::currentProjectChanged);
 
     //Borrar
-    QString testFile = "proy_nuevo.sev"; //"patron.sev";
-    OldProject *old = new OldProject;
-    Project *proj = old->readOldProject(testFile);
-    XmlSerializer ser;
-    ser.save(*proj, "newProj.qvs", "Project");
+//    QString testFile = "proy_nuevo.sev"; //"patron.sev";
+//    OldProject *old = new OldProject;
+//    mCurrentProject = old->readOldProject(testFile);
+//    XmlSerializer ser;
+//    ser.save(*mCurrentProject, "newProj.qvs", "Project");
 }
 
 TableModel *QVESModelDelegate::model()
@@ -33,28 +48,55 @@ TableModel *QVESModelDelegate::model()
 
 QList<ModelDataTable *> QVESModelDelegate::list() const
 {
-    return mList;
+    return mTableList;
+}
+
+ChartDelegate *QVESModelDelegate::chartDelegate() const
+{
+    return mChartDelegate;
 }
 
 void QVESModelDelegate::currentProjectChanged()
 {
-    //mCurrentProject = mCore->project();
-    //mCurrentVES = mCurrentProject->currentVES();
+    mCurrentProject = mCore->project();
+    mCurrentVES = mCurrentProject->currentVES();
+    readVESNames();
+    readModelNames();
+    setDataTableModel();
+    mChartDelegate->configureModelsFromVES(mCurrentVES);
 }
 
 void QVESModelDelegate::setDataTableModel()
 {
-    ModelDataTable *v1 = new ModelDataTable(5.0, 15.0);
-//    v1.setX(5.0);
-//    v1.setY(15.0);
+    mTableList.clear();
+    switch (mShowedTableData) {
+    case DataForTable::Field:
+        foreach (const auto &item, mCurrentVES->fieldData()) {
+            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+            mTableList.append(value);
+        }
+        break;
+    case DataForTable::Splice:
+        foreach (const auto &item, mCurrentVES->splices()) {
+            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+            mTableList.append(value);
+        }
+        break;
+    case DataForTable::Calculated:
+        foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
+            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+            mTableList.append(value);
+        }
+        break;
+    case DataForTable::Model:
+        foreach (const auto &item, mCurrentVES->currentModel()->model()) {
+            ModelDataTable *value = new ModelDataTable(item.depth(), item.resistivity());
+            mTableList.append(value);
+        }
+        break;
+    }
 
-    ModelDataTable *v2 = new ModelDataTable(25.0, 35.0);
-//    v2.setX(25.0);
-//    v2.setY(35.0);
-
-    mList << v1 << v2;
-
-    mTableModel->setTableFromVes(mList);
+    mTableModel->setTableFromVES(mTableList);
 }
 
 void QVESModelDelegate::setList(QList<ModelDataTable *> list)
@@ -62,6 +104,28 @@ void QVESModelDelegate::setList(QList<ModelDataTable *> list)
     //if (mList == list)
     //    return;
 
-    mList = list;
-    emit ListChanged(mList);
+    mTableList = list;
+    emit ListChanged(mTableList);
+}
+
+void QVESModelDelegate::openProject(const QString &filename)
+{
+    mCore->openProject(filename);
+
+}
+
+void QVESModelDelegate::showedTableDataChanged(const QVESModelDelegate::DataForTable dt)
+{
+    mShowedTableData = dt;
+    setDataTableModel();
+}
+
+QStringList QVESModelDelegate::vesNames() const
+{
+    return mVESNames;
+}
+
+QStringList QVESModelDelegate::modelNames() const
+{
+    return mModelNames;
 }

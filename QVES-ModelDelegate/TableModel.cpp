@@ -10,7 +10,7 @@ TableModel::TableModel(QObject *parent)
 
 int TableModel::rowCount(const QModelIndex &parent) const
 {
-    return 2;
+   return mTable.count();
 }
 
 int TableModel::columnCount(const QModelIndex &parent) const
@@ -41,8 +41,9 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
 }
 
-void TableModel::setTableFromVes(const QList<ModelDataTable *> &table)
+void TableModel::setTableFromVES(const QList<ModelDataTable *> &table)
 {
+    mTable.clear();
     for (int i = 0; i<table.count(); i++){
         mTable.append(table.at(i));
     }

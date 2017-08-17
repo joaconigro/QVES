@@ -7,14 +7,21 @@ VESCore::VESCore(QObject *parent) : QObject(parent)
 
 Project *VESCore::project()
 {
-    return &mProject;
+    return mProject;
 }
 
 bool VESCore::openProject(const QString &filename)
 {
-    XmlSerializer serializer;
-    mProject.setParent(this);
-    serializer.load(mProject, filename);
-    emit projectLoaded();
-    return true;
+    if (filename.endsWith(".sev", Qt::CaseInsensitive)){
+        OldProject *old = new OldProject;
+        mProject = old->readOldProject(filename);
+        emit projectLoaded();
+        return true;
+    } else {
+        XmlSerializer serializer;
+        mProject->setParent(this);
+        serializer.load(*mProject, filename);
+        emit projectLoaded();
+        return true;
+    }
 }

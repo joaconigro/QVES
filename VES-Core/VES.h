@@ -31,7 +31,10 @@ private:
     int mCurrentIndexModel;
     VfsaParameters *mPreviousParameters;
     VfsaParameters *mCurrentParameters;
-
+    double mMinX;
+    double mMinY;
+    double mMaxX;
+    double mMaxY;
 
     //Splices methods
     int searchSections();
@@ -57,6 +60,10 @@ public:
     int currentIndexModel() const;
     VfsaParameters *previousParameters() const;
     VfsaParameters *currentParameters() const;
+    double minX() const;
+    double minY() const;
+    double maxX() const;
+    double maxY() const;
 
     //Setters
     void setName(const QString name);
@@ -73,6 +80,8 @@ public:
     void fromVariant(const QVariant& variant) override;
 
     VES& operator =(const VES &rhs);
+
+    void findMaxAndMin();
 
 signals:
 

@@ -69,6 +69,8 @@ VES::VES(QObject *parent) : QObject(parent)
     mDate = QDate::currentDate();
     mCurrentParameters = new VfsaParameters(this);
     mPreviousParameters = new VfsaParameters(this);
+    mCurrentIndexModel = -1;
+    mMinX = mMinY = mMaxX = mMaxY = 0.0;
 }
 
 VES::VES(const VES &ve)
@@ -79,6 +81,11 @@ VES::VES(const VES &ve)
     mFieldOperator = ve.fieldOperator();
     mEquipment = ve.equipment();
     mComment = ve.comment();
+    mCurrentIndexModel = ve.currentIndexModel();
+    mMinX = ve.minX();
+    mMinY = ve.minY();
+    mMaxX = ve.maxX();
+    mMaxY = ve.maxY();
     QLocale qLoc;
     mDate = qLoc.toDate(ve.date(), "dd/MM/yyyy");
     mFieldData = ve.fieldData();
@@ -162,6 +169,26 @@ VfsaParameters *VES::currentParameters() const
     return mCurrentParameters;
 }
 
+double VES::minX() const
+{
+    return mMinX;
+}
+
+double VES::minY() const
+{
+    return mMinY;
+}
+
+double VES::maxX() const
+{
+    return mMaxX;
+}
+
+double VES::maxY() const
+{
+    return mMaxY;
+}
+
 void VES::setName(const QString name)
 {
     mName = name;
@@ -200,6 +227,7 @@ void VES::setCurrentIndexModel(const int value)
         if (mCurrentIndexModel != value){
             mCurrentIndexModel = value;
             mCurrentModel = &(mModels[mCurrentIndexModel]);
+            findMaxAndMin();
         }
     }
 }
@@ -307,6 +335,11 @@ VES &VES::operator =(const VES &rhs)
     mFieldOperator = rhs.fieldOperator();
     mEquipment = rhs.equipment();
     mComment = rhs.comment();
+    mCurrentIndexModel = rhs.currentIndexModel();
+    mMinX = rhs.minX();
+    mMinY = rhs.minY();
+    mMaxX = rhs.maxX();
+    mMaxY = rhs.maxY();
     QLocale qLoc;
     mDate = qLoc.toDate(rhs.date(), "dd/MM/yyyy");
     mFieldData = rhs.fieldData();
@@ -318,6 +351,76 @@ VES &VES::operator =(const VES &rhs)
     mCurrentParameters = rhs.currentParameters();
     this->setParent(rhs.parent());
     return *this;
+}
+
+void VES::findMaxAndMin()
+{
+    mMinX = mMinY = qInf();
+    mMaxX = mMaxY = -1.0;
+
+    foreach (const auto &item, mFieldData) {
+        if (mMinX > item.ab2Distance()){
+            mMinX = item.ab2Distance();
+        }
+        if (mMaxX < item.ab2Distance()){
+            mMaxX = item.ab2Distance();
+        }
+        if (mMinY > item.resistivity()){
+            mMinY = item.resistivity();
+        }
+        if (mMaxY < item.resistivity()){
+            mMaxY = item.resistivity();
+        }
+    }
+
+    foreach (const auto &item, mSplices) {
+        if (mMinX > item.ab2Distance()){
+            mMinX = item.ab2Distance();
+        }
+        if (mMaxX < item.ab2Distance()){
+            mMaxX = item.ab2Distance();
+        }
+        if (mMinY > item.resistivity()){
+            mMinY = item.resistivity();
+        }
+        if (mMaxY < item.resistivity()){
+            mMaxY = item.resistivity();
+        }
+    }
+
+    foreach (const auto &item, mCurrentModel->calculatedData()) {
+        if (mMinX > item.ab2Distance()){
+            mMinX = item.ab2Distance();
+        }
+        if (mMaxX < item.ab2Distance()){
+            mMaxX = item.ab2Distance();
+        }
+        if (mMinY > item.resistivity()){
+            mMinY = item.resistivity();
+        }
+        if (mMaxY < item.resistivity()){
+            mMaxY = item.resistivity();
+        }
+    }
+
+    for (int i = 0; i < mCurrentModel->model().count(); ++i) {
+        if (i>0){
+            if (mMinX > mCurrentModel->model().at(i).from()){
+                mMinX = mCurrentModel->model().at(i).from();
+            }
+        }
+        if (i < mCurrentModel->model().count() - 1){
+            if (mMaxX < mCurrentModel->model().at(i).until()){
+                mMaxX = mCurrentModel->model().at(i).until();
+            }
+        }
+        if (mMinY > mCurrentModel->model().at(i).resistivity()){
+            mMinY = mCurrentModel->model().at(i).resistivity();
+        }
+        if (mMaxY < mCurrentModel->model().at(i).resistivity()){
+            mMaxY = mCurrentModel->model().at(i).resistivity();
+        }
+    }
 }
 
 void VES::createSplices()

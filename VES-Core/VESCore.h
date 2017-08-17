@@ -3,6 +3,7 @@
 
 #include "ves-core_global.h"
 #include "Project.h"
+#include "OldProject.h"
 #include <QObject>
 #include "XmlSerializer.h"
 
@@ -10,7 +11,7 @@ class VESCORESHARED_EXPORT VESCore: public QObject
 {
     Q_OBJECT
 
-    Project mProject;
+    Project *mProject;
 public:
     VESCore(QObject *parent);
 
