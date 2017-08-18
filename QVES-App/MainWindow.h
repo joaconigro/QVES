@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "DataPanel.h"
+#include "MainChart.h"
+#include "VESPropertiesPanel.h"
+#include "QVESModelDelegate.h"
+#include "TableModel.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +22,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    DataPanel *mDataPanel;
+    VESPropertiesPanel *mPropertiesPanel;
+    MainChart *mChart;
+    QVESModelDelegate *mDelegate;
+
+private slots:
+    void openProject();
+    void loadProject();
+    void loadVES();
 };
 
 #endif // MAINWINDOW_H

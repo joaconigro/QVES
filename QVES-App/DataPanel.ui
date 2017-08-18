@@ -144,4 +144,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <signal>comboBoxCurrentVESIndexChanged(int)</signal>
+ </slots>
 </ui>

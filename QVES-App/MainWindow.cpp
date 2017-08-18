@@ -1,15 +1,9 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-
 #include <QSplitter>
 #include <QTabWidget>
-#include "DataPanel.h"
-#include "MainChart.h"
-#include "VESPropertiesPanel.h"
 #include <QtCharts/QChartView>
-
-#include "../QVES-ModelDelegate/QVESModelDelegate.h"
-#include "../QVES-ModelDelegate/TableModel.h"
+#include <QFileDialog>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -21,47 +15,61 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     QSplitter *splitter = new QSplitter(this);
-   QTabWidget *mainTabs = new QTabWidget(splitter);
+    QTabWidget *mainTabs = new QTabWidget(splitter);
+    mDelegate = new QVESModelDelegate(this);
+    mDataPanel = new DataPanel;
+    mPropertiesPanel = new VESPropertiesPanel;
+    mChart = new MainChart;
+
+    connect(mDataPanel, &DataPanel::currentVESIndexChanged, mDelegate, &QVESModelDelegate::selectedVESChanged);
+    connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
+    connect(mDelegate, &QVESModelDelegate::vesChanged, this, &MainWindow::loadVES);
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
+
+    mDataPanel->setMaximumWidth(mDataPanel->sizeHint().width());
+    mainTabs->addTab(mDataPanel, tr("Datos del SEV"));
+    mPropertiesPanel->setMaximumWidth(mDataPanel->sizeHint().width());
+    mainTabs->addTab(mPropertiesPanel, tr("Propiedades del SEV"));
+    mainTabs->setMaximumWidth(mainTabs->sizeHint().width());
 
 
-    DataPanel *dataPanel = new DataPanel;
-    dataPanel->setMaximumWidth(dataPanel->sizeHint().width());
-   mainTabs->addTab(dataPanel, tr("Datos del SEV"));
 
-    VESPropertiesPanel *propertiesPanel = new VESPropertiesPanel;
-    propertiesPanel->setMaximumWidth(dataPanel->sizeHint().width());
-   mainTabs->addTab(propertiesPanel, tr("Propiedades del SEV"));
-
-   mainTabs->setMaximumWidth(mainTabs->sizeHint().width());
-
-
-    MainChart *mainChart = new MainChart;
-    QChartView *chartView = new QChartView(mainChart->chart);
+    QChartView *chartView = new QChartView(mChart->chart);
+    chartView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameShape(QFrame::StyledPanel);
     chartView->setFrameShadow(QFrame::Raised);
-   // chartView->setRubberBand(QChartView::RectangleRubberBand);
 
 
     splitter->addWidget(mainTabs);
     splitter->addWidget(chartView);
-
-
-
     this->setCentralWidget(splitter);
-
-    //borrar
-    QVESModelDelegate *del = new QVESModelDelegate(this);
-    QString testFile = "proy_nuevo.sev";
-    del->openProject(testFile);
-    dataPanel->setMyModel(del->model());
-    mainChart->chartDelegateChanged(del->chartDelegate());
-    dataPanel->loadVESNames(del->vesNames());
-    dataPanel->loadModelNames(del->modelNames());
     this->showMaximized();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::openProject()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir proyecto..."),
+                                                    "",
+                                                    tr("Proyectos QVS (*.qvs);; Proyectos antiguos de SEVs (*.sev)"));
+    if (!fileName.isNull()){
+        mDelegate->openProject(fileName);
+    }
+}
+
+void MainWindow::loadProject()
+{
+    mDataPanel->loadVESNames(mDelegate->vesNames(), mDelegate->currentVESIndex());
+}
+
+void MainWindow::loadVES()
+{
+    mDataPanel->setMyModel(mDelegate->model());
+    mChart->chartDelegateChanged(mDelegate->chartDelegate());
+    mDataPanel->loadModelNames(mDelegate->modelNames(), mDelegate->currentVESModelIndex());
 }

@@ -24,10 +24,11 @@ private:
     Ui::DataPanel *ui;
 
 public slots:
-    void loadVESNames(const QStringList &list);
-    void loadModelNames(const QStringList &list);
-private slots:
-    void on_comboBoxCurrentVes_currentIndexChanged(int index);
+    void loadVESNames(const QStringList &list, const int index);
+    void loadModelNames(const QStringList &list, const int index);
+
+signals:
+ void currentVESIndexChanged(int index);
 };
 
 #endif // DATAPANEL_H

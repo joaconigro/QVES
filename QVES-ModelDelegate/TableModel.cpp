@@ -43,8 +43,10 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 
 void TableModel::setTableFromVES(const QList<ModelDataTable *> &table)
 {
+    beginResetModel();
     mTable.clear();
     for (int i = 0; i<table.count(); i++){
         mTable.append(table.at(i));
     }
+    endResetModel();
 }

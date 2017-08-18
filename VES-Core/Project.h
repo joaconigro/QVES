@@ -38,7 +38,9 @@ public:
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
+
 signals:
+    void currentVESChanged();
 
 public slots:
     void addVES(VES &ves);

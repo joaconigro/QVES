@@ -4,7 +4,9 @@
 #include <QObject>
 #include "qves-modeldelegate_global.h"
 #include "VESCore.h"
+#include "OldProject.h"
 #include "Project.h"
+#include <QString>
 #include "VES.h"
 #include "TableModel.h"
 #include <QList>
@@ -23,6 +25,8 @@ private:
 
     Project *mCurrentProject;
     VES *mCurrentVES;
+    int mCurrentVESIndex;
+    int mCurrentVESModelIndex;
     VESCore *mCore;
     TableModel *mTableModel;
     QList<ModelDataTable*> mTableList;
@@ -40,18 +44,25 @@ public:
     TableModel *model();
     QList<ModelDataTable*> list() const;
     ChartDelegate *chartDelegate() const;
+    int currentVESIndex() const;
+    int currentVESModelIndex() const;
 
 public slots:
-    void currentProjectChanged();
+    void changeCurrentProject();
+    void changeCurrentVES();
     void setDataTableModel();
-    void setList(QList<ModelDataTable*> list);
+//    void setList(QList<ModelDataTable*> list);
     void openProject(const QString &filename);
     void showedTableDataChanged(const DataForTable dt = DataForTable::Field);
     QStringList vesNames() const;
     QStringList modelNames() const;
 
+    void selectedVESChanged(int index);
+
 signals:
-    void ListChanged(QList<ModelDataTable*> list);
+    //void ListChanged(QList<ModelDataTable*> list);
+    void projectChanged();
+    void vesChanged();
 };
 
 #endif // QVESMODELDELEGATE_H

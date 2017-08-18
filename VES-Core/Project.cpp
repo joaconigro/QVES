@@ -62,6 +62,7 @@ void Project::setCurrentIndex(const int value)
         if (mCurrentIndex != value) {
             mCurrentIndex = value;
             mCurrentVES = &(mVESs[mCurrentIndex]);
+            emit currentVESChanged();
         }
     }
 }

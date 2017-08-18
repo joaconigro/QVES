@@ -51,6 +51,7 @@ signals:
 
 public slots:
     void configureModelsFromVES(const VES *ves);
+
 };
 
 #endif // CHARTDELEGATE_H
