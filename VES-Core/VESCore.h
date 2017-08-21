@@ -12,16 +12,23 @@ class VESCORESHARED_EXPORT VESCore: public QObject
     Q_OBJECT
 
     Project *mProject;
+    QString mProjectFileName;
+    QString mProjectPath;
+
 public:
     VESCore(QObject *parent);
 
     Project *project();
+    QString projectPath() const;
+    QString projectFileName() const;
 
 signals:
     void projectLoaded();
 
 public slots:
     bool openProject(const QString &filename);
+    bool saveProject(const QString &filename);
+    bool saveProject();
 };
 
 #endif // VESCORE_H

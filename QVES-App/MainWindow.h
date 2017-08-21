@@ -27,10 +27,14 @@ private:
     MainChart *mChart;
     QVESModelDelegate *mDelegate;
 
+    void createConnections();
+
 private slots:
     void openProject();
     void loadProject();
     void loadVES();
+    void saveProject();
+    void saveAsProject();
 };
 
 #endif // MAINWINDOW_H

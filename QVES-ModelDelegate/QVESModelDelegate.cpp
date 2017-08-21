@@ -1,5 +1,15 @@
 #include "QVESModelDelegate.h"
 
+QString QVESModelDelegate::projectFileName() const
+{
+    return mProjectFileName;
+}
+
+QString QVESModelDelegate::projectPath() const
+{
+    return mProjectPath;
+}
+
 void QVESModelDelegate::readVESNames()
 {
     mVESNames.clear();
@@ -25,6 +35,7 @@ QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
     mShowedTableData = DataForTable::Field;
     mChartDelegate = new ChartDelegate(this);
     connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
+    mProjectFileName = mProjectPath = "";
 }
 
 TableModel *QVESModelDelegate::model()
@@ -58,6 +69,8 @@ void QVESModelDelegate::changeCurrentProject()
     mCurrentProject = mCore->project();
     connect(mCurrentProject, &Project::currentVESChanged, this, &QVESModelDelegate::changeCurrentVES);
     mCurrentVESIndex = mCurrentProject->currentIndex();
+    mProjectFileName = mCore->projectFileName();
+    mProjectPath = mCore->projectPath();
     readVESNames();
     emit projectChanged();
     changeCurrentVES();
@@ -119,6 +132,16 @@ void QVESModelDelegate::openProject(const QString &filename)
 {
     mCore->openProject(filename);
 
+}
+
+void QVESModelDelegate::saveAsProject(const QString &filename)
+{
+    mCore->saveProject(filename);
+}
+
+void QVESModelDelegate::saveProject()
+{
+    mCore->saveProject();
 }
 
 void QVESModelDelegate::showedTableDataChanged(const QVESModelDelegate::DataForTable dt)

@@ -325,6 +325,8 @@ void VES::fromVariant(const QVariant &variant)
         mod.fromVariant(data);
         mModels.append(mod);
     }
+
+    setCurrentIndexModel(map.value("mCurrentIndexModel").toInt());
 }
 
 VES &VES::operator =(const VES &rhs)

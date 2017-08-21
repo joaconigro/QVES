@@ -9,57 +9,58 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-void MainChart::updateFieldSeries(TableModel *table)
+void MainChart::createFieldSeries()
 {
     mFieldSeries->setName(tr("Datos de campo"));
+    mFieldSeries->setMarkerShape(QScatterSeries::MarkerShapeCircle);
+    mFieldSeries->setMarkerSize(8.0);
 
-    QVXYModelMapper *mapper = new QVXYModelMapper(this);
-    mapper->setXColumn(0);
-    mapper->setYColumn(1);
-    mapper->setSeries(mFieldSeries);
-    mapper->setModel(table);
+    mMapperField->setXColumn(0);
+    mMapperField->setYColumn(1);
+    mMapperField->setSeries(mFieldSeries);
+    mMapperField->setModel(mDelegate->fieldChartModel());
     chart->addSeries(mFieldSeries);
 }
 
-void MainChart::updateSpliceSeries(TableModel *table)
+void MainChart::createSpliceSeries()
 {
     mSpliceSeries->setName(tr("Datos empalmados"));
+    mSpliceSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
+    mSpliceSeries->setMarkerSize(8.0);
 
-    QVXYModelMapper *mapper = new QVXYModelMapper(this);
-    mapper->setXColumn(0);
-    mapper->setYColumn(1);
-    mapper->setSeries(mSpliceSeries);
-    mapper->setModel(table);
+    mMapperSplice->setXColumn(0);
+    mMapperSplice->setYColumn(1);
+    mMapperSplice->setSeries(mSpliceSeries);
+    mMapperSplice->setModel(mDelegate->spliceChartModel());
     chart->addSeries(mSpliceSeries);
 }
 
-void MainChart::updateCalculatedSeries(TableModel *table)
+void MainChart::createCalculatedSeries()
 {
     mCalculatedSeries->setName(tr("Datos calculados"));
+    mCalculatedSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
+    mCalculatedSeries->setMarkerSize(8.0);
 
-    QVXYModelMapper *mapper = new QVXYModelMapper(this);
-    mapper->setXColumn(0);
-    mapper->setYColumn(1);
-    mapper->setSeries(mCalculatedSeries);
-    mapper->setModel(table);
+    mMapperCalculated->setXColumn(0);
+    mMapperCalculated->setYColumn(1);
+    mMapperCalculated->setSeries(mCalculatedSeries);
+    mMapperCalculated->setModel(mDelegate->calculatedChartModel());
     chart->addSeries(mCalculatedSeries);
 }
 
-void MainChart::updateModeledSeries(TableModel *table)
+void MainChart::createModeledSeries()
 {
     mModeledSeries->setName(tr("Datos modelados"));
 
-    QVXYModelMapper *mapper = new QVXYModelMapper(this);
-    mapper->setXColumn(0);
-    mapper->setYColumn(1);
-    mapper->setSeries(mModeledSeries);
-    mapper->setModel(table);
+    mMapperModeled->setXColumn(0);
+    mMapperModeled->setYColumn(1);
+    mMapperModeled->setSeries(mModeledSeries);
+    mMapperModeled->setModel(mDelegate->modeledChartModel());
     chart->addSeries(mModeledSeries);
 }
 
 void MainChart::configureXYAxis()
 {
-    //![3]
     QLogValueAxis *axisX = new QLogValueAxis();
     axisX->setTitleText(tr("Distancia AB/2 (m)"));
     axisX->setLabelFormat("%g");
@@ -71,8 +72,6 @@ void MainChart::configureXYAxis()
     chart->setAxisX(axisX, mCalculatedSeries);
     chart->setAxisX(axisX, mModeledSeries);
     axisX->setRange(mDelegate->chartMinX(), mDelegate->chartMaxX());
-    //series->attachAxis(axisX);
-    //seriesP->attachAxis(axisX);
 
     QLogValueAxis *axisY = new QLogValueAxis();
     axisY->setTitleText(tr("Resistividad"));
@@ -85,37 +84,34 @@ void MainChart::configureXYAxis()
     chart->setAxisY(axisY, mCalculatedSeries);
     chart->setAxisY(axisY, mModeledSeries);
     axisY->setRange(mDelegate->chartMinY(), mDelegate->chartMaxY());
-    //series->attachAxis(axisY);
-    //seriesP->attachAxis(axisY);
-    //![3]
 }
 
 MainChart::MainChart(QWidget *parent) : QWidget(parent)
 {
+    chart = new QChart();
+
     mDelegate = new ChartDelegate(this);
 
     mFieldSeries = new QScatterSeries(this);
-    mFieldSeries->setMarkerShape(QScatterSeries::MarkerShapeCircle);
-    mFieldSeries->setMarkerSize(8.0);
-    //mFieldSeries->setUseOpenGL(true);
+    mMapperField = new QVXYModelMapper(this);
+    createFieldSeries();
 
     mSpliceSeries = new QScatterSeries(this);
-    mSpliceSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
-    mSpliceSeries->setMarkerSize(8.0);
-    //mSpliceSeries->setUseOpenGL(true);
+    mMapperSplice = new QVXYModelMapper(this);
+    createSpliceSeries();
 
     mCalculatedSeries = new QScatterSeries(this);
-    mCalculatedSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
-    mCalculatedSeries->setMarkerSize(8.0);
-    //mCalculatedSeries->setUseOpenGL(true);
+    mMapperCalculated = new QVXYModelMapper(this);
+    createCalculatedSeries();
 
     mModeledSeries = new QLineSeries(this);
-    //mModeledSeries->setUseOpenGL(true);
+    mMapperModeled = new QVXYModelMapper(this);
+    createModeledSeries();
 
     connect(mDelegate, &ChartDelegate::modelsChanged, this, &MainChart::modelDelegateChanged);
 
-    chart = new QChart();
     chart->setAnimationOptions(QChart::AllAnimations);
+    chart->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
 }
 
 void MainChart::chartDelegateChanged(ChartDelegate *del)
@@ -127,12 +123,11 @@ void MainChart::chartDelegateChanged(ChartDelegate *del)
 void MainChart::modelDelegateChanged()
 {
     chart->series().clear();
-    updateFieldSeries(mDelegate->fieldChartModel());
-    updateSpliceSeries(mDelegate->spliceChartModel());
-    updateCalculatedSeries(mDelegate->calculatedChartModel());
-    updateModeledSeries(mDelegate->modeledChartModel());
+    createFieldSeries();
+    createSpliceSeries();
+    createCalculatedSeries();
+    createModeledSeries();
 
     configureXYAxis();
-    chart->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
     chart->setTitle(mDelegate->vesName());
 }

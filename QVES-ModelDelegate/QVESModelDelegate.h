@@ -34,6 +34,8 @@ private:
     ChartDelegate *mChartDelegate;
     QStringList mVESNames;
     QStringList mModelNames;
+    QString mProjectFileName;
+    QString mProjectPath;
 
     void readVESNames();
     void readModelNames();
@@ -46,6 +48,8 @@ public:
     ChartDelegate *chartDelegate() const;
     int currentVESIndex() const;
     int currentVESModelIndex() const;
+    QString projectFileName() const;
+    QString projectPath() const;
 
 public slots:
     void changeCurrentProject();
@@ -53,6 +57,8 @@ public slots:
     void setDataTableModel();
 //    void setList(QList<ModelDataTable*> list);
     void openProject(const QString &filename);
+    void saveAsProject(const QString &filename);
+    void saveProject();
     void showedTableDataChanged(const DataForTable dt = DataForTable::Field);
     QStringList vesNames() const;
     QStringList modelNames() const;

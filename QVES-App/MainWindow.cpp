@@ -21,10 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mPropertiesPanel = new VESPropertiesPanel;
     mChart = new MainChart;
 
-    connect(mDataPanel, &DataPanel::currentVESIndexChanged, mDelegate, &QVESModelDelegate::selectedVESChanged);
-    connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
-    connect(mDelegate, &QVESModelDelegate::vesChanged, this, &MainWindow::loadVES);
-    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
+    createConnections();
+
+
 
     mDataPanel->setMaximumWidth(mDataPanel->sizeHint().width());
     mainTabs->addTab(mDataPanel, tr("Datos del SEV"));
@@ -52,6 +51,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::createConnections()
+{
+    connect(mDataPanel, &DataPanel::currentVESIndexChanged, mDelegate, &QVESModelDelegate::selectedVESChanged);
+    connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
+    connect(mDelegate, &QVESModelDelegate::vesChanged, this, &MainWindow::loadVES);
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
+}
+
 void MainWindow::openProject()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir proyecto..."),
@@ -72,4 +81,24 @@ void MainWindow::loadVES()
     mDataPanel->setMyModel(mDelegate->model());
     mChart->chartDelegateChanged(mDelegate->chartDelegate());
     mDataPanel->loadModelNames(mDelegate->modelNames(), mDelegate->currentVESModelIndex());
+}
+
+void MainWindow::saveProject()
+{
+    if (mDelegate->projectFileName().isEmpty()){
+        saveAsProject();
+    } else {
+        mDelegate->saveProject();
+    }
+
+}
+
+void MainWindow::saveAsProject()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Guardar proyecto como..."),
+                                                    mDelegate->projectPath(),
+                                                    tr("Proyectos QVS (*.qvs)"));
+    if (!fileName.isNull()){
+        mDelegate->saveAsProject(fileName);
+    }
 }

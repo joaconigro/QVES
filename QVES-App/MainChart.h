@@ -7,6 +7,7 @@
 #include <QtCharts/QScatterSeries>
 #include "ChartDelegate.h"
 #include "VES.h"
+#include <QVXYModelMapper>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -18,11 +19,15 @@ class MainChart : public QWidget
     QScatterSeries *mSpliceSeries;
     QScatterSeries *mCalculatedSeries;
     QLineSeries *mModeledSeries;
+    QVXYModelMapper *mMapperField;
+    QVXYModelMapper *mMapperSplice;
+    QVXYModelMapper *mMapperCalculated;
+    QVXYModelMapper *mMapperModeled;
 
-    void updateFieldSeries(TableModel *table);
-    void updateSpliceSeries(TableModel *table);
-    void updateCalculatedSeries(TableModel *table);
-    void updateModeledSeries(TableModel *table);
+    void createFieldSeries();
+    void createSpliceSeries();
+    void createCalculatedSeries();
+    void createModeledSeries();
 
     void configureXYAxis();
 public:
