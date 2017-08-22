@@ -6,7 +6,8 @@ DataPanel::DataPanel(QWidget *parent) :
     ui(new Ui::DataPanel)
 {
     ui->setupUi(this);
-
+    ui->radioButtonField->setChecked(true);
+    mSelectedData = TableModel::DataType::Field;
 
     connect(ui->comboBoxCurrentVes, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESIndexChanged);
 
@@ -39,6 +40,20 @@ void DataPanel::loadModelNames(const QStringList &list, const int index)
     ui->comboBoxVesModel->clear();
     ui->comboBoxVesModel->addItems(list);
     ui->comboBoxVesModel->setCurrentIndex(index);
+}
+
+void DataPanel::changeShowedData()
+{
+    if(ui->radioButtonField->isChecked()){
+        mSelectedData = TableModel::DataType::Field;
+    }else if (ui->radioButtonSplice->isChecked()) {
+        mSelectedData = TableModel::DataType::Splice;
+    }else if (ui->radioButtonCalculated->isChecked()) {
+        mSelectedData = TableModel::DataType::Calculated;
+    }else if (ui->radioButtonModeled->isChecked()) {
+        mSelectedData = TableModel::DataType::Model;
+    }
+    emit showedDataChanged(mSelectedData);
 }
 
 

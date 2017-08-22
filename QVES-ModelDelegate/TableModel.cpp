@@ -10,40 +10,85 @@ TableModel::TableModel(QObject *parent)
 
 int TableModel::rowCount(const QModelIndex &parent) const
 {
-   return mTable.count();
+    Q_UNUSED(parent);
+    return mTable.count();
 }
 
 int TableModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return 2;
+}
+
+QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0:
+                if (mTypeOfData == DataType::Model){
+                    return tr("Profundidad");
+                } else {
+                    return tr("Distancia AB/2");
+                }
+            case 1:
+                return tr("Resistividad");
+
+            default:
+                return QVariant();
+        }
+    } else if (orientation == Qt::Vertical) {
+        return (section + 1);
+    }
+    return QVariant();
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::DisplayRole)
-    {
+    if (role == Qt::DisplayRole){
         if (index.column() == 0){
             return mTable.at(index.row())->x();
         }else{
             return mTable.at(index.row())->y();
         }
+    } else if (role == Qt::TextAlignmentRole) {
+        return Qt::AlignRight;
     }
     return QVariant();
 }
 
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    return true;
+    if (index.isValid() && role == Qt::EditRole) {
+        ModelDataTable *temp = new ModelDataTable();
+        if (index.column() == 0)
+            temp->setX(value.toDouble());
+        else if (index.column() == 1)
+            temp->setY(value.toDouble());
+        else
+            return false;
+
+        mTable.replace(index.row(), temp);
+        emit dataChanged(index, index);
+        return true;
+    }
+    return false;
 }
 
 Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 {
-    return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+    if (!index.isValid())
+        return Qt::ItemIsEnabled;
+
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-void TableModel::setTableFromVES(const QList<ModelDataTable *> &table)
+void TableModel::setTableFromVES(const QList<ModelDataTable *> &table, DataType type)
 {
     beginResetModel();
+    mTypeOfData = type;
     mTable.clear();
     for (int i = 0; i<table.count(); i++){
         mTable.append(table.at(i));

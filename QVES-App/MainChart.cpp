@@ -19,7 +19,6 @@ void MainChart::createFieldSeries()
     mMapperField->setYColumn(1);
     mMapperField->setSeries(mFieldSeries);
     mMapperField->setModel(mDelegate->fieldChartModel());
-    chart->addSeries(mFieldSeries);
 }
 
 void MainChart::createSpliceSeries()
@@ -32,7 +31,6 @@ void MainChart::createSpliceSeries()
     mMapperSplice->setYColumn(1);
     mMapperSplice->setSeries(mSpliceSeries);
     mMapperSplice->setModel(mDelegate->spliceChartModel());
-    chart->addSeries(mSpliceSeries);
 }
 
 void MainChart::createCalculatedSeries()
@@ -45,7 +43,6 @@ void MainChart::createCalculatedSeries()
     mMapperCalculated->setYColumn(1);
     mMapperCalculated->setSeries(mCalculatedSeries);
     mMapperCalculated->setModel(mDelegate->calculatedChartModel());
-    chart->addSeries(mCalculatedSeries);
 }
 
 void MainChart::createModeledSeries()
@@ -56,7 +53,6 @@ void MainChart::createModeledSeries()
     mMapperModeled->setYColumn(1);
     mMapperModeled->setSeries(mModeledSeries);
     mMapperModeled->setModel(mDelegate->modeledChartModel());
-    chart->addSeries(mModeledSeries);
 }
 
 void MainChart::configureXYAxis()
@@ -95,18 +91,22 @@ MainChart::MainChart(QWidget *parent) : QWidget(parent)
     mFieldSeries = new QScatterSeries(this);
     mMapperField = new QVXYModelMapper(this);
     createFieldSeries();
+    chart->addSeries(mFieldSeries);
 
     mSpliceSeries = new QScatterSeries(this);
     mMapperSplice = new QVXYModelMapper(this);
     createSpliceSeries();
+    chart->addSeries(mSpliceSeries);
 
     mCalculatedSeries = new QScatterSeries(this);
     mMapperCalculated = new QVXYModelMapper(this);
     createCalculatedSeries();
+    chart->addSeries(mCalculatedSeries);
 
     mModeledSeries = new QLineSeries(this);
     mMapperModeled = new QVXYModelMapper(this);
     createModeledSeries();
+    chart->addSeries(mModeledSeries);
 
     connect(mDelegate, &ChartDelegate::modelsChanged, this, &MainChart::modelDelegateChanged);
 

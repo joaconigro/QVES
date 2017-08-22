@@ -114,7 +114,7 @@ void ChartDelegate::configureModelsFromVES(const VES *ves)
         ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
-    mFieldChartModel->setTableFromVES(tempTable);
+    mFieldChartModel->setTableFromVES(tempTable, TableModel::DataType::Field);
 
     tempTable.clear();
     mSpliceChartModel = new TableModel(this);
@@ -122,7 +122,7 @@ void ChartDelegate::configureModelsFromVES(const VES *ves)
         ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
-    mSpliceChartModel->setTableFromVES(tempTable);
+    mSpliceChartModel->setTableFromVES(tempTable, TableModel::DataType::Splice);
 
     tempTable.clear();
     mCalculatedChartModel = new TableModel(this);
@@ -130,7 +130,7 @@ void ChartDelegate::configureModelsFromVES(const VES *ves)
         ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
-    mCalculatedChartModel->setTableFromVES(tempTable);
+    mCalculatedChartModel->setTableFromVES(tempTable, TableModel::DataType::Calculated);
 
     tempTable.clear();
     mModeledChartModel = new TableModel(this);
@@ -151,7 +151,7 @@ void ChartDelegate::configureModelsFromVES(const VES *ves)
         }
 
     }
-    mModeledChartModel->setTableFromVES(tempTable);
+    mModeledChartModel->setTableFromVES(tempTable, TableModel::DataType::Model);
 
     emit modelsChanged();
 }

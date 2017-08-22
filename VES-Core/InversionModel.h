@@ -48,7 +48,7 @@ public:
     QString name() const;
     QString id() const;
     double errorResult() const;
-    QString errorString() const;
+    QString errorString();
     InversionAlgorithm usedAlgorithm() const;
     ZohdyFilters zohdyFilter() const;
     QList<BasicData> calculatedData() const;

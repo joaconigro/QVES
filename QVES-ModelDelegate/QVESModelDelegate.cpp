@@ -10,6 +10,11 @@ QString QVESModelDelegate::projectPath() const
     return mProjectPath;
 }
 
+QString QVESModelDelegate::modelError() const
+{
+    return mCurrentVES->currentModel()->errorString();
+}
+
 void QVESModelDelegate::readVESNames()
 {
     mVESNames.clear();
@@ -32,7 +37,7 @@ QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
     mCurrentVES = nullptr;
     mCore = new VESCore(this);
     mTableModel = new TableModel(this);
-    mShowedTableData = DataForTable::Field;
+    mShowedTableData = TableModel::DataType::Field;
     mChartDelegate = new ChartDelegate(this);
     connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
     mProjectFileName = mProjectPath = "";
@@ -90,25 +95,25 @@ void QVESModelDelegate::setDataTableModel()
 {
     mTableList.clear();
     switch (mShowedTableData) {
-    case DataForTable::Field:
+    case TableModel::DataType::Field:
         foreach (const auto &item, mCurrentVES->fieldData()) {
             ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
             mTableList.append(value);
         }
         break;
-    case DataForTable::Splice:
+    case TableModel::DataType::Splice:
         foreach (const auto &item, mCurrentVES->splices()) {
             ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
             mTableList.append(value);
         }
         break;
-    case DataForTable::Calculated:
+    case TableModel::DataType::Calculated:
         foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
             ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
             mTableList.append(value);
         }
         break;
-    case DataForTable::Model:
+    case TableModel::DataType::Model:
         foreach (const auto &item, mCurrentVES->currentModel()->model()) {
             ModelDataTable *value = new ModelDataTable(item.depth(), item.resistivity());
             mTableList.append(value);
@@ -116,7 +121,7 @@ void QVESModelDelegate::setDataTableModel()
         break;
     }
 
-    mTableModel->setTableFromVES(mTableList);
+    mTableModel->setTableFromVES(mTableList, mShowedTableData);
 }
 
 //void QVESModelDelegate::setList(QList<ModelDataTable *> list)
@@ -144,7 +149,7 @@ void QVESModelDelegate::saveProject()
     mCore->saveProject();
 }
 
-void QVESModelDelegate::showedTableDataChanged(const QVESModelDelegate::DataForTable dt)
+void QVESModelDelegate::showedTableDataChanged(const TableModel::DataType dt)
 {
     mShowedTableData = dt;
     setDataTableModel();

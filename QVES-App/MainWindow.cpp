@@ -4,6 +4,7 @@
 #include <QTabWidget>
 #include <QtCharts/QChartView>
 #include <QFileDialog>
+#include <QLabel>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -23,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     createConnections();
 
-
+    ui->statusBar->addPermanentWidget(new QLabel(ui->statusBar));
 
     mDataPanel->setMaximumWidth(mDataPanel->sizeHint().width());
     mainTabs->addTab(mDataPanel, tr("Datos del SEV"));
@@ -59,6 +60,7 @@ void MainWindow::createConnections()
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
+    connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
 }
 
 void MainWindow::openProject()
@@ -81,6 +83,7 @@ void MainWindow::loadVES()
     mDataPanel->setMyModel(mDelegate->model());
     mChart->chartDelegateChanged(mDelegate->chartDelegate());
     mDataPanel->loadModelNames(mDelegate->modelNames(), mDelegate->currentVESModelIndex());
+    ui->statusBar->showMessage(mDelegate->modelError(), 0);
 }
 
 void MainWindow::saveProject()

@@ -1,6 +1,7 @@
 #include "InversionModel.h"
 #include <QUuid>
 #include <QtMath>
+#include <QLocale>
 
 void InversionModel::chooseFilter(const InversionModel::ZohdyFilters filter, QVector<double> &a, double &w, double &s, double &dx)
 {
@@ -149,7 +150,8 @@ double InversionModel::calculateModelError(const QList<SpliceData> &fieldData, c
         sum = aux * aux + sum;
     }
 
-    return (sqrt(sum / fieldData.count()) * 100.0);
+    double finalError = (sqrt(sum / fieldData.count()) * 100.0);
+    return finalError;
 }
 
 InversionModel::InversionModel(QObject *parent) : QObject(parent)
@@ -170,7 +172,7 @@ InversionModel::InversionModel(const InversionModel& im)
 
     mName = im.name();
     mErrorResult = im.errorResult();
-    mErrorString = im.errorString();
+    //mErrorString = im.errorString();
     mUsedAlgorithm = im.usedAlgorithm();
     mZohdyFilter = im.zohdyFilter();
     mCalculatedData = im.calculatedData();
@@ -243,8 +245,10 @@ double InversionModel::errorResult() const
     return mErrorResult;
 }
 
-QString InversionModel::errorString() const
+QString InversionModel::errorString()
 {
+    QLocale qLoc;
+    mErrorString = "RMS = " + qLoc.toString(mErrorResult, 'g', 3);
     return mErrorString;
 }
 
@@ -430,7 +434,7 @@ InversionModel &InversionModel::operator =(const InversionModel &rhs)
 
     mName = rhs.name();
     mErrorResult = rhs.errorResult();
-    mErrorString = rhs.errorString();
+    //mErrorString = rhs.errorString();
     mUsedAlgorithm = rhs.usedAlgorithm();
     mZohdyFilter = rhs.zohdyFilter();
     mCalculatedData = rhs.calculatedData();

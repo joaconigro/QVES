@@ -17,10 +17,7 @@
 
 class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
 {
-public:
-    enum class DataForTable{Field, Splice, Calculated, Model};
 
-private:
     Q_OBJECT
 
     Project *mCurrentProject;
@@ -30,7 +27,7 @@ private:
     VESCore *mCore;
     TableModel *mTableModel;
     QList<ModelDataTable*> mTableList;
-    DataForTable mShowedTableData;
+    TableModel::DataType mShowedTableData;
     ChartDelegate *mChartDelegate;
     QStringList mVESNames;
     QStringList mModelNames;
@@ -50,6 +47,7 @@ public:
     int currentVESModelIndex() const;
     QString projectFileName() const;
     QString projectPath() const;
+    QString modelError() const;
 
 public slots:
     void changeCurrentProject();
@@ -59,7 +57,7 @@ public slots:
     void openProject(const QString &filename);
     void saveAsProject(const QString &filename);
     void saveProject();
-    void showedTableDataChanged(const DataForTable dt = DataForTable::Field);
+    void showedTableDataChanged(const TableModel::DataType dt = TableModel::DataType::Field);
     QStringList vesNames() const;
     QStringList modelNames() const;
 

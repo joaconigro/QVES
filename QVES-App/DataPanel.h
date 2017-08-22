@@ -13,6 +13,7 @@ class DataPanel : public QWidget
 {
     Q_OBJECT
 
+    TableModel::DataType  mSelectedData;
 
 public:
     explicit DataPanel(QWidget *parent = 0);
@@ -26,9 +27,11 @@ private:
 public slots:
     void loadVESNames(const QStringList &list, const int index);
     void loadModelNames(const QStringList &list, const int index);
+    void changeShowedData();
 
 signals:
- void currentVESIndexChanged(int index);
+    void currentVESIndexChanged(int index);
+    void showedDataChanged(const TableModel::DataType dataType);
 };
 
 #endif // DATAPANEL_H

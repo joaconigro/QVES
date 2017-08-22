@@ -143,8 +143,74 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>radioButtonField</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPanel</receiver>
+   <slot>changeShowedData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>358</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonSplice</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPanel</receiver>
+   <slot>changeShowedData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>182</x>
+     <y>81</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonCalculated</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPanel</receiver>
+   <slot>changeShowedData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>335</x>
+     <y>113</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonModeled</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPanel</receiver>
+   <slot>changeShowedData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <signal>comboBoxCurrentVESIndexChanged(int)</signal>
+  <slot>changeShowedData()</slot>
  </slots>
 </ui>
