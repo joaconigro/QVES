@@ -124,15 +124,6 @@ void QVESModelDelegate::setDataTableModel()
     mTableModel->setTableFromVES(mTableList, mShowedTableData);
 }
 
-//void QVESModelDelegate::setList(QList<ModelDataTable *> list)
-//{
-//    //if (mList == list)
-//    //    return;
-
-//    mTableList = list;
-//    emit ListChanged(mTableList);
-//}
-
 void QVESModelDelegate::openProject(const QString &filename)
 {
     mCore->openProject(filename);

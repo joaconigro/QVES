@@ -7,10 +7,10 @@ DataPanel::DataPanel(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->radioButtonField->setChecked(true);
-    mSelectedData = TableModel::DataType::Field;
+    changeShowedData();
+    ui->tableView->setItemDelegate(new TableDelegate);
 
     connect(ui->comboBoxCurrentVes, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESIndexChanged);
-
 }
 
 DataPanel::~DataPanel()
@@ -46,12 +46,16 @@ void DataPanel::changeShowedData()
 {
     if(ui->radioButtonField->isChecked()){
         mSelectedData = TableModel::DataType::Field;
+        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
     }else if (ui->radioButtonSplice->isChecked()) {
         mSelectedData = TableModel::DataType::Splice;
+        ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     }else if (ui->radioButtonCalculated->isChecked()) {
         mSelectedData = TableModel::DataType::Calculated;
+        ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     }else if (ui->radioButtonModeled->isChecked()) {
         mSelectedData = TableModel::DataType::Model;
+        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
     }
     emit showedDataChanged(mSelectedData);
 }

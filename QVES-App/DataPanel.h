@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "TableModel.h"
 #include <QStringList>
+#include "TableDelegate.h"
 
 namespace Ui {
 class DataPanel;
@@ -14,6 +15,7 @@ class DataPanel : public QWidget
     Q_OBJECT
 
     TableModel::DataType  mSelectedData;
+    TableDelegate *myDelegate;
 
 public:
     explicit DataPanel(QWidget *parent = 0);

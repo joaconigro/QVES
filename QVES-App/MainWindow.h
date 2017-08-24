@@ -7,6 +7,7 @@
 #include "VESPropertiesPanel.h"
 #include "QVESModelDelegate.h"
 #include "TableModel.h"
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,7 @@ public:
     ~MainWindow();
 
 private:
+    QLabel *rmsStatusLabel;
     Ui::MainWindow *ui;
     DataPanel *mDataPanel;
     VESPropertiesPanel *mPropertiesPanel;

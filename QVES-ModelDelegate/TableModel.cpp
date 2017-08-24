@@ -62,19 +62,35 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole) {
-        ModelDataTable *temp = new ModelDataTable();
-        if (index.column() == 0)
-            temp->setX(value.toDouble());
-        else if (index.column() == 1)
-            temp->setY(value.toDouble());
-        else
+        ModelDataTable *temp = new ModelDataTable(mTable.at(index.row())->x(), mTable.at(index.row())->y());
+        double tempValue = value.toDouble();
+        if (index.column() == 0) {
+            if (index.row() == 0){
+                if (tempValue < mTable.at(index.row() + 1)->x()){
+                    temp->setX(tempValue);
+                }
+            }else if (index.row() == mTable.count() - 1) {
+                if (tempValue > mTable.at(index.row() - 1)->x()){
+                    temp->setX(tempValue);
+                }
+            } else if ((tempValue > mTable.at(index.row() - 1)->x()) && (tempValue < mTable.at(index.row() + 1)->x())){
+                temp->setX(tempValue);
+            } else {
+                return false;
+            }
+        } else if (index.column() == 1) {
+            if (tempValue > 0.0)
+                temp->setY(tempValue);
+        } else
             return false;
 
         mTable.replace(index.row(), temp);
         emit dataChanged(index, index);
         return true;
     }
+
     return false;
+
 }
 
 Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
