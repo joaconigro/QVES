@@ -11,7 +11,7 @@
 #include "TableModel.h"
 #include <QList>
 #include "ModelDataTable.h"
-#include "ChartDelegate.h"
+//#include "ChartDelegate.h"
 #include <QStringList>
 
 
@@ -25,48 +25,65 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     int mCurrentVESIndex;
     int mCurrentVESModelIndex;
     VESCore *mCore;
-    TableModel *mTableModel;
-    QList<ModelDataTable*> mTableList;
+    TableModel *mCurrentModel;
+    TableModel *mFieldModel;
+    TableModel *mSpliceModel;
+    TableModel *mCalculatedModel;
+    TableModel *mTableModeledModel;
+    TableModel *mChartModeledModel;
     TableModel::DataType mShowedTableData;
-    ChartDelegate *mChartDelegate;
+//    ChartDelegate *mChartDelegate;
     QStringList mVESNames;
     QStringList mModelNames;
     QString mProjectFileName;
     QString mProjectPath;
+    double mChartMinX;
+    double mChartMinY;
+    double mChartMaxX;
+    double mChartMaxY;
+    QString mVESName;
 
     void readVESNames();
     void readModelNames();
+    void selectModelForTable();
 
 public:
     explicit QVESModelDelegate(QObject *parent);
 
-    TableModel *model();
-    QList<ModelDataTable*> list() const;
-    ChartDelegate *chartDelegate() const;
+    TableModel *currentModel();
+    TableModel *fieldModel();
+    TableModel *spliceModel();
+    TableModel *calculatedModel();
+    TableModel *tableModeledModel();
+    TableModel *chartModeledModel();
     int currentVESIndex() const;
     int currentVESModelIndex() const;
     QString projectFileName() const;
     QString projectPath() const;
     QString modelError() const;
+    double chartMinX() const;
+    double chartMinY() const;
+    double chartMaxX() const;
+    double chartMaxY() const;
+    QString vesName() const;
 
 public slots:
     void changeCurrentProject();
     void changeCurrentVES();
     void setDataTableModel();
-//    void setList(QList<ModelDataTable*> list);
     void openProject(const QString &filename);
     void saveAsProject(const QString &filename);
     void saveProject();
     void showedTableDataChanged(const TableModel::DataType dt = TableModel::DataType::Field);
     QStringList vesNames() const;
     QStringList modelNames() const;
-
+    void updateVESData(const QModelIndex &index) const;
     void selectedVESChanged(int index);
 
 signals:
-    //void ListChanged(QList<ModelDataTable*> list);
     void projectChanged();
     void vesChanged();
+    void tableModelChanged();
 };
 
 #endif // QVESMODELDELEGATE_H

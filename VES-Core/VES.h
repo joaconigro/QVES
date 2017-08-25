@@ -87,6 +87,7 @@ signals:
 
 public slots:
     void createSplices();
+    void updateFieldData(const int row, const int column, const double value);
 };
 
 Q_DECLARE_METATYPE(VES)

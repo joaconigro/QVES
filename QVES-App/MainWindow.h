@@ -37,6 +37,7 @@ private slots:
     void loadVES();
     void saveProject();
     void saveAsProject();
+    void modelUpdated();
 };
 
 #endif // MAINWINDOW_H

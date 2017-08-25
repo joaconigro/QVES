@@ -25,15 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         QVESModelDelegate.cpp \
     TableModel.cpp \
-    ModelDataTable.cpp \
-    ChartDelegate.cpp
+    ModelDataTable.cpp
 
 HEADERS += \
         QVESModelDelegate.h \
         qves-modeldelegate_global.h \ 
     TableModel.h \
-    ModelDataTable.h \
-    ChartDelegate.h
+    ModelDataTable.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core

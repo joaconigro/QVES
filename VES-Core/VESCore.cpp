@@ -61,3 +61,12 @@ bool VESCore::saveProject()
     xml.save(*mProject, mProjectFileName, "Project");
     return true;
 }
+
+void VESCore::changeDataForCurrentVES(const int row, const int column, const int dataType, const double value)
+{
+    if (dataType == 0){
+        mProject->currentVES()->updateFieldData(row, column, value);
+    } else if (dataType == 3) {
+        mProject->currentVES()->currentModel()->updateModeledData(row, column, value);
+    }
+}

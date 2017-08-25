@@ -29,6 +29,7 @@ public slots:
     bool openProject(const QString &filename);
     bool saveProject(const QString &filename);
     bool saveProject();
+    void changeDataForCurrentVES(const int row, const int column, const int dataType, const double value);
 };
 
 #endif // VESCORE_H

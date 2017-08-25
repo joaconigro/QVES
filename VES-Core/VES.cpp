@@ -439,3 +439,16 @@ void VES::createSplices()
     cleanDuplicatedSplices();
 
 }
+
+void VES::updateFieldData(const int row, const int column, const double value)
+{
+    if (column == 0){
+        mFieldData[row].setAb2Distance(value);
+    } else if (column == 1) {
+        mFieldData[row].setResistivity(value);
+    } else {
+        return;
+    }
+
+    createSplices();
+}

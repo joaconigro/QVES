@@ -18,7 +18,7 @@ void MainChart::createFieldSeries()
     mMapperField->setXColumn(0);
     mMapperField->setYColumn(1);
     mMapperField->setSeries(mFieldSeries);
-    mMapperField->setModel(mDelegate->fieldChartModel());
+    mMapperField->setModel(mDelegate->fieldModel());
 }
 
 void MainChart::createSpliceSeries()
@@ -30,7 +30,7 @@ void MainChart::createSpliceSeries()
     mMapperSplice->setXColumn(0);
     mMapperSplice->setYColumn(1);
     mMapperSplice->setSeries(mSpliceSeries);
-    mMapperSplice->setModel(mDelegate->spliceChartModel());
+    mMapperSplice->setModel(mDelegate->spliceModel());
 }
 
 void MainChart::createCalculatedSeries()
@@ -42,7 +42,7 @@ void MainChart::createCalculatedSeries()
     mMapperCalculated->setXColumn(0);
     mMapperCalculated->setYColumn(1);
     mMapperCalculated->setSeries(mCalculatedSeries);
-    mMapperCalculated->setModel(mDelegate->calculatedChartModel());
+    mMapperCalculated->setModel(mDelegate->calculatedModel());
 }
 
 void MainChart::createModeledSeries()
@@ -52,7 +52,7 @@ void MainChart::createModeledSeries()
     mMapperModeled->setXColumn(0);
     mMapperModeled->setYColumn(1);
     mMapperModeled->setSeries(mModeledSeries);
-    mMapperModeled->setModel(mDelegate->modeledChartModel());
+    mMapperModeled->setModel(mDelegate->chartModeledModel());
 }
 
 void MainChart::configureXYAxis()
@@ -86,7 +86,7 @@ MainChart::MainChart(QWidget *parent) : QWidget(parent)
 {
     chart = new QChart();
 
-    mDelegate = new ChartDelegate(this);
+    mDelegate = new QVESModelDelegate(this);
 
     mFieldSeries = new QScatterSeries(this);
     mMapperField = new QVXYModelMapper(this);
@@ -108,13 +108,13 @@ MainChart::MainChart(QWidget *parent) : QWidget(parent)
     createModeledSeries();
     chart->addSeries(mModeledSeries);
 
-    connect(mDelegate, &ChartDelegate::modelsChanged, this, &MainChart::modelDelegateChanged);
+    connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
 
     chart->setAnimationOptions(QChart::AllAnimations);
     chart->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
 }
 
-void MainChart::chartDelegateChanged(ChartDelegate *del)
+void MainChart::chartDelegateChanged(QVESModelDelegate *del)
 {
     mDelegate = del;
     modelDelegateChanged();

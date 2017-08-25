@@ -442,3 +442,16 @@ InversionModel &InversionModel::operator =(const InversionModel &rhs)
     this->setParent(rhs.parent());
     return *this;
 }
+
+void InversionModel::updateModeledData(const int row, const int column, const double value)
+{
+    if (column == 0){
+        mModel[row].setDepth(value);
+    } else if (column == 1) {
+        mModel[row].setResistivity(value);
+    } else {
+        return;
+    }
+
+
+}

@@ -85,7 +85,8 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
             return false;
 
         mTable.replace(index.row(), temp);
-        emit dataChanged(index, index);
+        emit myTableChanged(index);
+        //emit dataChanged(index, index);
         return true;
     }
 

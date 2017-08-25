@@ -1,4 +1,5 @@
 #include "QVESModelDelegate.h"
+#include <QtMath>
 
 QString QVESModelDelegate::projectFileName() const
 {
@@ -13,6 +14,31 @@ QString QVESModelDelegate::projectPath() const
 QString QVESModelDelegate::modelError() const
 {
     return mCurrentVES->currentModel()->errorString();
+}
+
+double QVESModelDelegate::chartMinX() const
+{
+    return mChartMinX;
+}
+
+double QVESModelDelegate::chartMinY() const
+{
+    return mChartMinY;
+}
+
+double QVESModelDelegate::chartMaxX() const
+{
+    return mChartMaxX;
+}
+
+double QVESModelDelegate::chartMaxY() const
+{
+    return mChartMaxY;
+}
+
+QString QVESModelDelegate::vesName() const
+{
+    return mCurrentVES->name();
 }
 
 void QVESModelDelegate::readVESNames()
@@ -31,31 +57,74 @@ void QVESModelDelegate::readModelNames()
     }
 }
 
+void QVESModelDelegate::selectModelForTable()
+{
+    switch (mShowedTableData) {
+    case TableModel::DataType::Field:
+        mCurrentModel = mFieldModel;
+        break;
+    case TableModel::DataType::Splice:
+        mCurrentModel = mSpliceModel;
+        break;
+    case TableModel::DataType::Calculated:
+       mCurrentModel = mCalculatedModel;
+        break;
+    case TableModel::DataType::Model:
+       mCurrentModel = mTableModeledModel;
+        break;
+    }
+
+    connect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::updateVESData);
+    emit tableModelChanged();
+}
+
 QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
 {
     mCurrentProject = nullptr;
     mCurrentVES = nullptr;
     mCore = new VESCore(this);
-    mTableModel = new TableModel(this);
+    mCurrentModel = new TableModel(this);
     mShowedTableData = TableModel::DataType::Field;
-    mChartDelegate = new ChartDelegate(this);
-    connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
+
     mProjectFileName = mProjectPath = "";
+    mFieldModel = nullptr;
+    mSpliceModel = nullptr;
+    mCalculatedModel = nullptr;
+    mTableModeledModel = nullptr;
+    mChartModeledModel = nullptr;
+
+    connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
+
 }
 
-TableModel *QVESModelDelegate::model()
+TableModel *QVESModelDelegate::currentModel()
 {
-    return mTableModel;
+    return mCurrentModel;
 }
 
-QList<ModelDataTable *> QVESModelDelegate::list() const
+TableModel *QVESModelDelegate::fieldModel()
 {
-    return mTableList;
+    return mFieldModel;
 }
 
-ChartDelegate *QVESModelDelegate::chartDelegate() const
+TableModel *QVESModelDelegate::spliceModel()
 {
-    return mChartDelegate;
+    return mSpliceModel;
+}
+
+TableModel *QVESModelDelegate::calculatedModel()
+{
+    return mCalculatedModel;
+}
+
+TableModel *QVESModelDelegate::tableModeledModel()
+{
+    return mTableModeledModel;
+}
+
+TableModel *QVESModelDelegate::chartModeledModel()
+{
+    return mChartModeledModel;
 }
 
 int QVESModelDelegate::currentVESIndex() const
@@ -87,41 +156,69 @@ void QVESModelDelegate::changeCurrentVES()
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
     setDataTableModel();
-    mChartDelegate->configureModelsFromVES(mCurrentVES);
     emit vesChanged();
 }
 
 void QVESModelDelegate::setDataTableModel()
 {
-    mTableList.clear();
-    switch (mShowedTableData) {
-    case TableModel::DataType::Field:
-        foreach (const auto &item, mCurrentVES->fieldData()) {
-            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
-            mTableList.append(value);
-        }
-        break;
-    case TableModel::DataType::Splice:
-        foreach (const auto &item, mCurrentVES->splices()) {
-            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
-            mTableList.append(value);
-        }
-        break;
-    case TableModel::DataType::Calculated:
-        foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
-            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
-            mTableList.append(value);
-        }
-        break;
-    case TableModel::DataType::Model:
-        foreach (const auto &item, mCurrentVES->currentModel()->model()) {
-            ModelDataTable *value = new ModelDataTable(item.depth(), item.resistivity());
-            mTableList.append(value);
-        }
-        break;
-    }
+    QList<ModelDataTable *> tempTable;
+    QList<ModelDataTable *> tempTable2;
 
-    mTableModel->setTableFromVES(mTableList, mShowedTableData);
+    mChartMinX = pow(10, floor(log10(mCurrentVES->minX())));
+    mChartMinY = pow(10, floor(log10(mCurrentVES->minY())));
+    mChartMaxX = pow(10, ceil(log10(mCurrentVES->maxX())));
+    mChartMaxY = pow(10, ceil(log10(mCurrentVES->maxY())));
+
+    mFieldModel = new TableModel(this);
+    foreach (const auto &item, mCurrentVES->fieldData()) {
+        ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+        tempTable.append(value);
+    }
+    mFieldModel->setTableFromVES(tempTable, TableModel::DataType::Field);
+
+    tempTable.clear();
+    mSpliceModel = new TableModel(this);
+    foreach (const auto &item, mCurrentVES->splices()) {
+        ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+        tempTable.append(value);
+    }
+    mSpliceModel->setTableFromVES(tempTable, TableModel::DataType::Splice);
+
+    tempTable.clear();
+    mCalculatedModel = new TableModel(this);
+    foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
+        ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+        tempTable.append(value);
+    }
+    mCalculatedModel->setTableFromVES(tempTable, TableModel::DataType::Calculated);
+
+    tempTable.clear();
+    mTableModeledModel = new TableModel(this);
+    mChartModeledModel = new TableModel(this);
+    foreach (const auto &item, mCurrentVES->currentModel()->model()) {
+        ModelDataTable *value0 = new ModelDataTable(item.depth(), item.resistivity());
+        tempTable2.append(value0);
+
+        if (item.from() == 0.0){
+            ModelDataTable *value1 = new ModelDataTable(mChartMinX, item.resistivity());
+            tempTable.append(value1);
+        } else {
+            ModelDataTable *value1 = new ModelDataTable(item.from(), item.resistivity());
+            tempTable.append(value1);
+        }
+        if (item.until() == qInf()){
+            ModelDataTable *value2 = new ModelDataTable(mChartMaxX, item.resistivity());
+            tempTable.append(value2);
+        } else {
+            ModelDataTable *value2 = new ModelDataTable(item.until(), item.resistivity());
+            tempTable.append(value2);
+        }
+
+    }
+    mTableModeledModel->setTableFromVES(tempTable2, TableModel::DataType::Model);
+    mChartModeledModel->setTableFromVES(tempTable, TableModel::DataType::Model);
+
+   selectModelForTable();
 }
 
 void QVESModelDelegate::openProject(const QString &filename)
@@ -143,7 +240,7 @@ void QVESModelDelegate::saveProject()
 void QVESModelDelegate::showedTableDataChanged(const TableModel::DataType dt)
 {
     mShowedTableData = dt;
-    setDataTableModel();
+    selectModelForTable();
 }
 
 QStringList QVESModelDelegate::vesNames() const
@@ -154,6 +251,29 @@ QStringList QVESModelDelegate::vesNames() const
 QStringList QVESModelDelegate::modelNames() const
 {
     return mModelNames;
+}
+
+void QVESModelDelegate::updateVESData(const QModelIndex &index) const
+{
+    double tempValue = mCurrentModel->data(index, Qt::DisplayRole).toDouble();
+    int dt = static_cast<int>(mShowedTableData);
+
+    mCore->changeDataForCurrentVES(index.row(), index.column(), dt, tempValue);
+
+//    switch (mShowedTableData) {
+//    case TableModel::DataType::Field:
+//        if (index.column() == 0){
+//            mCurrentVES->fieldData()[index.row()].setAb2Distance(mCurrentModel->data(index, Qt::DisplayRole).toDouble());
+//        }else if (index.column() == 1){
+//            mCurrentVES->fieldData()[index.row()].setResistivity(mCurrentModel->data(index, Qt::DisplayRole).toDouble());
+//        } else {
+//            return;
+//        }
+
+//        break;
+//    default:
+//        break;
+//    }
 }
 
 void QVESModelDelegate::selectedVESChanged(int index)

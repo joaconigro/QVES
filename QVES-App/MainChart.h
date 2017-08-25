@@ -5,7 +5,8 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QScatterSeries>
-#include "ChartDelegate.h"
+#include "QVESModelDelegate.h"
+//#include "ChartDelegate.h"
 #include "VES.h"
 #include <QVXYModelMapper>
 
@@ -14,7 +15,7 @@ QT_CHARTS_USE_NAMESPACE
 class MainChart : public QWidget
 {
     Q_OBJECT
-    ChartDelegate *mDelegate;
+    QVESModelDelegate *mDelegate;
     QScatterSeries *mFieldSeries;
     QScatterSeries *mSpliceSeries;
     QScatterSeries *mCalculatedSeries;
@@ -39,7 +40,7 @@ public:
 signals:
 
 public slots:
-   void chartDelegateChanged(ChartDelegate *del);
+   void chartDelegateChanged(QVESModelDelegate *del);
    void modelDelegateChanged();
 };
 

@@ -61,6 +61,7 @@ void MainWindow::createConnections()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
+    connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainWindow::modelUpdated);
 }
 
 void MainWindow::openProject()
@@ -80,11 +81,10 @@ void MainWindow::loadProject()
 
 void MainWindow::loadVES()
 {
-    mDataPanel->setMyModel(mDelegate->model());
-    mChart->chartDelegateChanged(mDelegate->chartDelegate());
+    mDataPanel->setMyModel(mDelegate->currentModel());
+    mChart->chartDelegateChanged(mDelegate);
     mDataPanel->loadModelNames(mDelegate->modelNames(), mDelegate->currentVESModelIndex());
     rmsStatusLabel->setText(mDelegate->modelError());
-    //ui->statusBar->addPermanentWidget(new QLabel(mDelegate->modelError()));
 }
 
 void MainWindow::saveProject()
@@ -105,4 +105,9 @@ void MainWindow::saveAsProject()
     if (!fileName.isNull()){
         mDelegate->saveAsProject(fileName);
     }
+}
+
+void MainWindow::modelUpdated()
+{
+    mDataPanel->setMyModel(mDelegate->currentModel());
 }
