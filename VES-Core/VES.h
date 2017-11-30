@@ -84,10 +84,13 @@ public:
     void findMaxAndMin();
 
 signals:
+    void selectedModelChanged();
 
 public slots:
     void createSplices();
     void updateFieldData(const int row, const int column, const double value);
+    void zohdyInversion();
+    void selectModel(const int modelIndex);
 };
 
 Q_DECLARE_METATYPE(VES)

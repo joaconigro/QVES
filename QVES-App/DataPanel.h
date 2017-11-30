@@ -33,6 +33,7 @@ public slots:
 
 signals:
     void currentVESIndexChanged(int index);
+    void currentVESModelIndexChanged(int index);
     void showedDataChanged(const TableModel::DataType dataType);
 };
 

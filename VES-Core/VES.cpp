@@ -452,3 +452,24 @@ void VES::updateFieldData(const int row, const int column, const double value)
 
     createSplices();
 }
+
+void VES::zohdyInversion()
+{
+    int zohdyCounter = 0;
+    foreach (const InversionModel &im, mModels) {
+        if (im.usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
+            ++zohdyCounter;
+        }
+    }
+
+    InversionModel im("Zohdy "+ QString::number(zohdyCounter), this);
+    im.zohdyInversion(splices(), InversionModel::ZohdyFilters::Johansen);
+    mModels.append(im);
+}
+
+void VES::selectModel(const int modelIndex)
+{
+    mCurrentIndexModel = modelIndex;
+    mCurrentModel = &(mModels[modelIndex]);
+    emit selectedModelChanged();
+}

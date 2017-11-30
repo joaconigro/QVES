@@ -55,11 +55,13 @@ MainWindow::~MainWindow()
 void MainWindow::createConnections()
 {
     connect(mDataPanel, &DataPanel::currentVESIndexChanged, mDelegate, &QVESModelDelegate::selectedVESChanged);
+    connect(mDataPanel, &DataPanel::currentVESModelIndexChanged, mDelegate, &QVESModelDelegate::changeCurrentModel);
     connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
     connect(mDelegate, &QVESModelDelegate::vesChanged, this, &MainWindow::loadVES);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
+    connect(ui->actionZohdy, &QAction::triggered, mDelegate, &QVESModelDelegate::carryOutZohdyInversion);
     connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainWindow::modelUpdated);
 }

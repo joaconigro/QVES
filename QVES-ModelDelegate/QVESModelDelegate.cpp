@@ -94,7 +94,6 @@ QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
     mChartModeledModel = nullptr;
 
     connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
-
 }
 
 TableModel *QVESModelDelegate::currentModel()
@@ -156,6 +155,8 @@ void QVESModelDelegate::changeCurrentVES()
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
     setDataTableModel();
+    connect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
+    connect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
     emit vesChanged();
 }
 
@@ -279,4 +280,16 @@ void QVESModelDelegate::updateVESData(const QModelIndex &index) const
 void QVESModelDelegate::selectedVESChanged(int index)
 {
     mCurrentProject->setCurrentIndex(index);
+}
+
+void QVESModelDelegate::changeCurrentModel(int index)
+{
+    mCurrentVES->selectModel(index);
+}
+
+void QVESModelDelegate::updateVESModels()
+{
+    readModelNames();
+    setDataTableModel();
+    emit vesChanged();
 }

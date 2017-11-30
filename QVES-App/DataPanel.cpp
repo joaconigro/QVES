@@ -11,6 +11,7 @@ DataPanel::DataPanel(QWidget *parent) :
     ui->tableView->setItemDelegate(new TableDelegate);
 
     connect(ui->comboBoxCurrentVes, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESIndexChanged);
+    connect(ui->comboBoxVesModel, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESModelIndexChanged);
 }
 
 DataPanel::~DataPanel()
@@ -46,7 +47,7 @@ void DataPanel::changeShowedData()
 {
     if(ui->radioButtonField->isChecked()){
         mSelectedData = TableModel::DataType::Field;
-        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        ui->tableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     }else if (ui->radioButtonSplice->isChecked()) {
         mSelectedData = TableModel::DataType::Splice;
         ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -55,7 +56,7 @@ void DataPanel::changeShowedData()
         ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     }else if (ui->radioButtonModeled->isChecked()) {
         mSelectedData = TableModel::DataType::Model;
-        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        ui->tableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     }
     emit showedDataChanged(mSelectedData);
 }

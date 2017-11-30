@@ -79,11 +79,14 @@ public slots:
     QStringList modelNames() const;
     void updateVESData(const QModelIndex &index) const;
     void selectedVESChanged(int index);
+    void changeCurrentModel(int index);
+    void updateVESModels();
 
 signals:
     void projectChanged();
     void vesChanged();
     void tableModelChanged();
+    void carryOutZohdyInversion();
 };
 
 #endif // QVESMODELDELEGATE_H
