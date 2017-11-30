@@ -306,6 +306,7 @@ void InversionModel::setModelData(const QList<ModelData> &list)
 void InversionModel::zohdyInversion(const QList<SpliceData> &fieldData, const InversionModel::ZohdyFilters filter)
 {
     double w, s, dx;
+    const double minErrorTolerance = 0.2;
     QVector<double> a;
     chooseFilter(filter, a, w, s, dx);
 
@@ -394,7 +395,7 @@ void InversionModel::zohdyInversion(const QList<SpliceData> &fieldData, const In
 
         //If new error is lower than previous one, continue with the loop.
         //Else, save the model and exit from loop.
-        if (error2 < error1){
+        if ((error2 < error1) && (error2 > minErrorTolerance)){
             error1 = error2;
             tempCalculated2.clear();
             tempCalculated2.append(tempCalculated);
