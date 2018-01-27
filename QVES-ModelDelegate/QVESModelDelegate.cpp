@@ -151,6 +151,10 @@ void QVESModelDelegate::changeCurrentProject()
 
 void QVESModelDelegate::changeCurrentVES()
 {
+    if (mCurrentVES){
+        disconnect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
+        disconnect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
+    }
     mCurrentVES = mCurrentProject->currentVES();
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
