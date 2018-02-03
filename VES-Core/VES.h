@@ -7,6 +7,8 @@
 #include "SpliceData.h"
 #include "LocationData.h"
 #include "InversionModel.h"
+#include "ZohdyModel.h"
+#include "VFSAInversionModel.h"
 #include <QList>
 #include "Serializable.h"
 #include <QDate>
@@ -26,7 +28,7 @@ private:
     QList<BasicData> mFieldData;
     QList<SpliceData> mSplices;
     LocationData *mLocation;
-    QList<InversionModel> mModels;
+    QList<InversionModel *> mModels;
     InversionModel *mCurrentModel;
     int mCurrentIndexModel;
     VfsaParameters *mPreviousParameters;
@@ -55,7 +57,7 @@ public:
     QList<BasicData> fieldData() const;
     QList<SpliceData> splices() const;
     LocationData *location() const;
-    QList<InversionModel> models() const;
+    QList<InversionModel *> models() const;
     InversionModel *currentModel() const;
     int currentIndexModel() const;
     VfsaParameters *previousParameters() const;
@@ -74,7 +76,7 @@ public:
     void setLocation(LocationData *loc);
     void setCurrentIndexModel(const int value);
     void setFieldData(const QList<BasicData> &list);
-    void setModels(const QList<InversionModel> &list);
+    void setModels(const QList<InversionModel *> &list);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;

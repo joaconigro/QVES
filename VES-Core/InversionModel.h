@@ -19,21 +19,19 @@ public:
     enum class InversionAlgorithm{Zohdy, Vfsa, Manual, Unkown};
     enum class ZohdyFilters{Johansen, ONeill};
 
-private:
+protected:
     QString mName;
     QString mId;
     double mErrorResult;
     QString mErrorString;
     InversionAlgorithm mUsedAlgorithm;
-    ZohdyFilters mZohdyFilter;
     QList<BasicData> mCalculatedData;
     QList<ModelData> mModel;
 
-    //Zohdy inversion functions
-    void chooseFilter(const InversionModel::ZohdyFilters filter, QVector<double> &a, double &w, double &s, double &dx);
+
+
     void calculateDepths(QList<ModelData> &model);
     void calculateThicknesses(QList<ModelData> &model);
-    void TRS(const QList<SpliceData> &field, QList<BasicData> &calculated, QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx);
     double calculateModelError(const QList<SpliceData> &fieldData, const QList<BasicData> &calculatedData) const;
 
 public:
@@ -41,8 +39,8 @@ public:
     explicit InversionModel(const QString &name, QObject *parent = nullptr);
     InversionModel(const InversionModel& im);
 
-    QVariant toVariant() const override;
-    void fromVariant(const QVariant& variant) override;
+    virtual QVariant toVariant() const override = 0;
+    virtual void fromVariant(const QVariant& variant) override = 0;
 
     //Getters
     QString name() const;
@@ -50,19 +48,17 @@ public:
     double errorResult() const;
     QString errorString();
     InversionAlgorithm usedAlgorithm() const;
-    ZohdyFilters zohdyFilter() const;
     QList<BasicData> calculatedData() const;
     QList<ModelData> model() const;
 
     //Setters
     void setName(const QString value);
     void setUsedAlgorithm(const InversionAlgorithm value);
-    void setZohdyFilter(const ZohdyFilters value);
     void setCalculatedData(const QList<BasicData> &list);
     void setModelData(const QList<ModelData> &list);
 
-    //Zohdy inversion functions
-    void zohdyInversion(const QList<SpliceData> &fieldData, const InversionModel::ZohdyFilters filter);
+    //Inversion functions
+    virtual void inversion(const QList<SpliceData> &fieldData);
     void updateModelError(const QList<SpliceData> &list);
 
     InversionModel& operator =(const InversionModel &rhs);
@@ -73,6 +69,6 @@ public slots:
     void updateModeledData(const int row, const int column, const double value);
 };
 
-Q_DECLARE_METATYPE(InversionModel)
+//Q_DECLARE_METATYPE(InversionModel)
 
 #endif // INVERSIONMODEL_H

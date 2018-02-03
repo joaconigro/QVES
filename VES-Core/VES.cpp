@@ -144,7 +144,7 @@ LocationData *VES::location() const
     return mLocation;
 }
 
-QList<InversionModel> VES::models() const
+QList<InversionModel *> VES::models() const
 {
     return mModels;
 }
@@ -226,7 +226,7 @@ void VES::setCurrentIndexModel(const int value)
     if (value >= 0 && value < mModels.count()){
         if (mCurrentIndexModel != value){
             mCurrentIndexModel = value;
-            mCurrentModel = &(mModels[mCurrentIndexModel]);
+            mCurrentModel = mModels[mCurrentIndexModel];
             findMaxAndMin();
         }
     }
@@ -240,12 +240,20 @@ void VES::setFieldData(const QList<BasicData> &list)
     }
 }
 
-void VES::setModels(const QList<InversionModel> &list)
+void VES::setModels(const QList<InversionModel *> &list)
 {
-    foreach (const InversionModel &im, list) {
-        InversionModel newIm = im;
+    for(int i = 0; i < list.count(); i++){
+//        if (list[i]->usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
+//            ZohdyModel zm(*(list[i]));
+//            mModels.append(&zm);
+//        }
+        InversionModel *newIm = list[i];
         mModels.append(newIm);
-    }
+  }
+//    foreach (const InversionModel &im, list) {
+//        InversionModel *newIm = im;
+//        mModels.append(newIm);
+//    }
 }
 
 QVariant VES::toVariant() const
@@ -276,7 +284,16 @@ QVariant VES::toVariant() const
 
     QVariantList modeled;
     for (const auto& md : mModels) {
-    modeled.append(md.toVariant());
+        modeled.append(md->toVariant());
+//        switch (md->usedAlgorithm()) {
+//        case InversionModel::InversionAlgorithm::Zohdy :
+//            modeled.append((static_cast<ZohdyModel *>(md))->toVariant());
+//            break;
+//        default:
+//            modeled.append(md->toVariant());
+//            break;
+//        }
+
     }
     map.insert("mModels", modeled);
 
@@ -295,8 +312,8 @@ void VES::fromVariant(const QVariant &variant)
     mLocation = new LocationData(this);
     mLocation->fromVariant(map.value("mLocation"));
 
-    mCurrentModel = new InversionModel(this);
-    mCurrentModel->fromVariant(map.value("mCurrentModel"));
+    //mCurrentModel = new InversionModel(this);
+    //mCurrentModel->fromVariant(map.value("mCurrentModel"));
 
     mPreviousParameters = new VfsaParameters(this);
     mPreviousParameters->fromVariant(map.value("mPreviousParameters"));
@@ -321,8 +338,13 @@ void VES::fromVariant(const QVariant &variant)
 
     QVariantList modeled = map.value("mModels").toList();
     for(const QVariant& data : modeled) {
-        InversionModel mod;
-        mod.fromVariant(data);
+        InversionModel *mod;
+        if (data.toMap().contains("mZohdyFilter")){
+             mod = new ZohdyModel(this);
+        } else {
+            mod = new VFSAInversionModel(this);
+        }
+        mod->fromVariant(data);
         mModels.append(mod);
     }
 
@@ -456,20 +478,22 @@ void VES::updateFieldData(const int row, const int column, const double value)
 void VES::zohdyInversion()
 {
     int zohdyCounter = 0;
-    foreach (const InversionModel &im, mModels) {
-        if (im.usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
+    foreach (const InversionModel *im, mModels) {
+        if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
             ++zohdyCounter;
         }
     }
 
-    InversionModel im("Zohdy "+ QString::number(zohdyCounter), this);
-    im.zohdyInversion(splices(), InversionModel::ZohdyFilters::Johansen);
-    mModels.append(im);
+    ZohdyModel zm("Zohdy "+ QString::number(zohdyCounter), InversionModel::ZohdyFilters::Johansen, true, 0.12, this);
+    zm.inversion(splices());
+    //InversionModel im("Zohdy "+ QString::number(zohdyCounter), this);
+    //im.zohdyInversion(splices(), InversionModel::ZohdyFilters::Johansen);
+    mModels.append(&zm);
 }
 
 void VES::selectModel(const int modelIndex)
 {
     mCurrentIndexModel = modelIndex;
-    mCurrentModel = &(mModels[modelIndex]);
+    mCurrentModel = mModels[modelIndex];
     emit selectedModelChanged();
 }

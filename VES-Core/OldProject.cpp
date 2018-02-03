@@ -4,6 +4,8 @@
 #include "LocationData.h"
 #include <QVariant>
 #include "XmlSerializer.h"
+#include "VFSAInversionModel.h"
+#include "ZohdyModel.h"
 
 void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
 {
@@ -31,21 +33,31 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
                 newVes->setFieldData(readOldListaPuntoCampo(reader, "listaPuntoCampo"));
                 newVes->createSplices();
             } else if (reader->name() == "listaModelos") {
-                QList<InversionModel> tempList;
+                QList<InversionModel*> tempList;
                 bool modelRead = true;
                 reader->readNextStartElement();
                 while (modelRead) {
                     if (reader->name() == "listaModelos" && reader->tokenType() == QXmlStreamReader::TokenType::EndElement) {
                         modelRead = false;
                     } else {
-                        InversionModel *im = readOldModelo(reader);
+                        InversionModel* im = readOldModelo(reader);
+                        //readOldModelo(reader, im);
                         if (im){
                             im->updateModelError(newVes->splices());
-                            tempList.append(*im);
+                        if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Vfsa){
+                            //ZohdyModel *zm = static_cast<ZohdyModel*>(im);
+                            tempList.append(static_cast<VFSAInversionModel*>(im));
+                        }else {
+                            tempList.append(static_cast<ZohdyModel*>(im));
+                        }
+
+
+
                         }
                     }
                     reader->readNext();
                 }
+
                 newVes->setModels(tempList);
             } else if (reader->name() == "modeloSeleccionado") {
                 QVariant temp = reader->readElementText();
@@ -161,12 +173,16 @@ QList<BasicData> OldProject::readOldListaPuntoCampo(QXmlStreamReader *reader, co
     return list;
 }
 
-InversionModel *OldProject::readOldModelo(QXmlStreamReader *reader)
+InversionModel * OldProject::readOldModelo(QXmlStreamReader *reader)
 {
-    InversionModel *tempModel = new InversionModel();
+    //InversionModel *tempModel = new InversionModel();
     QVariant tempVariant;
 
     bool read = true;
+    QString tempName;
+    int inversionAlgorithm;
+    QList<BasicData> basicDataList;
+    QList<ModelData> modeledList;
     reader->readNextStartElement();
     if (reader->isEndElement()){
         return nullptr;
@@ -178,18 +194,22 @@ InversionModel *OldProject::readOldModelo(QXmlStreamReader *reader)
             break;
         case QXmlStreamReader::TokenType::StartElement:
             if (reader->name() == "nombre"){
-                tempModel->setName(reader->readElementText());
+                tempName = reader->readElementText();
+                //tempModel->setName(reader->readElementText());
             } else if (reader->name() == "tipo") {
                 tempVariant = reader->readElementText();
-                if (tempVariant.toInt() == 0) {
-                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Zohdy);
-                } else {
-                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Vfsa);
-                }
+                inversionAlgorithm = tempVariant.toInt();
+//                if (tempVariant.toInt() == 0) {
+//                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Zohdy);
+//                } else {
+//                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Vfsa);
+//                }
             } else if (reader->name() == "listaPuntoCalculado"){
-                tempModel->setCalculatedData(readOldListaPuntoCampo(reader, "listaPuntoCalculado"));
+                basicDataList = readOldListaPuntoCampo(reader, "listaPuntoCalculado");
+                //tempModel->setCalculatedData(readOldListaPuntoCampo(reader, "listaPuntoCalculado"));
             } else if (reader->name() == "listaModeloSEVs"){
-                tempModel->setModelData(readOldModeloSEVs(reader));
+                modeledList = readOldModeloSEVs(reader);
+                //tempModel->setModelData(readOldModeloSEVs(reader));
             } else {
                 reader->skipCurrentElement();
             }
@@ -206,6 +226,17 @@ InversionModel *OldProject::readOldModelo(QXmlStreamReader *reader)
             break;
         }
     }
+
+    InversionModel* tempModel;
+    if (inversionAlgorithm == 0){
+        ZohdyModel *zm = new ZohdyModel(tempName);
+        tempModel = zm;
+    } else {
+        VFSAInversionModel *vm = new VFSAInversionModel(tempName);
+        tempModel = vm;
+    }
+    tempModel->setCalculatedData(basicDataList);
+    tempModel->setModelData(modeledList);
 
     return tempModel;
 }

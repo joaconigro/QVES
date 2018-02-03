@@ -53,7 +53,7 @@ void QVESModelDelegate::readModelNames()
 {
     mModelNames.clear();
     foreach (const auto &item, mCurrentVES->models()) {
-        mModelNames.append(item.name());
+        mModelNames.append(item->name());
     }
 }
 
