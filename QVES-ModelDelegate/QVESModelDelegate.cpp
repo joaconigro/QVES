@@ -13,7 +13,11 @@ QString QVESModelDelegate::projectPath() const
 
 QString QVESModelDelegate::modelError() const
 {
-    return mCurrentVES->currentModel()->errorString();
+    if (mCurrentVES->currentModel()){
+        return mCurrentVES->currentModel()->errorString();
+    } else {
+        return "";
+    }
 }
 
 double QVESModelDelegate::chartMinX() const
@@ -76,6 +80,16 @@ void QVESModelDelegate::selectModelForTable()
 
     connect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::updateVESData);
     emit tableModelChanged();
+}
+
+void QVESModelDelegate::resetTableModels()
+{
+    mCurrentModel = new TableModel(this);
+    mFieldModel = new TableModel(this);
+    mSpliceModel = new TableModel(this);
+    mCalculatedModel = new TableModel(this);
+    mTableModeledModel = new TableModel(this);
+    mChartModeledModel = new TableModel(this);
 }
 
 QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
@@ -158,6 +172,7 @@ void QVESModelDelegate::changeCurrentVES()
     mCurrentVES = mCurrentProject->currentVES();
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
+    resetTableModels();
     setDataTableModel();
     connect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
     connect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
@@ -174,7 +189,7 @@ void QVESModelDelegate::setDataTableModel()
     mChartMaxX = pow(10, ceil(log10(mCurrentVES->maxX())));
     mChartMaxY = pow(10, ceil(log10(mCurrentVES->maxY())));
 
-    mFieldModel = new TableModel(this);
+    //mFieldModel = new TableModel(this);
     foreach (const auto &item, mCurrentVES->fieldData()) {
         ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
@@ -182,46 +197,48 @@ void QVESModelDelegate::setDataTableModel()
     mFieldModel->setTableFromVES(tempTable, TableModel::DataType::Field);
 
     tempTable.clear();
-    mSpliceModel = new TableModel(this);
+    //mSpliceModel = new TableModel(this);
     foreach (const auto &item, mCurrentVES->splices()) {
         ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
     mSpliceModel->setTableFromVES(tempTable, TableModel::DataType::Splice);
 
-    tempTable.clear();
-    mCalculatedModel = new TableModel(this);
-    foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
-        ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
-        tempTable.append(value);
-    }
-    mCalculatedModel->setTableFromVES(tempTable, TableModel::DataType::Calculated);
-
-    tempTable.clear();
-    mTableModeledModel = new TableModel(this);
-    mChartModeledModel = new TableModel(this);
-    foreach (const auto &item, mCurrentVES->currentModel()->model()) {
-        ModelDataTable *value0 = new ModelDataTable(item.depth(), item.resistivity());
-        tempTable2.append(value0);
-
-        if (item.from() == 0.0){
-            ModelDataTable *value1 = new ModelDataTable(mChartMinX, item.resistivity());
-            tempTable.append(value1);
-        } else {
-            ModelDataTable *value1 = new ModelDataTable(item.from(), item.resistivity());
-            tempTable.append(value1);
+    if (mCurrentVES->models().count() > 0 && (mCurrentVES->currentModel())){
+        tempTable.clear();
+        //mCalculatedModel = new TableModel(this);
+        foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
+            ModelDataTable *value = new ModelDataTable(item.ab2Distance(), item.resistivity());
+            tempTable.append(value);
         }
-        if (item.until() == qInf()){
-            ModelDataTable *value2 = new ModelDataTable(mChartMaxX, item.resistivity());
-            tempTable.append(value2);
-        } else {
-            ModelDataTable *value2 = new ModelDataTable(item.until(), item.resistivity());
-            tempTable.append(value2);
-        }
+        mCalculatedModel->setTableFromVES(tempTable, TableModel::DataType::Calculated);
 
+        tempTable.clear();
+        //mTableModeledModel = new TableModel(this);
+        //mChartModeledModel = new TableModel(this);
+        foreach (const auto &item, mCurrentVES->currentModel()->model()) {
+            ModelDataTable *value0 = new ModelDataTable(item.depth(), item.resistivity());
+            tempTable2.append(value0);
+
+            if (item.from() == 0.0){
+                ModelDataTable *value1 = new ModelDataTable(mChartMinX, item.resistivity());
+                tempTable.append(value1);
+            } else {
+                ModelDataTable *value1 = new ModelDataTable(item.from(), item.resistivity());
+                tempTable.append(value1);
+            }
+            if (item.until() == qInf()){
+                ModelDataTable *value2 = new ModelDataTable(mChartMaxX, item.resistivity());
+                tempTable.append(value2);
+            } else {
+                ModelDataTable *value2 = new ModelDataTable(item.until(), item.resistivity());
+                tempTable.append(value2);
+            }
+
+        }
+        mTableModeledModel->setTableFromVES(tempTable2, TableModel::DataType::Model);
+        mChartModeledModel->setTableFromVES(tempTable, TableModel::DataType::Model);
     }
-    mTableModeledModel->setTableFromVES(tempTable2, TableModel::DataType::Model);
-    mChartModeledModel->setTableFromVES(tempTable, TableModel::DataType::Model);
 
    selectModelForTable();
 }

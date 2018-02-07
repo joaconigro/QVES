@@ -84,7 +84,7 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
 
 void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES *ves)
 {
-    LocationData *newLoc = new LocationData(ves);
+    LocationData newLoc(ves);
     QVariant tempVariant;
 
     bool read = true;
@@ -97,19 +97,19 @@ void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES *ves)
         case QXmlStreamReader::TokenType::StartElement:
             if (reader->name() == "coordX"){
                 tempVariant = reader->readElementText();
-                newLoc->setLocalX(tempVariant.toDouble());
+                newLoc.setLocalX(tempVariant.toDouble());
             } else if (reader->name() == "coordY") {
                 tempVariant = reader->readElementText();
-                newLoc->setLocalY(tempVariant.toDouble());
+                newLoc.setLocalY(tempVariant.toDouble());
             } else if (reader->name() == "coordZ") {
                 tempVariant = reader->readElementText();
-                newLoc->setZ(tempVariant.toDouble());
+                newLoc.setZ(tempVariant.toDouble());
             } else if (reader->name() == "lat") {
                 tempVariant = reader->readElementText();
-                newLoc->setDecimalLatitude(tempVariant.toDouble());
+                newLoc.setDecimalLatitude(tempVariant.toDouble());
             } else if (reader->name() == "lng") {
                 tempVariant = reader->readElementText();
-                newLoc->setDecimalLongitude(tempVariant.toDouble());
+                newLoc.setDecimalLongitude(tempVariant.toDouble());
             } else {
                 reader->skipCurrentElement();
             }

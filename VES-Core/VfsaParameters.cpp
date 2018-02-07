@@ -27,6 +27,21 @@ VfsaParameters::VfsaParameters(const VfsaParameters &vp)
     mLimits = vp.limits();
 }
 
+VfsaParameters &VfsaParameters::operator =(const VfsaParameters &rhs)
+{
+    mInitialTemperature = rhs.initialTemperature();
+    mIterationsPerTemperature = rhs.iterationsPerTemperature();
+    mMovesPerTemperature = rhs.movesPerTemperature();
+    mSolutions = rhs.solutions();
+    mNumberOfParameters = rhs.numberOfParameters();
+    mNumberOfBeds = rhs.numberOfBeds();
+    mMaximunPdf = rhs.maximunPdf();
+    mMinimunPdf = rhs.minimunPdf();
+    mLimits = rhs.limits();
+    this->setParent(rhs.parent());
+    return *this;
+}
+
 QVariant VfsaParameters::toVariant() const
 {
     QVariantMap map;

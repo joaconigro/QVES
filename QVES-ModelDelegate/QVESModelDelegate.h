@@ -46,6 +46,7 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     void readVESNames();
     void readModelNames();
     void selectModelForTable();
+    void resetTableModels();
 
 public:
     explicit QVESModelDelegate(QObject *parent);

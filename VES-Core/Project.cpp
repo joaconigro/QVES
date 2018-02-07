@@ -93,7 +93,10 @@ void Project::fromVariant(const QVariant &variant)
     for(const QVariant& data : list) {
         VES v;
         v.fromVariant(data);
-        mVESs.append(v);
+//        for (int i=0; i<v.models().count();i++)
+//            v.models()[i]->setParent(&v);
+        this->addVES(v);
+        //mVESs.append(v);
     }
 
     setCurrentIndex(map.value("mCurrentIndex").toInt());

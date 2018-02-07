@@ -65,10 +65,10 @@ VES::VES(QObject *parent) : QObject(parent)
 {
     mId = QUuid::createUuid().toString();
     mName = mFieldOperator = mEquipment = mComment = "";
-    mLocation = new LocationData(this);
+    //mLocation = new LocationData(this);
     mDate = QDate::currentDate();
-    mCurrentParameters = new VfsaParameters(this);
-    mPreviousParameters = new VfsaParameters(this);
+    //mCurrentParameters = new VfsaParameters(this);
+    //mPreviousParameters = new VfsaParameters(this);
     mCurrentIndexModel = -1;
     mMinX = mMinY = mMaxX = mMaxY = 0.0;
 }
@@ -139,7 +139,7 @@ QList<SpliceData> VES::splices() const
     return mSplices;
 }
 
-LocationData *VES::location() const
+LocationData VES::location() const
 {
     return mLocation;
 }
@@ -159,12 +159,12 @@ int VES::currentIndexModel() const
     return mCurrentIndexModel;
 }
 
-VfsaParameters *VES::previousParameters() const
+VfsaParameters VES::previousParameters() const
 {
     return mPreviousParameters;
 }
 
-VfsaParameters *VES::currentParameters() const
+VfsaParameters VES::currentParameters() const
 {
     return mCurrentParameters;
 }
@@ -215,9 +215,9 @@ void VES::setDate(const QString stringDate)
     mDate = qLoc.toDate(stringDate, "dd/MM/yyyy");
 }
 
-void VES::setLocation(LocationData *loc)
+void VES::setLocation(LocationData loc)
 {
-    loc->setParent(this);
+    loc.setParent(this);
     mLocation = loc;
 }
 
@@ -229,6 +229,8 @@ void VES::setCurrentIndexModel(const int value)
             mCurrentModel = mModels[mCurrentIndexModel];
             findMaxAndMin();
         }
+    } else {
+        mCurrentModel = nullptr;
     }
 }
 
@@ -248,6 +250,7 @@ void VES::setModels(const QList<InversionModel *> &list)
 //            mModels.append(&zm);
 //        }
         InversionModel *newIm = list[i];
+        newIm->setParent(this);
         mModels.append(newIm);
   }
 //    foreach (const InversionModel &im, list) {
@@ -265,10 +268,10 @@ QVariant VES::toVariant() const
     map.insert("mEquipment", mEquipment);
     map.insert("mComment", mComment);
     map.insert("mDate", date());
-    map.insert("mLocation", mLocation->toVariant());
+    map.insert("mLocation", mLocation.toVariant());
     map.insert("mCurrentIndexModel", mCurrentIndexModel);
-    map.insert("mPreviousParameters", mPreviousParameters->toVariant());
-    map.insert("mCurrentParameters", mCurrentParameters->toVariant());
+    map.insert("mPreviousParameters", mPreviousParameters.toVariant());
+    map.insert("mCurrentParameters", mCurrentParameters.toVariant());
 
     QVariantList basic;
     for (const auto& cd : mFieldData) {
@@ -309,17 +312,14 @@ void VES::fromVariant(const QVariant &variant)
     mEquipment = map.value("mEquipment").toString();
     mComment = map.value("mComment").toString();
     setDate(map.value("mDate").toString());
-    mLocation = new LocationData(this);
-    mLocation->fromVariant(map.value("mLocation"));
+    mLocation.fromVariant(map.value("mLocation"));
 
     //mCurrentModel = new InversionModel(this);
     //mCurrentModel->fromVariant(map.value("mCurrentModel"));
 
-    mPreviousParameters = new VfsaParameters(this);
-    mPreviousParameters->fromVariant(map.value("mPreviousParameters"));
+    mPreviousParameters.fromVariant(map.value("mPreviousParameters"));
 
-    mCurrentParameters = new VfsaParameters(this);
-    mCurrentParameters->fromVariant(map.value("mCurrentParameters"));
+    mCurrentParameters.fromVariant(map.value("mCurrentParameters"));
 
 
     QVariantList basic = map.value("mFieldData").toList();
@@ -338,14 +338,18 @@ void VES::fromVariant(const QVariant &variant)
 
     QVariantList modeled = map.value("mModels").toList();
     for(const QVariant& data : modeled) {
-        InversionModel *mod;
+        //InversionModel *mod;
         if (data.toMap().contains("mZohdyFilter")){
-             mod = new ZohdyModel(this);
+             ZohdyModel* mod = new ZohdyModel();
+             mod->fromVariant(data);
+             mModels.append(mod);
         } else {
-            mod = new VFSAInversionModel(this);
+            VFSAInversionModel* mod = new VFSAInversionModel();
+            mod->fromVariant(data);
+            mModels.append(mod);
         }
-        mod->fromVariant(data);
-        mModels.append(mod);
+        //mod->fromVariant(data);
+        //mModels.append(mod);
     }
 
     setCurrentIndexModel(map.value("mCurrentIndexModel").toInt());

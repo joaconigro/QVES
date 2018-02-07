@@ -43,6 +43,8 @@ public:
     explicit LocationData(const double x, const double y, const int zone, const Hemisphere hem, const double z = 0.0, QObject *parent = nullptr);
     LocationData(const LocationData& ld);
 
+    LocationData& operator =(const LocationData &rhs);
+
     //Getters
     QString gmsLatitude() const;
     QString gmsLongitude() const;

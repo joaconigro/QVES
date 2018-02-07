@@ -24,6 +24,7 @@ class VESCORESHARED_EXPORT VfsaParameters : public QObject, public Serializable
 public:
     explicit VfsaParameters(QObject *parent = nullptr);
     VfsaParameters(const VfsaParameters &vp);
+    VfsaParameters& operator =(const VfsaParameters &rhs);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;

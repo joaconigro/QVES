@@ -262,6 +262,24 @@ LocationData::LocationData(const LocationData &ld)
     this->setParent(ld.parent());
 }
 
+LocationData &LocationData::operator =(const LocationData &rhs)
+{
+    mGmsLatitude = rhs.gmsLatitude();
+    mGmsLongitude = rhs.gmsLongitude();
+    mDecimalLatitude = rhs.decimalLatitude();
+    mDecimalLongitude = rhs.decimalLongitude();
+    mUtmX = rhs.utmX();
+    mUtmY = rhs.utmY();
+    mUtmZone = rhs.utmZone();
+    mLocalX = rhs.localX();
+    mLocalY = rhs.localY();
+    mZ = rhs.z();
+    mHem = rhs.Hem();
+    mOnlyLocals = rhs.onlyLocals();
+    this->setParent(rhs.parent());
+    return *this;
+}
+
 QString LocationData::gmsLatitude() const
 {
     return mGmsLatitude;
