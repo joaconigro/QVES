@@ -98,6 +98,12 @@ VES::VES(const VES &ve)
     this->setParent(ve.parent());
 }
 
+//VES::~VES()
+//{
+//    qDeleteAll(mModels);
+//    mModels.clear();
+//}
+
 QString VES::name() const
 {
     return mName;
@@ -228,6 +234,7 @@ void VES::setCurrentIndexModel(const int value)
             mCurrentIndexModel = value;
             mCurrentModel = mModels[mCurrentIndexModel];
             findMaxAndMin();
+            emit selectedModelChanged(value);
         }
     } else {
         mCurrentModel = nullptr;
@@ -340,11 +347,11 @@ void VES::fromVariant(const QVariant &variant)
     for(const QVariant& data : modeled) {
         //InversionModel *mod;
         if (data.toMap().contains("mZohdyFilter")){
-             ZohdyModel* mod = new ZohdyModel();
+             ZohdyModel* mod = new ZohdyModel(this);
              mod->fromVariant(data);
              mModels.append(mod);
         } else {
-            VFSAInversionModel* mod = new VFSAInversionModel();
+            VFSAInversionModel* mod = new VFSAInversionModel(this);
             mod->fromVariant(data);
             mModels.append(mod);
         }
@@ -488,16 +495,17 @@ void VES::zohdyInversion()
         }
     }
 
-    ZohdyModel zm("Zohdy "+ QString::number(zohdyCounter), InversionModel::ZohdyFilters::Johansen, true, 0.12, this);
-    zm.inversion(splices());
+    ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), InversionModel::ZohdyFilters::Johansen, this);
+    zm->inversion(splices());
     //InversionModel im("Zohdy "+ QString::number(zohdyCounter), this);
     //im.zohdyInversion(splices(), InversionModel::ZohdyFilters::Johansen);
-    mModels.append(&zm);
+    mModels.append(zm);
+    setCurrentIndexModel(mModels.indexOf(zm));
 }
 
 void VES::selectModel(const int modelIndex)
 {
     mCurrentIndexModel = modelIndex;
     mCurrentModel = mModels[modelIndex];
-    emit selectedModelChanged();
+    emit selectedModelChanged(modelIndex);
 }

@@ -24,7 +24,7 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
             } else if (reader->name() == "vacio") {
                 QString empty = reader->readElementText().toLower();
                 if (empty == "true"){
-                    newProject->addVES(*newVes);
+                    newProject->addVES(newVes);
                     return;
                 }
             } else if (reader->name() == "coord") {
@@ -79,7 +79,7 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
         }
     }
 
-    newProject->addVES(*newVes);
+    newProject->addVES(newVes);
 }
 
 void OldProject::readOldCoordinates(QXmlStreamReader *reader, VES *ves)

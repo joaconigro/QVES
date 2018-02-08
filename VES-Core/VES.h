@@ -46,6 +46,7 @@ private:
 public:
     explicit VES(QObject *parent = nullptr);
     VES(const VES& ve);
+    //~VES();
 
     //Getters
     QString name() const;
@@ -86,7 +87,7 @@ public:
     void findMaxAndMin();
 
 signals:
-    void selectedModelChanged();
+    void selectedModelChanged(const int newIndex);
 
 public slots:
     void createSplices();

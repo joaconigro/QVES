@@ -26,6 +26,12 @@ bool VESCore::openProject(const QString &filename)
     QFileInfo file(filename);
     mProjectPath = file.absolutePath();
 
+    if (mProject) {
+        delete mProject;
+        mProject = new Project(this);
+        emit projectClosed();
+    }
+
     if (filename.endsWith(".sev", Qt::CaseInsensitive)){
         OldProject *old = new OldProject;
         mProject = old->readOldProject(filename);
@@ -35,7 +41,7 @@ bool VESCore::openProject(const QString &filename)
     } else {
         XmlSerializer serializer;
         if (!mProject){
-            mProject = new Project();
+            mProject = new Project(this);
         }
         mProject->setParent(this);
         serializer.load(*mProject, filename);

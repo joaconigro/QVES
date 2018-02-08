@@ -19,16 +19,16 @@ ZohdyModel::ZohdyModel(const QString &name, QObject *parent) : InversionModel(na
     mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
 }
 
-ZohdyModel::ZohdyModel(const QString &name, const InversionModel::ZohdyFilters filter, const bool applyDarZarrouk, const double darZarroukThreshold, QObject *parent) :
-InversionModel(name, parent),
-  mZohdyFilter(filter)
+ZohdyModel::ZohdyModel(const QString &name, const InversionModel::ZohdyFilters filter, QObject *parent, const bool applyDarZarrouk, const double darZarroukThreshold) :
+    InversionModel(name, parent),
+    mZohdyFilter(filter)
 {
-mUsedAlgorithm = InversionAlgorithm::Zohdy;
+    mUsedAlgorithm = InversionAlgorithm::Zohdy;
 }
 
 ZohdyModel::ZohdyModel(const InversionModel &im) : InversionModel(im)
 {
-     mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
+    mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
 }
 
 ZohdyModel::ZohdyModel(const ZohdyModel &zm)
@@ -57,13 +57,13 @@ QVariant ZohdyModel::toVariant() const
 
     QVariantList calculated;
     for (const auto& cd : mCalculatedData) {
-    calculated.append(cd.toVariant());
+        calculated.append(cd.toVariant());
     }
     map.insert("mCalculatedData", calculated);
 
     QVariantList modeled;
     for (const auto& md : mModel) {
-    modeled.append(md.toVariant());
+        modeled.append(md.toVariant());
     }
     map.insert("mModel", modeled);
 
@@ -73,7 +73,7 @@ QVariant ZohdyModel::toVariant() const
 
 void ZohdyModel::fromVariant(const QVariant &variant)
 {
-//    InversionModel::fromVariant(variant);
+    //    InversionModel::fromVariant(variant);
     QVariantMap map = variant.toMap();
     mName = map.value("mName").toString();
     mId = map.value("mId").toString();

@@ -81,7 +81,8 @@ public slots:
     void updateVESData(const QModelIndex &index) const;
     void selectedVESChanged(int index);
     void changeCurrentModel(int index);
-    void updateVESModels();
+    void updateVESModels(const int newIndex);
+    void projectClosed();
 
 signals:
     void projectChanged();

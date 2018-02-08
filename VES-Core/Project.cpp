@@ -16,12 +16,19 @@ Project::Project(const Project &pr)
     this->setParent(pr.parent());
 }
 
+Project::~Project()
+{
+    if (mCurrentVES)
+        mCurrentVES = nullptr;
+    mVESs.clear();
+}
+
 QString Project::name() const
 {
     return mName;
 }
 
-QList<VES> Project::vess() const
+QList<VES *> Project::vess() const
 {
     return mVESs;
 }
@@ -61,7 +68,7 @@ void Project::setCurrentIndex(const int value)
     if (value >= 0 && value < mVESs.count()){
         if (mCurrentIndex != value) {
             mCurrentIndex = value;
-            mCurrentVES = &(mVESs[mCurrentIndex]);
+            mCurrentVES = mVESs[mCurrentIndex];
             emit currentVESChanged();
         }
     }
@@ -76,7 +83,7 @@ QVariant Project::toVariant() const
 
     QVariantList list;
     for (const auto& v : mVESs) {
-    list.append(v.toVariant());
+    list.append(v->toVariant());
     }
     map.insert("mVESs", list);
 
@@ -91,8 +98,8 @@ void Project::fromVariant(const QVariant &variant)
 
     QVariantList list = map.value("mVESs").toList();
     for(const QVariant& data : list) {
-        VES v;
-        v.fromVariant(data);
+        VES* v = new VES(this);
+        v->fromVariant(data);
 //        for (int i=0; i<v.models().count();i++)
 //            v.models()[i]->setParent(&v);
         this->addVES(v);
@@ -102,8 +109,8 @@ void Project::fromVariant(const QVariant &variant)
     setCurrentIndex(map.value("mCurrentIndex").toInt());
 }
 
-void Project::addVES(VES &ves)
+void Project::addVES(VES* ves)
 {
-    ves.setParent(this);
+    ves->setParent(this);
     mVESs.append(ves);
 }

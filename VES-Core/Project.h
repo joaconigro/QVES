@@ -12,7 +12,7 @@ class VESCORESHARED_EXPORT Project : public QObject, public Serializable
     Q_OBJECT
 
     QString mName;
-    QList<VES> mVESs;
+    QList<VES*> mVESs;
     VES *mCurrentVES;
     int mCurrentIndex;
     QString mCurrentePath;
@@ -22,10 +22,11 @@ class VESCORESHARED_EXPORT Project : public QObject, public Serializable
 public:
     explicit Project(QObject *parent = nullptr);
     Project(const Project& pr);
+    ~Project();
 
     //Getters
     QString name() const;
-    QList<VES> vess() const;
+    QList<VES*> vess() const;
     VES *currentVES() const;
     int currentIndex() const;
     QString currentePath() const;
@@ -43,7 +44,7 @@ signals:
     void currentVESChanged();
 
 public slots:
-    void addVES(VES &ves);
+    void addVES(VES *ves);
 };
 
 Q_DECLARE_METATYPE(Project)

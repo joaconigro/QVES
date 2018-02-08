@@ -24,6 +24,7 @@ public:
 
 signals:
     void projectLoaded();
+    void projectClosed();
 
 public slots:
     bool openProject(const QString &filename);

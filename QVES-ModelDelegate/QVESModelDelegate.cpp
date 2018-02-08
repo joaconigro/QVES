@@ -48,8 +48,8 @@ QString QVESModelDelegate::vesName() const
 void QVESModelDelegate::readVESNames()
 {
     mVESNames.clear();
-    foreach (const VES &ves, mCurrentProject->vess()) {
-        mVESNames.append(ves.name());
+    foreach (const auto &ves, mCurrentProject->vess()) {
+        mVESNames.append(ves->name());
     }
 }
 
@@ -108,6 +108,7 @@ QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
     mChartModeledModel = nullptr;
 
     connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
+    connect(mCore, &VESCore::projectClosed, this, &QVESModelDelegate::projectClosed);
 }
 
 TableModel *QVESModelDelegate::currentModel()
@@ -152,7 +153,7 @@ int QVESModelDelegate::currentVESModelIndex() const
 
 void QVESModelDelegate::changeCurrentProject()
 {
-    disconnect(mCurrentProject, &Project::currentVESChanged, this, &QVESModelDelegate::changeCurrentVES);
+    //disconnect(mCurrentProject, &Project::currentVESChanged, this, &QVESModelDelegate::changeCurrentVES);
     mCurrentProject = mCore->project();
     connect(mCurrentProject, &Project::currentVESChanged, this, &QVESModelDelegate::changeCurrentVES);
     mCurrentVESIndex = mCurrentProject->currentIndex();
@@ -308,9 +309,16 @@ void QVESModelDelegate::changeCurrentModel(int index)
     mCurrentVES->selectModel(index);
 }
 
-void QVESModelDelegate::updateVESModels()
+void QVESModelDelegate::updateVESModels(const int newIndex)
 {
+    mCurrentVESModelIndex = newIndex;
     readModelNames();
     setDataTableModel();
     emit vesChanged();
+}
+
+void QVESModelDelegate::projectClosed()
+{
+    mCurrentProject = nullptr;
+    mCurrentVES = nullptr;
 }
