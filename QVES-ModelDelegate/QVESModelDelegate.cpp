@@ -171,6 +171,7 @@ void QVESModelDelegate::changeCurrentVES()
         disconnect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
     }
     mCurrentVES = mCurrentProject->currentVES();
+    mCurrentVES->findMaxAndMin();
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
     resetTableModels();
@@ -185,10 +186,22 @@ void QVESModelDelegate::setDataTableModel()
     QList<ModelDataTable *> tempTable;
     QList<ModelDataTable *> tempTable2;
 
-    mChartMinX = pow(10, floor(log10(mCurrentVES->minX())));
-    mChartMinY = pow(10, floor(log10(mCurrentVES->minY())));
-    mChartMaxX = pow(10, ceil(log10(mCurrentVES->maxX())));
-    mChartMaxY = pow(10, ceil(log10(mCurrentVES->maxY())));
+
+    double exponent = log10(mCurrentVES->minX());
+    exponent = (fmod(exponent, 1.0) != 0) ? floor(exponent) : exponent - 1.0;
+    mChartMinX = pow(10, exponent);
+
+    exponent = log10(mCurrentVES->minY());
+    exponent = (fmod(exponent, 1.0) != 0) ? floor(exponent) : exponent - 1.0;
+    mChartMinY = pow(10, exponent);
+
+    exponent = log10(mCurrentVES->maxX());
+    exponent = (fmod(exponent, 1.0) != 0) ? ceil(exponent) : exponent + 1.0;
+    mChartMaxX = pow(10, exponent);
+
+    exponent = log10(mCurrentVES->maxY());
+    exponent = (fmod(exponent, 1.0) != 0) ? ceil(exponent) : exponent + 1.0;
+    mChartMaxY = pow(10, exponent);
 
     //mFieldModel = new TableModel(this);
     foreach (const auto &item, mCurrentVES->fieldData()) {

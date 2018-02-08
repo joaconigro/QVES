@@ -1,5 +1,6 @@
 #include "VES.h"
 #include <QUuid>
+#include "QtMath"
 
 int VES::searchSections()
 {
@@ -295,15 +296,6 @@ QVariant VES::toVariant() const
     QVariantList modeled;
     for (const auto& md : mModels) {
         modeled.append(md->toVariant());
-//        switch (md->usedAlgorithm()) {
-//        case InversionModel::InversionAlgorithm::Zohdy :
-//            modeled.append((static_cast<ZohdyModel *>(md))->toVariant());
-//            break;
-//        default:
-//            modeled.append(md->toVariant());
-//            break;
-//        }
-
     }
     map.insert("mModels", modeled);
 
@@ -390,72 +382,44 @@ VES &VES::operator =(const VES &rhs)
 
 void VES::findMaxAndMin()
 {
-    mMinX = mMinY = qInf();
+    mMinX = mMinY = 1000000.0;
     mMaxX = mMaxY = -1.0;
 
     foreach (const auto &item, mFieldData) {
-        if (mMinX > item.ab2Distance()){
-            mMinX = item.ab2Distance();
-        }
-        if (mMaxX < item.ab2Distance()){
-            mMaxX = item.ab2Distance();
-        }
-        if (mMinY > item.resistivity()){
-            mMinY = item.resistivity();
-        }
-        if (mMaxY < item.resistivity()){
-            mMaxY = item.resistivity();
-        }
+        mMinX = qMin(mMinX, item.ab2Distance());
+        mMaxX = qMax(mMaxX, item.ab2Distance());
+        mMinY = qMin(mMinY, item.resistivity());
+        mMaxY = qMax(mMaxY, item.resistivity());
     }
 
     foreach (const auto &item, mSplices) {
-        if (mMinX > item.ab2Distance()){
-            mMinX = item.ab2Distance();
+        mMinX = qMin(mMinX, item.ab2Distance());
+        mMaxX = qMax(mMaxX, item.ab2Distance());
+        mMinY = qMin(mMinY, item.resistivity());
+        mMaxY = qMax(mMaxY, item.resistivity());
+    }
+
+    if (mCurrentModel){
+        foreach (const auto &item, mCurrentModel->calculatedData()) {
+            mMinX = qMin(mMinX, item.ab2Distance());
+            mMaxX = qMax(mMaxX, item.ab2Distance());
+            mMinY = qMin(mMinY, item.resistivity());
+            mMaxY = qMax(mMaxY, item.resistivity());
         }
-        if (mMaxX < item.ab2Distance()){
-            mMaxX = item.ab2Distance();
-        }
-        if (mMinY > item.resistivity()){
-            mMinY = item.resistivity();
-        }
-        if (mMaxY < item.resistivity()){
-            mMaxY = item.resistivity();
+
+        for (int i = 0; i < mCurrentModel->model().count(); ++i) {
+            if (i>0){
+                mMinX = qMin(mMinX, mCurrentModel->model().at(i).from());
+           }
+            if (i < mCurrentModel->model().count() - 1){
+                mMaxX = qMax(mMaxX, mCurrentModel->model().at(i).until());
+           }
+
+            mMinY = qMin(mMinY, mCurrentModel->model().at(i).resistivity());
+            mMaxY = qMax(mMaxY, mCurrentModel->model().at(i).resistivity());
         }
     }
 
-    foreach (const auto &item, mCurrentModel->calculatedData()) {
-        if (mMinX > item.ab2Distance()){
-            mMinX = item.ab2Distance();
-        }
-        if (mMaxX < item.ab2Distance()){
-            mMaxX = item.ab2Distance();
-        }
-        if (mMinY > item.resistivity()){
-            mMinY = item.resistivity();
-        }
-        if (mMaxY < item.resistivity()){
-            mMaxY = item.resistivity();
-        }
-    }
-
-    for (int i = 0; i < mCurrentModel->model().count(); ++i) {
-        if (i>0){
-            if (mMinX > mCurrentModel->model().at(i).from()){
-                mMinX = mCurrentModel->model().at(i).from();
-            }
-        }
-        if (i < mCurrentModel->model().count() - 1){
-            if (mMaxX < mCurrentModel->model().at(i).until()){
-                mMaxX = mCurrentModel->model().at(i).until();
-            }
-        }
-        if (mMinY > mCurrentModel->model().at(i).resistivity()){
-            mMinY = mCurrentModel->model().at(i).resistivity();
-        }
-        if (mMaxY < mCurrentModel->model().at(i).resistivity()){
-            mMaxY = mCurrentModel->model().at(i).resistivity();
-        }
-    }
 }
 
 void VES::createSplices()
@@ -497,15 +461,21 @@ void VES::zohdyInversion()
 
     ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), InversionModel::ZohdyFilters::Johansen, this);
     zm->inversion(splices());
-    //InversionModel im("Zohdy "+ QString::number(zohdyCounter), this);
-    //im.zohdyInversion(splices(), InversionModel::ZohdyFilters::Johansen);
+
+    QList<SpliceData> calcData;
+    for (const auto& cd : zm->calculatedData()) {
+        calcData.append(SpliceData(cd.ab2Distance(), cd.resistivity()));
+    }
+    zm->inversion(calcData);
+
     mModels.append(zm);
     setCurrentIndexModel(mModels.indexOf(zm));
 }
 
 void VES::selectModel(const int modelIndex)
 {
-    mCurrentIndexModel = modelIndex;
-    mCurrentModel = mModels[modelIndex];
-    emit selectedModelChanged(modelIndex);
+    setCurrentIndexModel(modelIndex);
+//    mCurrentIndexModel = modelIndex;
+//    mCurrentModel = mModels[modelIndex];
+//    emit selectedModelChanged(modelIndex);
 }
