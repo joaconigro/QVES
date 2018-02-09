@@ -91,11 +91,13 @@ public slots:
     void projectClosed();
     void dataSelectionChanged(const QList<int> indices);
     void currentVESModelModified();
+    void currentVESFieldModified();
     void mergeSelectedBeds();
 
 signals:
     void projectChanged();
     void vesChanged();
+    void vesCurrentModelChanged();
     void tableModelChanged();
     void carryOutZohdyInversion();
     void carryOutDarZarrouk(const QList<int> beds);

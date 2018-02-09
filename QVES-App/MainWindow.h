@@ -35,6 +35,7 @@ private slots:
     void openProject();
     void loadProject();
     void loadVES();
+    void modelChanged();
     void saveProject();
     void saveAsProject();
     void modelUpdated();

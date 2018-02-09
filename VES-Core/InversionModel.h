@@ -59,6 +59,7 @@ public:
 
     //Inversion functions
     virtual void inversion(const QList<SpliceData> &fieldData) = 0;
+    virtual void updateInversionModelEdited(const QList<SpliceData> &fieldData) = 0;
     void updateModelError(const QList<SpliceData> &list);
     void darZarrouk(const QList<int> bedIndices);
 

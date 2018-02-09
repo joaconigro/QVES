@@ -220,6 +220,4 @@ void InversionModel::updateModeledData(const int row, const int column, const do
     } else {
         return;
     }
-
-
 }

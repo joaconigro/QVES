@@ -234,17 +234,18 @@ void QVESModelDelegate::changeCurrentVES()
         disconnect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
         disconnect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
         disconnect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
+        disconnect(mCurrentVES, &VES::fieldDataModified, this, &QVESModelDelegate::currentVESFieldModified);
     }
     mCurrentVES = mCurrentProject->currentVES();
     mCurrentVES->findMaxAndMin();
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
-    resetTableModels();
     setDataTableModel();
     connect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
     connect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
     connect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
     connect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
+    connect(mCurrentVES, &VES::fieldDataModified, this, &QVESModelDelegate::currentVESFieldModified);
     emit vesChanged();
 }
 
@@ -266,6 +267,7 @@ void QVESModelDelegate::setDataTableModel()
     exponent = (fmod(exponent, 1.0) != 0) ? ceil(exponent) : exponent + 1.0;
     mChartMaxY = pow(10, exponent);
 
+    resetTableModels();
     fillFieldModel();
     fillSpliceModel();
     if (mCurrentVES->models().count() > 0 && (mCurrentVES->currentModel())){
@@ -313,6 +315,7 @@ void QVESModelDelegate::updateVESData(const QModelIndex &index) const
 
     mCore->changeDataForCurrentVES(index.row(), index.column(), dt, tempValue);
 
+
 //    switch (mShowedTableData) {
 //    case TableModel::DataType::Field:
 //        if (index.column() == 0){
@@ -337,6 +340,7 @@ void QVESModelDelegate::selectedVESChanged(int index)
 void QVESModelDelegate::changeCurrentModel(int index)
 {
     mCurrentVES->selectModel(index);
+    emit vesCurrentModelChanged();
 }
 
 void QVESModelDelegate::updateVESModels(const int newIndex)
@@ -361,12 +365,23 @@ void QVESModelDelegate::dataSelectionChanged(const QList<int> indices)
 
 void QVESModelDelegate::currentVESModelModified()
 {
+    fillCalculatedModel();
     fillModeledModels();
+    emit tableModelChanged();
+    emit vesCurrentModelChanged();
+}
+
+void QVESModelDelegate::currentVESFieldModified()
+{
+    fillFieldModel();
+    fillSpliceModel();
     emit tableModelChanged();
 }
 
 void QVESModelDelegate::mergeSelectedBeds()
 {
-    if(mSelectedRows.count()>1)
-        emit carryOutDarZarrouk(mSelectedRows);
+    if (mShowedTableData == TableModel::DataType::Model){
+        if(mSelectedRows.count()>1)
+            emit carryOutDarZarrouk(mSelectedRows);
+    }
 }

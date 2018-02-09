@@ -16,6 +16,7 @@ public:
     void fromVariant(const QVariant& variant) override;
 
     void inversion(const QList<SpliceData> &fieldData) override;
+    void updateInversionModelEdited(const QList<SpliceData> &fieldData) override;
 };
 
 Q_DECLARE_METATYPE(VFSAInversionModel)

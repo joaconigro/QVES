@@ -410,6 +410,28 @@ void VES::createSplices()
 
 }
 
+void VES::dataEdited(const int dataType, const int row, const int column, const double value)
+{
+    switch (dataType) {
+    case 0:
+        updateFieldData(row, column, value);
+        break;
+    case 3:
+        updateModeledData(row, column, value);
+        break;
+    default:
+        break;
+    }
+}
+
+void VES::updateModeledData(const int row, const int column, const double value)
+{
+    mCurrentModel->updateModeledData(row, column, value);
+    mCurrentModel->updateInversionModelEdited(splices());
+    emit currentModelModified();
+}
+
+
 void VES::updateFieldData(const int row, const int column, const double value)
 {
     if (column == 0){
@@ -421,6 +443,15 @@ void VES::updateFieldData(const int row, const int column, const double value)
     }
 
     createSplices();
+    emit fieldDataModified();
+
+    if(mModels.count()>0){
+        foreach (auto& model, mModels) {
+            model->updateModelError(splices());
+        }
+        emit currentModelModified();
+    }
+
 }
 
 void VES::zohdyInversion()
@@ -433,14 +464,16 @@ void VES::zohdyInversion()
     }
 
     ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), InversionModel::ZohdyFilters::Johansen, this);
+    zm->setIsSmoothing(false);
     zm->inversion(splices());
 
     QList<SpliceData> calcData;
     for (const auto& cd : zm->calculatedData()) {
         calcData.append(SpliceData(cd.ab2Distance(), cd.resistivity()));
     }
+    zm->setIsSmoothing(true);
     zm->inversion(calcData);
-
+    zm->updateModelError(splices());
     mModels.append(zm);
     setCurrentIndexModel(mModels.indexOf(zm));
 }

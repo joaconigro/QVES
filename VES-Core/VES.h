@@ -38,10 +38,14 @@ private:
     double mMaxX;
     double mMaxY;
 
-    //Splices methods
+    //Splices functions
     int searchSections();
     void correctSplices(int maxSections);
     void cleanDuplicatedSplices();
+
+    //User edit functions
+    void updateFieldData(const int row, const int column, const double value);
+    void updateModeledData(const int row, const int column, const double value);
 
 public:
     explicit VES(QObject *parent = nullptr);
@@ -89,10 +93,11 @@ public:
 signals:
     void selectedModelChanged(const int newIndex);
     void currentModelModified();
+    void fieldDataModified();
 
 public slots:
     void createSplices();
-    void updateFieldData(const int row, const int column, const double value);
+    void dataEdited(const int dataType, const int row, const int column, const double value);
     void zohdyInversion();
     void selectModel(const int modelIndex);
     void darZarrouk(const QList<int> bedIndices);

@@ -9,19 +9,33 @@
 
 ZohdyModel::ZohdyModel(QObject *parent) : InversionModel(parent)
 {
+    mName = "";
     mUsedAlgorithm = InversionAlgorithm::Zohdy;
     mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
+    mDarZarroukThreshold = 0.12;
+    mApplyDarZarrouk = true;
 }
 
 ZohdyModel::ZohdyModel(const QString &name, QObject *parent) : InversionModel(name, parent)
 {
     mUsedAlgorithm = InversionAlgorithm::Zohdy;
     mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
+    mDarZarroukThreshold = 0.12;
+    mApplyDarZarrouk = true;
+}
+
+ZohdyModel::ZohdyModel(const QString &name, const QList<ModelData> model, QObject *parent) :
+    InversionModel(name, parent)
+{
+    setModelData(model);
+    mUsedAlgorithm = InversionAlgorithm::Manual;
 }
 
 ZohdyModel::ZohdyModel(const QString &name, const InversionModel::ZohdyFilters filter, QObject *parent, const bool applyDarZarrouk, const double darZarroukThreshold) :
     InversionModel(name, parent),
-    mZohdyFilter(filter)
+    mZohdyFilter(filter),
+    mApplyDarZarrouk(applyDarZarrouk),
+    mDarZarroukThreshold(darZarroukThreshold)
 {
     mUsedAlgorithm = InversionAlgorithm::Zohdy;
 }
@@ -29,6 +43,8 @@ ZohdyModel::ZohdyModel(const QString &name, const InversionModel::ZohdyFilters f
 ZohdyModel::ZohdyModel(const InversionModel &im) : InversionModel(im)
 {
     mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
+    mDarZarroukThreshold = 0.12;
+    mApplyDarZarrouk = false;
 }
 
 ZohdyModel::ZohdyModel(const ZohdyModel &zm)
@@ -36,6 +52,8 @@ ZohdyModel::ZohdyModel(const ZohdyModel &zm)
     mId = QUuid::createUuid().toString();
 
     mName = zm.name();
+    mDarZarroukThreshold = zm.darZarroukThreshold();
+    mApplyDarZarrouk = zm.applyDarZarrouk();
     mErrorResult = zm.errorResult();
     mUsedAlgorithm = zm.usedAlgorithm();
     mZohdyFilter = zm.zohdyFilter();
@@ -46,8 +64,7 @@ ZohdyModel::ZohdyModel(const ZohdyModel &zm)
 
 QVariant ZohdyModel::toVariant() const
 {
-    QVariantMap map;// = InversionModel::toVariant().toMap();
-    //map = InversionModel::toVariant();
+    QVariantMap map;
     map.insert("mName", mName);
     map.insert("mId", mId);
     map.insert("mErrorResult", mErrorResult);
@@ -69,7 +86,6 @@ QVariant ZohdyModel::toVariant() const
 
     return map;
 }
-
 
 void ZohdyModel::fromVariant(const QVariant &variant)
 {
@@ -97,12 +113,21 @@ void ZohdyModel::fromVariant(const QVariant &variant)
     }
 }
 
-
-
-
 void ZohdyModel::inversion(const QList<SpliceData> &fieldData)
 {
-    zohdyInversion(fieldData, mZohdyFilter);
+    if (mUsedAlgorithm == InversionAlgorithm::Zohdy){
+        zohdyInversion(fieldData, mZohdyFilter);
+        if(mIsSmoothing && mApplyDarZarrouk){
+            autoMergeBeds();
+            customModelInversion(fieldData, mZohdyFilter);
+        }
+    }
+
+}
+
+void ZohdyModel::updateInversionModelEdited(const QList<SpliceData> &fieldData)
+{
+    customModelInversion(fieldData, mZohdyFilter);
 }
 
 InversionModel::ZohdyFilters ZohdyModel::zohdyFilter() const
@@ -110,9 +135,29 @@ InversionModel::ZohdyFilters ZohdyModel::zohdyFilter() const
     return mZohdyFilter;
 }
 
+bool ZohdyModel::applyDarZarrouk() const
+{
+    return mApplyDarZarrouk;
+}
+
+double ZohdyModel::darZarroukThreshold() const
+{
+    return mDarZarroukThreshold;
+}
+
+bool ZohdyModel::isSmoothing() const
+{
+    return mIsSmoothing;
+}
+
 void ZohdyModel::setZohdyFilter(const InversionModel::ZohdyFilters value)
 {
     mZohdyFilter = value;
+}
+
+void ZohdyModel::setIsSmoothing(const bool value)
+{
+    mIsSmoothing = value;
 }
 
 void ZohdyModel::chooseFilter(const InversionModel::ZohdyFilters filter, QVector<double> &a, double &w, double &s, double &dx)
@@ -151,7 +196,7 @@ void ZohdyModel::chooseFilter(const InversionModel::ZohdyFilters filter, QVector
     }
 }
 
-void ZohdyModel::TRS(const QList<SpliceData> &field, QList<BasicData> &calculated, QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx)
+void ZohdyModel::TRS(const QList<SpliceData> &field, QList<BasicData> &calculated, const QList<ModelData> &model, const QVector<double> a, const double w, const double s, const double dx)
 {
     //Necessary variables.
     QVector<double> x(a.size());
@@ -308,6 +353,8 @@ void ZohdyModel::zohdyInversion(const QList<SpliceData> &fieldData, const Invers
             tempModel2.clear();
             tempModel2.append(tempModel);
         }else{
+            if (error2 < minErrorTolerance)
+                error1 = error2;
             tempCalculated.clear();
             tempCalculated.append(tempCalculated2);
             tempModel.clear();
@@ -328,4 +375,68 @@ void ZohdyModel::zohdyInversion(const QList<SpliceData> &fieldData, const Invers
     mCalculatedData.append(tempCalculated);
     mErrorResult = error1;
     mZohdyFilter = filter;
+}
+
+void ZohdyModel::customModelInversion(const QList<SpliceData> &fieldData, const InversionModel::ZohdyFilters filter)
+{
+    double w, s, dx;
+    const double minErrorTolerance = 0.2;
+    QVector<double> a;
+    chooseFilter(filter, a, w, s, dx);
+
+    calculateThicknesses(mModel);
+
+    QList<BasicData> tempCalculated;
+    tempCalculated.clear();
+    TRS(fieldData, tempCalculated, mModel, a, w, s, dx);
+
+    mCalculatedData.clear();
+    mCalculatedData.append(tempCalculated);
+
+    updateModelError(fieldData);
+}
+
+void ZohdyModel::autoMergeBeds()
+{
+    bool merge;
+    double diff1, diff2, tempDiff;
+    QVector<int> indices(2);
+    //indices.reserve(2);
+
+    //Do loop through mModel list to find the lower difference between
+    //two consecutive beds. The difference must be lower than the threshold
+    do{
+       tempDiff = 1000.0;
+       merge = false;
+
+       for(int i = 1; i < mModel.count() - 2; i++) {
+           diff1 = abs(log10(mModel.at(i).resistivity()) - log10(mModel.at(i-1).resistivity()));
+           diff2 = abs(log10(mModel.at(i).resistivity()) - log10(mModel.at(i+1).resistivity()));
+
+           if ((diff1 < tempDiff) || (diff2 < tempDiff)){
+               if (diff1 < diff2){
+                   if (diff1 < mDarZarroukThreshold){
+                       indices[0] = i-1;
+                       indices[1] = i;
+                       merge = true;
+                       tempDiff = diff1;
+                   }
+               } else {
+                   if (diff2 < mDarZarroukThreshold){
+                       indices[0] = i;
+                       indices[1] = i+1;
+                       merge = true;
+                       tempDiff = diff2;
+                   }
+               }
+           }
+       }
+
+       if (merge){
+           darZarrouk(indices.toList());
+       }
+
+    } while(merge);
+
+
 }

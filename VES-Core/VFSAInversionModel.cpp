@@ -93,3 +93,8 @@ void VFSAInversionModel::inversion(const QList<SpliceData> &fieldData)
 {
 
 }
+
+void VFSAInversionModel::updateInversionModelEdited(const QList<SpliceData> &fieldData)
+{
+
+}
