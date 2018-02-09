@@ -62,7 +62,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole) {
-        ModelDataTable *temp = new ModelDataTable(mTable.at(index.row())->x(), mTable.at(index.row())->y());
+        XYDataTable *temp = new XYDataTable(mTable.at(index.row())->x(), mTable.at(index.row())->y());
         double tempValue = value.toDouble();
         if (index.column() == 0) {
             if (index.row() == 0){
@@ -102,7 +102,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-void TableModel::setTableFromVES(const QList<ModelDataTable *> &table, DataType type)
+void TableModel::setTableFromVES(const QList<XYDataTable *> &table, DataType type)
 {
     beginResetModel();
     mTypeOfData = type;

@@ -58,8 +58,9 @@ public:
     void setModelData(const QList<ModelData> &list);
 
     //Inversion functions
-    virtual void inversion(const QList<SpliceData> &fieldData);
+    virtual void inversion(const QList<SpliceData> &fieldData) = 0;
     void updateModelError(const QList<SpliceData> &list);
+    void darZarrouk(const QList<int> bedIndices);
 
     InversionModel& operator =(const InversionModel &rhs);
 

@@ -10,8 +10,8 @@
 #include "VES.h"
 #include "TableModel.h"
 #include <QList>
-#include "ModelDataTable.h"
-//#include "ChartDelegate.h"
+#include "XYDataTable.h"
+#include "QItemSelection"
 #include <QStringList>
 
 
@@ -42,10 +42,15 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     double mChartMaxX;
     double mChartMaxY;
     QString mVESName;
+    QList<int> mSelectedRows;
 
     void readVESNames();
     void readModelNames();
     void selectModelForTable();
+    void fillFieldModel();
+    void fillSpliceModel();
+    void fillCalculatedModel();
+    void fillModeledModels();
     void resetTableModels();
 
 public:
@@ -67,6 +72,7 @@ public:
     double chartMaxX() const;
     double chartMaxY() const;
     QString vesName() const;
+    QList<int> selectedRows() const;
 
 public slots:
     void changeCurrentProject();
@@ -83,12 +89,16 @@ public slots:
     void changeCurrentModel(int index);
     void updateVESModels(const int newIndex);
     void projectClosed();
+    void dataSelectionChanged(const QList<int> indices);
+    void currentVESModelModified();
+    void mergeSelectedBeds();
 
 signals:
     void projectChanged();
     void vesChanged();
     void tableModelChanged();
     void carryOutZohdyInversion();
+    void carryOutDarZarrouk(const QList<int> beds);
 };
 
 #endif // QVESMODELDELEGATE_H

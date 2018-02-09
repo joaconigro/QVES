@@ -9,6 +9,12 @@ DataPanel::DataPanel(QWidget *parent) :
     ui->radioButtonField->setChecked(true);
     changeShowedData();
     ui->tableView->setItemDelegate(new TableDelegate);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //selectionModel = ui->tableView->selectionModel();
+
+    //selectionModel->selectionChanged(selectionModel->selection(), QItemSelection);
+    //connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
+    //connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged2);
 
     connect(ui->comboBoxCurrentVes, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESIndexChanged);
     connect(ui->comboBoxVesModel, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESModelIndexChanged);
@@ -23,6 +29,10 @@ void DataPanel::setMyModel(TableModel *mod)
 {
     ui->tableView->reset();
     ui->tableView->setModel(mod);
+    selectionModel = ui->tableView->selectionModel();
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
+    //connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged2);
+
     for (int c = 0; c < ui->tableView->horizontalHeader()->count(); ++c)
     {
         ui->tableView->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
@@ -59,6 +69,21 @@ void DataPanel::changeShowedData()
         ui->tableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     }
     emit showedDataChanged(mSelectedData);
+}
+
+void DataPanel::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    Q_UNUSED(selected)
+    Q_UNUSED(deselected)
+
+    QList<int> indices;
+    int i;
+    foreach (const auto &s,  selectionModel->selectedIndexes()) {
+        i = s.row();
+        if(!(indices.contains(i)))
+            indices.append(i);
+    }
+    emit rowSelectionChanged(indices);
 }
 
 

@@ -86,58 +86,6 @@ InversionModel::InversionModel(const InversionModel& im)
     this->setParent(im.parent());
 }
 
-
-//QVariant InversionModel::toVariant() const
-//{
-//    QVariantMap map;
-//    map.insert("mName", mName);
-//    map.insert("mId", mId);
-//    map.insert("mErrorResult", mErrorResult);
-//    map.insert("mErrorString", mErrorString);
-//    map.insert("mUsedAlgorithm", static_cast<int>(mUsedAlgorithm));
-////    map.insert("mZohdyFilter", static_cast<int>(mZohdyFilter));
-
-
-//    QVariantList calculated;
-//    for (const auto& cd : mCalculatedData) {
-//    calculated.append(cd.toVariant());
-//    }
-//    map.insert("mCalculatedData", calculated);
-
-//    QVariantList modeled;
-//    for (const auto& md : mModel) {
-//    modeled.append(md.toVariant());
-//    }
-//    map.insert("mModel", modeled);
-
-//    return map;
-//}
-
-//void InversionModel::fromVariant(const QVariant &variant)
-//{
-//    QVariantMap map = variant.toMap();
-//    mName = map.value("mName").toString();
-//    mId = map.value("mId").toString();
-//    mErrorResult = map.value("mErrorResult").toDouble();
-//    mErrorString = map.value("mErrorString").toString();
-//    mUsedAlgorithm = static_cast<InversionModel::InversionAlgorithm>(map.value("mUsedAlgorithm").toInt());
-//   // mZohdyFilter = static_cast<InversionModel::ZohdyFilters>(map.value("mZohdyFilter").toInt());
-
-//    QVariantList calculated = map.value("mCalculatedData").toList();
-//    for(const QVariant& data : calculated) {
-//        BasicData calc;
-//        calc.fromVariant(data);
-//        mCalculatedData.append(calc);
-//    }
-
-//    QVariantList modeled = map.value("mModel").toList();
-//    for(const QVariant& data : modeled) {
-//        ModelData mod;
-//        mod.fromVariant(data);
-//        mModel.append(mod);
-//    }
-//}
-
 QString InversionModel::name() const
 {
     return mName;
@@ -201,14 +149,52 @@ void InversionModel::setModelData(const QList<ModelData> &list)
     }
 }
 
-void InversionModel::inversion(const QList<SpliceData> &fieldData)
-{
-
-}
-
 void InversionModel::updateModelError(const QList<SpliceData> &list)
 {
     mErrorResult = calculateModelError(list, mCalculatedData);
+}
+
+void InversionModel::darZarrouk(const QList<int> bedIndices)
+{
+    int insertPoint = *std::min_element(bedIndices.begin(), bedIndices.end());
+
+    //Calculate Transverse Resistence and Longitudinal Conductance for selected beds.
+    foreach (const auto &i, bedIndices) {
+        if(mModel.at(i).depth() == qInf()){
+            mModel[i].setTransverseResistence(std::numeric_limits<int>::max() * mModel.at(i).resistivity());
+            mModel[i].setLongitudinalConductance(std::numeric_limits<int>::max() / mModel.at(i).resistivity());
+        } else {
+            mModel[i].setTransverseResistence(mModel.at(i).thickness() * mModel.at(i).resistivity());
+            mModel[i].setLongitudinalConductance(mModel.at(i).thickness() / mModel.at(i).resistivity());
+        }
+    }
+
+    double sumTR, sumLC;
+    sumLC = sumTR = 0.0;
+    foreach (const auto &i, bedIndices) {
+          sumTR += mModel.at(i).transverseResistence();
+          sumLC += mModel.at(i).longitudinalConductance();
+    }
+
+    //Calculate parametres for a new bed.
+    double newResistivity, newThickness;
+    newResistivity = sqrt(sumTR / sumLC);
+    newThickness = sqrt(sumTR * sumLC);
+    ModelData newData;
+    newData.setResistivity(newResistivity);
+    newData.setThickness(newThickness);
+
+    //Delete old beds and insert the new one.
+    for(auto it = bedIndices.rbegin(); it != bedIndices.rend(); it++){
+        mModel.removeAt(*it);
+    }
+    mModel.insert(insertPoint, newData);
+
+    //Calculate new depths.
+    calculateDepths(mModel);
+
+
+
 }
 
 InversionModel &InversionModel::operator =(const InversionModel &rhs)

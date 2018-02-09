@@ -88,12 +88,14 @@ public:
 
 signals:
     void selectedModelChanged(const int newIndex);
+    void currentModelModified();
 
 public slots:
     void createSplices();
     void updateFieldData(const int row, const int column, const double value);
     void zohdyInversion();
     void selectModel(const int modelIndex);
+    void darZarrouk(const QList<int> bedIndices);
 };
 
 Q_DECLARE_METATYPE(VES)
