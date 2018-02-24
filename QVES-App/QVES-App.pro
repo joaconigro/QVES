@@ -29,19 +29,22 @@ SOURCES += \
     DataPanel.cpp \
     MainChart.cpp \
     VESPropertiesPanel.cpp \
-    TableDelegate.cpp
+    TableDelegate.cpp \
+    NewCustomModelDialog.cpp
 
 HEADERS += \
         MainWindow.h \
     DataPanel.h \
     MainChart.h \
     VESPropertiesPanel.h \
-    TableDelegate.h
+    TableDelegate.h \
+    NewCustomModelDialog.h
 
 FORMS += \
         MainWindow.ui \
     DataPanel.ui \
-    VESPropertiesPanel.ui
+    VESPropertiesPanel.ui \
+    NewCustomModelDialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core
@@ -58,3 +61,16 @@ else:unix: LIBS += -L$$OUT_PWD/../QVES-ModelDelegate/ -lQVES-ModelDelegate
 
 INCLUDEPATH += $$PWD/../QVES-ModelDelegate
 DEPENDPATH += $$PWD/../QVES-ModelDelegate
+
+RESOURCES += \
+    resources.qrc
+
+windows {
+       ICON = icon.png
+}
+linux {
+       ICON = icon.png
+}
+macx {
+       ICON = icon.icns
+}

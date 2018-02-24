@@ -458,7 +458,7 @@ void VES::zohdyInversion()
 {
     int zohdyCounter = 0;
     foreach (const InversionModel *im, mModels) {
-        if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
+        if (im->usedAlgorithm() != InversionModel::InversionAlgorithm::Zohdy){
             ++zohdyCounter;
         }
     }
@@ -487,7 +487,22 @@ void VES::darZarrouk(const QList<int> bedIndices)
 {
     if (mCurrentModel && bedIndices.count()>1){
         mCurrentModel->darZarrouk(bedIndices);
+        mCurrentModel->updateInversionModelEdited(mSplices);
         mCurrentModel->updateModelError(mSplices);
         emit currentModelModified();
     }
+}
+
+void VES::newZohdyModel(const int numberOfBeds)
+{
+    int zohdyCounter = 0;
+    foreach (const InversionModel *im, mModels) {
+        if (im->usedAlgorithm() != InversionModel::InversionAlgorithm::Zohdy){
+            ++zohdyCounter;
+        }
+    }
+
+    ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), numberOfBeds, this);
+    mModels.append(zm);
+    setCurrentIndexModel(mModels.indexOf(zm));
 }

@@ -178,8 +178,8 @@ void InversionModel::darZarrouk(const QList<int> bedIndices)
 
     //Calculate parametres for a new bed.
     double newResistivity, newThickness;
-    newResistivity = sqrt(sumTR / sumLC);
-    newThickness = sqrt(sumTR * sumLC);
+    newResistivity = qSqrt(sumTR / sumLC);
+    newThickness = qSqrt(sumTR * sumLC);
     ModelData newData;
     newData.setResistivity(newResistivity);
     newData.setThickness(newThickness);

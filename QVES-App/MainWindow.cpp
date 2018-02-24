@@ -4,7 +4,7 @@
 #include <QTabWidget>
 #include <QtCharts/QChartView>
 #include <QFileDialog>
-
+#include "NewCustomModelDialog.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -63,6 +63,7 @@ void MainWindow::createConnections()
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
+    connect(ui->actionEmptyModel, &QAction::triggered, this, &MainWindow::createEmptyModel);
     connect(ui->actionZohdy, &QAction::triggered, mDelegate, &QVESModelDelegate::carryOutZohdyInversion);
     connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainWindow::modelUpdated);
@@ -120,4 +121,12 @@ void MainWindow::saveAsProject()
 void MainWindow::modelUpdated()
 {
     mDataPanel->setMyModel(mDelegate->currentModel());
+}
+
+void MainWindow::createEmptyModel()
+{
+    NewCustomModelDialog* diag = new NewCustomModelDialog(this);
+    connect(diag, &NewCustomModelDialog::numberOfBedSelected, mDelegate, &QVESModelDelegate::createEmptyModel);
+
+    diag->show();
 }

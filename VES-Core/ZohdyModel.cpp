@@ -24,6 +24,20 @@ ZohdyModel::ZohdyModel(const QString &name, QObject *parent) : InversionModel(na
     mApplyDarZarrouk = true;
 }
 
+ZohdyModel::ZohdyModel(const QString &name, const int numberOfBeds, QObject *parent) : InversionModel(name, parent)
+{
+    mUsedAlgorithm = InversionAlgorithm::Manual;
+    mZohdyFilter = InversionModel::ZohdyFilters::Johansen;
+    for(int i = 0; i < numberOfBeds; i++){
+        ModelData md;
+        md.setDepth(i+1);
+        md.setResistivity(i+1);
+        mModel.append(md);
+    }
+    calculateThicknesses(mModel);
+    calculateDepths(mModel);
+}
+
 ZohdyModel::ZohdyModel(const QString &name, const QList<ModelData> model, QObject *parent) :
     InversionModel(name, parent)
 {
@@ -410,8 +424,8 @@ void ZohdyModel::autoMergeBeds()
        merge = false;
 
        for(int i = 1; i < mModel.count() - 2; i++) {
-           diff1 = abs(log10(mModel.at(i).resistivity()) - log10(mModel.at(i-1).resistivity()));
-           diff2 = abs(log10(mModel.at(i).resistivity()) - log10(mModel.at(i+1).resistivity()));
+           diff1 = qAbs(log10(mModel.at(i).resistivity()) - log10(mModel.at(i-1).resistivity()));
+           diff2 = qAbs(log10(mModel.at(i).resistivity()) - log10(mModel.at(i+1).resistivity()));
 
            if ((diff1 < tempDiff) || (diff2 < tempDiff)){
                if (diff1 < diff2){

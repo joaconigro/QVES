@@ -313,7 +313,7 @@
     <string>Agrupar capas</string>
    </property>
    <property name="toolTip">
-    <string>Agrupa las capas seleccionadas por el algoritmo deDar Zarrouk.</string>
+    <string>Agrupa las capas seleccionadas por el algoritmo de Dar Zarrouk.</string>
    </property>
   </action>
   <action name="actionEmptyModel">

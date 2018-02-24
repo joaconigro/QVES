@@ -93,6 +93,7 @@ public slots:
     void currentVESModelModified();
     void currentVESFieldModified();
     void mergeSelectedBeds();
+    void createEmptyModel(const int numberOfBeds);
 
 signals:
     void projectChanged();

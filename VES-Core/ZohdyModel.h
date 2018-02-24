@@ -25,6 +25,7 @@ private:
 public:
     explicit ZohdyModel(QObject *parent = nullptr);
     explicit ZohdyModel(const QString &name, QObject *parent = nullptr);
+    explicit ZohdyModel(const QString &name, const int numberOfBeds, QObject *parent = nullptr);
     explicit ZohdyModel(const QString &name, const QList<ModelData> model, QObject *parent = nullptr);
     explicit ZohdyModel(const QString &name, const ZohdyFilters filter, QObject *parent = nullptr, const bool applyDarZarrouk = true, const double darZarroukThreshold = 0.12);
     explicit ZohdyModel(const InversionModel& im);

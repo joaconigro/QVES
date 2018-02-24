@@ -39,6 +39,7 @@ private slots:
     void saveProject();
     void saveAsProject();
     void modelUpdated();
+    void createEmptyModel();
 };
 
 #endif // MAINWINDOW_H

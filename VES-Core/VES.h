@@ -101,6 +101,7 @@ public slots:
     void zohdyInversion();
     void selectModel(const int modelIndex);
     void darZarrouk(const QList<int> bedIndices);
+    void newZohdyModel(const int numberOfBeds);
 };
 
 Q_DECLARE_METATYPE(VES)

@@ -385,3 +385,10 @@ void QVESModelDelegate::mergeSelectedBeds()
             emit carryOutDarZarrouk(mSelectedRows);
     }
 }
+
+void QVESModelDelegate::createEmptyModel(const int numberOfBeds)
+{
+    if (mCurrentVES){
+        mCurrentVES->newZohdyModel(numberOfBeds);
+    }
+}
