@@ -10,6 +10,7 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QMessageBox>
+#include <QDir>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -71,7 +72,7 @@ void MainWindow::createConnections()
     connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
     connect(mDelegate, &QVESModelDelegate::vesChanged, this, &MainWindow::loadVES);
     connect(mDelegate, &QVESModelDelegate::vesCurrentModelChanged, this, &MainWindow::modelChanged);
-    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
+    //connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::openProject);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(ui->actionEmptyModel, &QAction::triggered, this, &MainWindow::createEmptyModel);
@@ -91,6 +92,7 @@ void MainWindow::loadSettings()
     QSettings settings;
 
     mQVESSettings = new QVESSettings(this);
+    connect(mQVESSettings, &QVESSettings::settingsLoaded, this, &MainWindow::onSettingsLoaded);
     mQVESSettings->setSettings(&settings);
     mQVESSettings->readSettings();
 
@@ -121,19 +123,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
 //    }
 }
 
-void MainWindow::openProject()
+void MainWindow::openProject(const QString filename)
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir proyecto..."),
-                                                    "",
-                                                    tr("Proyectos QVS (*.qvs);; Proyectos antiguos de SEVs (*.sev)"));
-    if (!fileName.isNull()){
-        mDelegate->openProject(fileName);
+    if (!filename.isNull()){
+        mDelegate->openProject(filename);
+        mQVESSettings->appendLastProject(filename);
     }
 }
 
 void MainWindow::loadProject()
 {
     mDataPanel->loadVESNames(mDelegate->vesNames(), mDelegate->currentVESIndex());
+    mLastDirectory = mDelegate->projectPath();
+    mQVESSettings->setLastDirectory(mLastDirectory);
 }
 
 void MainWindow::loadVES()
@@ -166,6 +168,7 @@ void MainWindow::saveAsProject()
                                                     tr("Proyectos QVS (*.qvs)"));
     if (!fileName.isNull()){
         mDelegate->saveAsProject(fileName);
+        mQVESSettings->appendLastProject(fileName);
     }
 }
 
@@ -184,8 +187,9 @@ void MainWindow::createEmptyModel()
 
 void MainWindow::exportChartAs()
 {
+    QString proposed = QDir::cleanPath(mDelegate->projectPath() + QDir::separator() + mDelegate->vesName() + ".png");
     QString fileName = QFileDialog::getSaveFileName(this, tr("Guardar gráfico como..."),
-                                                    mDelegate->projectPath(),
+                                                    proposed,
                                                     tr("Imágenes PNG (*.png)"));
     if (!fileName.isNull()){
         QPixmap p = chartView->grab();
@@ -203,20 +207,56 @@ void MainWindow::exportChartAs()
 
 void MainWindow::on_actionShowFieldData_triggered()
 {
+    mQVESSettings->setShowField(ui->actionShowFieldData->isChecked());
     emit fieldVisibleChanged(ui->actionShowFieldData->isChecked());
 }
 
 void MainWindow::on_actionShowSplices_triggered()
 {
+    mQVESSettings->setShowSplice(ui->actionShowSplices->isChecked());
     emit spliceVisibleChanged(ui->actionShowSplices->isChecked());
 }
 
 void MainWindow::on_actionShowCalculatedData_triggered()
 {
+    mQVESSettings->setShowCalculated(ui->actionShowCalculatedData->isChecked());
     emit calculatedVisibleChanged(ui->actionShowCalculatedData->isChecked());
 }
 
 void MainWindow::on_actionShowModels_triggered()
 {
+    mQVESSettings->setShowModel(ui->actionShowModels->isChecked());
     emit modeledVisibleChanged(ui->actionShowModels->isChecked());
+}
+
+void MainWindow::onSettingsLoaded()
+{
+    mLastDirectory = mQVESSettings->lastDirectory();
+
+    QMenu *recentsMenu = new QMenu(tr("Proyectos recientes"), this);
+    foreach (auto &s, mQVESSettings->lastOpenedProjects()) {
+        recentsMenu->addAction(s, [=](){this->openProject(s);});
+    }
+    QAction* before = ui->menuFile->actions().at(2);
+    ui->menuFile->insertMenu(before, recentsMenu);
+
+    ui->actionShowFieldData->setChecked(mQVESSettings->showField());
+    emit fieldVisibleChanged(mQVESSettings->showField());
+
+    ui->actionShowSplices->setChecked(mQVESSettings->showSplice());
+    emit spliceVisibleChanged(mQVESSettings->showSplice());
+
+    ui->actionShowCalculatedData->setChecked(mQVESSettings->showCalculated());
+    emit calculatedVisibleChanged(mQVESSettings->showCalculated());
+
+    ui->actionShowModels->setChecked(mQVESSettings->showModel());
+    emit modeledVisibleChanged(mQVESSettings->showModel());
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir proyecto..."),
+                                                    mLastDirectory,
+                                                    tr("Proyectos QVS (*.qvs);; Proyectos antiguos de SEVs (*.sev)"));
+    openProject(fileName);
 }

@@ -1,5 +1,307 @@
 #include "QVESSettings.h"
 
+QString QVESSettings::lastDirectory() const
+{
+    return mLastDirectory;
+}
+
+void QVESSettings::setLastDirectory(const QString &lastDirectory)
+{
+    mLastDirectory = lastDirectory;
+}
+
+void QVESSettings::appendLastProject(const QString &project)
+{
+    if(!mLastOpenedProjects.contains(project)){
+        mLastOpenedProjects.insert(0, project);
+    }
+}
+
+QString QVESSettings::VESName() const
+{
+    return mVESName;
+}
+
+void QVESSettings::setVESName(const QString &VESName)
+{
+    mVESName = VESName;
+}
+
+int QVESSettings::zohdyFilter() const
+{
+    return mZohdyFilter;
+}
+
+void QVESSettings::setZohdyFilter(int zohdyFilter)
+{
+    mZohdyFilter = zohdyFilter;
+}
+
+double QVESSettings::autoDarZarroukThreshold() const
+{
+    return mAutoDarZarroukThreshold;
+}
+
+void QVESSettings::setAutoDarZarroukThreshold(double autoDarZarroukThreshold)
+{
+    mAutoDarZarroukThreshold = autoDarZarroukThreshold;
+}
+
+bool QVESSettings::autoDarZarrouk() const
+{
+    return mAutoDarZarrouk;
+}
+
+void QVESSettings::setAutoDarZarrouk(bool autoDarZarrouk)
+{
+    mAutoDarZarrouk = autoDarZarrouk;
+}
+
+double QVESSettings::vFSAInitialTemperature() const
+{
+    return mVFSAInitialTemperature;
+}
+
+void QVESSettings::setVFSAInitialTemperature(double vFSAInitialTemperature)
+{
+    mVFSAInitialTemperature = vFSAInitialTemperature;
+}
+
+int QVESSettings::vFSAIterationsPerTemperature() const
+{
+    return mVFSAIterationsPerTemperature;
+}
+
+void QVESSettings::setVFSAIterationsPerTemperature(int vFSAIterationsPerTemperature)
+{
+    mVFSAIterationsPerTemperature = vFSAIterationsPerTemperature;
+}
+
+int QVESSettings::vFSAMovesPerTemperature() const
+{
+    return mVFSAMovesPerTemperature;
+}
+
+void QVESSettings::setVFSAMovesPerTemperature(int vFSAMovesPerTemperature)
+{
+    mVFSAMovesPerTemperature = vFSAMovesPerTemperature;
+}
+
+int QVESSettings::vFSASolutions() const
+{
+    return mVFSASolutions;
+}
+
+void QVESSettings::setVFSASolutions(int vFSASolutions)
+{
+    mVFSASolutions = vFSASolutions;
+}
+
+int QVESSettings::vFSANumberOfParameters() const
+{
+    return mVFSANumberOfParameters;
+}
+
+void QVESSettings::setVFSANumberOfParameters(int vFSANumberOfParameters)
+{
+    mVFSANumberOfParameters = vFSANumberOfParameters;
+}
+
+int QVESSettings::vFSANumberOfBeds() const
+{
+    return mVFSANumberOfBeds;
+}
+
+void QVESSettings::setVFSANumberOfBeds(int vFSANumberOfBeds)
+{
+    mVFSANumberOfBeds = vFSANumberOfBeds;
+}
+
+double QVESSettings::vFSAMaximunError() const
+{
+    return mVFSAMaximunError;
+}
+
+void QVESSettings::setVFSAMaximunError(double vFSAMaximunError)
+{
+    mVFSAMaximunError = vFSAMaximunError;
+}
+
+double QVESSettings::vFSAMinimunPdf() const
+{
+    return mVFSAMinimunPdf;
+}
+
+void QVESSettings::setVFSAMinimunPdf(double vFSAMinimunPdf)
+{
+    mVFSAMinimunPdf = vFSAMinimunPdf;
+}
+
+int QVESSettings::chartTheme() const
+{
+    return mChartTheme;
+}
+
+void QVESSettings::setChartTheme(int chartTheme)
+{
+    mChartTheme = chartTheme;
+}
+
+double QVESSettings::fieldPointSize() const
+{
+    return mFieldPointSize;
+}
+
+void QVESSettings::setFieldPointSize(double fieldPointSize)
+{
+    mFieldPointSize = fieldPointSize;
+}
+
+QColor QVESSettings::fieldColor() const
+{
+    return mFieldColor;
+}
+
+void QVESSettings::setFieldColor(const QColor &fieldColor)
+{
+    mFieldColor = fieldColor;
+}
+
+int QVESSettings::fieldMarkerType() const
+{
+    return mFieldMarkerType;
+}
+
+void QVESSettings::setFieldMarkerType(int fieldMarkerType)
+{
+    mFieldMarkerType = fieldMarkerType;
+}
+
+bool QVESSettings::showField() const
+{
+    return mShowField;
+}
+
+void QVESSettings::setShowField(bool showField)
+{
+    mShowField = showField;
+}
+
+double QVESSettings::splicePointSize() const
+{
+    return mSplicePointSize;
+}
+
+void QVESSettings::setSplicePointSize(double splicePointSize)
+{
+    mSplicePointSize = splicePointSize;
+}
+
+QColor QVESSettings::spliceColor() const
+{
+    return mSpliceColor;
+}
+
+void QVESSettings::setSpliceColor(const QColor &spliceColor)
+{
+    mSpliceColor = spliceColor;
+}
+
+int QVESSettings::spliceMarkerType() const
+{
+    return mSpliceMarkerType;
+}
+
+void QVESSettings::setSpliceMarkerType(int spliceMarkerType)
+{
+    mSpliceMarkerType = spliceMarkerType;
+}
+
+bool QVESSettings::showSplice() const
+{
+    return mShowSplice;
+}
+
+void QVESSettings::setShowSplice(bool showSplice)
+{
+    mShowSplice = showSplice;
+}
+
+double QVESSettings::calculatedPointSize() const
+{
+    return mCalculatedPointSize;
+}
+
+void QVESSettings::setCalculatedPointSize(double calculatedPointSize)
+{
+    mCalculatedPointSize = calculatedPointSize;
+}
+
+QColor QVESSettings::calculatedColor() const
+{
+    return mCalculatedColor;
+}
+
+void QVESSettings::setCalculatedColor(const QColor &calculatedColor)
+{
+    mCalculatedColor = calculatedColor;
+}
+
+int QVESSettings::calculatedMarkerType() const
+{
+    return mCalculatedMarkerType;
+}
+
+void QVESSettings::setCalculatedMarkerType(int calculatedMarkerType)
+{
+    mCalculatedMarkerType = calculatedMarkerType;
+}
+
+bool QVESSettings::showCalculated() const
+{
+    return mShowCalculated;
+}
+
+void QVESSettings::setShowCalculated(bool showCalculated)
+{
+    mShowCalculated = showCalculated;
+}
+
+double QVESSettings::modelLineWidth() const
+{
+    return mModelLineWidth;
+}
+
+void QVESSettings::setModelLineWidth(double modelLineWidth)
+{
+    mModelLineWidth = modelLineWidth;
+}
+
+QColor QVESSettings::modelColor() const
+{
+    return mModelColor;
+}
+
+void QVESSettings::setModelColor(const QColor &modelColor)
+{
+    mModelColor = modelColor;
+}
+
+bool QVESSettings::showModel() const
+{
+    return mShowModel;
+}
+
+void QVESSettings::setShowModel(bool showModel)
+{
+    mShowModel = showModel;
+}
+
+QStringList QVESSettings::lastOpenedProjects() const
+{
+    return mLastOpenedProjects;
+}
+
 void QVESSettings::defaultGeneralSettings()
 {
     mLastDirectory = "";
@@ -171,6 +473,8 @@ void QVESSettings::readSettings()
         restoreDefaultSettings();
         mSettingsInitialized = true;
     }
+
+    emit settingsLoaded();
 }
 
 void QVESSettings::writeSettings() const

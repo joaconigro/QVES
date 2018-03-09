@@ -31,6 +31,7 @@ private:
     QVESModelDelegate *mDelegate;
     QChartView *chartView;
 
+    QString mLastDirectory;
     QVESSettings* mQVESSettings;
     void createConnections();
 
@@ -42,7 +43,7 @@ private:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void openProject();
+    void openProject(const QString filename);
     void loadProject();
     void loadVES();
     void modelChanged();
@@ -58,6 +59,9 @@ private slots:
     void on_actionShowCalculatedData_triggered();
 
     void on_actionShowModels_triggered();
+    void onSettingsLoaded();
+
+    void on_actionOpen_triggered();
 
 signals:
     void fieldVisibleChanged(const bool value);

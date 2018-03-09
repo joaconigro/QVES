@@ -37,7 +37,6 @@
     </property>
     <addaction name="actionNewProject"/>
     <addaction name="actionOpen"/>
-    <addaction name="actionRecentProjects"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
@@ -162,14 +161,6 @@
    </property>
    <property name="toolTip">
     <string>Carga un proyecto al programa.</string>
-   </property>
-  </action>
-  <action name="actionRecentProjects">
-   <property name="text">
-    <string>Proyectos recientes</string>
-   </property>
-   <property name="toolTip">
-    <string>Proyectos abiertos recientemente,.</string>
    </property>
   </action>
   <action name="actionSave">
