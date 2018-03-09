@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT       += core gui charts opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +30,9 @@ SOURCES += \
     MainChart.cpp \
     VESPropertiesPanel.cpp \
     TableDelegate.cpp \
-    NewCustomModelDialog.cpp
+    NewCustomModelDialog.cpp \
+    QVESChartSerie.cpp \
+    QVESSettings.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -38,7 +40,9 @@ HEADERS += \
     MainChart.h \
     VESPropertiesPanel.h \
     TableDelegate.h \
-    NewCustomModelDialog.h
+    NewCustomModelDialog.h \
+    QVESChartSerie.h \
+    QVESSettings.h
 
 FORMS += \
         MainWindow.ui \

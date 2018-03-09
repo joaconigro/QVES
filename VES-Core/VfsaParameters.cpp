@@ -9,7 +9,7 @@ VfsaParameters::VfsaParameters(QObject *parent) : QObject(parent)
     mSolutions = 10;
     mNumberOfParameters = 5;
     mNumberOfBeds = 3;
-    mMaximunPdf = 0.0001;
+    mMaximunError = 0.0001;
     mMinimunPdf = 0.6825;
     mLimits.clear();
 }
@@ -22,8 +22,8 @@ VfsaParameters::VfsaParameters(const VfsaParameters &vp)
     mSolutions = vp.solutions();
     mNumberOfParameters = vp.numberOfParameters();
     mNumberOfBeds = vp.numberOfBeds();
-    mMaximunPdf = vp.maximunPdf();
-    mMinimunPdf = vp.minimunPdf();
+    mMaximunError = vp.maximunError();
+    mMaximunError = vp.minimunPdf();
     mLimits = vp.limits();
 }
 
@@ -35,7 +35,7 @@ VfsaParameters &VfsaParameters::operator =(const VfsaParameters &rhs)
     mSolutions = rhs.solutions();
     mNumberOfParameters = rhs.numberOfParameters();
     mNumberOfBeds = rhs.numberOfBeds();
-    mMaximunPdf = rhs.maximunPdf();
+    mMaximunError = rhs.maximunError();
     mMinimunPdf = rhs.minimunPdf();
     mLimits = rhs.limits();
     this->setParent(rhs.parent());
@@ -51,7 +51,7 @@ QVariant VfsaParameters::toVariant() const
     map.insert("mSolutions", mSolutions);
     map.insert("mNumberOfParameters", mNumberOfParameters);
     map.insert("mNumberOfBeds", mNumberOfBeds);
-    map.insert("mMaximunPdf", mMaximunPdf);
+    map.insert("mMaximunError", mMaximunError);
     map.insert("mMinimunPdf", mMinimunPdf);
 
     QVariantList list;
@@ -72,7 +72,7 @@ void VfsaParameters::fromVariant(const QVariant &variant)
     mSolutions = map.value("mSolutions").toInt();
     mNumberOfParameters = map.value("mNumberOfParameters").toInt();
     mNumberOfBeds = map.value("mNumberOfBeds").toInt();
-    mMaximunPdf = map.value("mMaximunPdf").toDouble();
+    mMaximunError = map.value("mMaximunError").toDouble();
     mMinimunPdf = map.value("mMinimunPdf").toDouble();
 
     QVariantList list = map.value("mLimits").toList();
@@ -119,9 +119,9 @@ QList<VfsaParameterLimit> VfsaParameters::limits() const
     return mLimits;
 }
 
-double VfsaParameters::maximunPdf() const
+double VfsaParameters::maximunError() const
 {
-    return mMaximunPdf;
+    return mMaximunError;
 }
 
 double VfsaParameters::minimunPdf() const
@@ -164,9 +164,9 @@ void VfsaParameters::setLimits(const QList<VfsaParameterLimit> &value)
     mLimits = value;
 }
 
-void VfsaParameters::setMaximunPdf(const double &value)
+void VfsaParameters::setMaximunError(const double &value)
 {
-    mMaximunPdf = value;
+    mMaximunError = value;
 }
 
 void VfsaParameters::setMinimunPdf(const double &value)

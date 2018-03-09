@@ -11,48 +11,33 @@ QT_CHARTS_USE_NAMESPACE
 
 void MainChart::createFieldSeries()
 {
-    mFieldSeries->setName(tr("Datos de campo"));
-    mFieldSeries->setMarkerShape(QScatterSeries::MarkerShapeCircle);
-    mFieldSeries->setMarkerSize(8.0);
-
-    mMapperField->setXColumn(0);
-    mMapperField->setYColumn(1);
-    mMapperField->setSeries(mFieldSeries);
-    mMapperField->setModel(mDelegate->fieldModel());
+    mFieldSeries = new QVESChartSerie(tr("Datos de campo"), QVESChartSerie::SeriesType::Point, this);
+    mFieldSeries->setSize(8.0);
+    mFieldSeries->setMarkerType(QVESChartSerie::MarkerType::Circle);
+    mFieldSeries->setModel(mDelegate->fieldModel());
 }
 
 void MainChart::createSpliceSeries()
 {
-    mSpliceSeries->setName(tr("Datos empalmados"));
-    mSpliceSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
-    mSpliceSeries->setMarkerSize(8.0);
-
-    mMapperSplice->setXColumn(0);
-    mMapperSplice->setYColumn(1);
-    mMapperSplice->setSeries(mSpliceSeries);
-    mMapperSplice->setModel(mDelegate->spliceModel());
+    mSpliceSeries = new QVESChartSerie(tr("Datos empalmados"), QVESChartSerie::SeriesType::Point, this);
+    mSpliceSeries->setSize(8.0);
+    mSpliceSeries->setMarkerType(QVESChartSerie::MarkerType::Square);
+    mSpliceSeries->setModel(mDelegate->spliceModel());
 }
 
 void MainChart::createCalculatedSeries()
 {
-    mCalculatedSeries->setName(tr("Datos calculados"));
-    mCalculatedSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
-    mCalculatedSeries->setMarkerSize(8.0);
-
-    mMapperCalculated->setXColumn(0);
-    mMapperCalculated->setYColumn(1);
-    mMapperCalculated->setSeries(mCalculatedSeries);
-    mMapperCalculated->setModel(mDelegate->calculatedModel());
+    mCalculatedSeries = new QVESChartSerie(tr("Datos calculados"), QVESChartSerie::SeriesType::Point, this);
+    mCalculatedSeries->setSize(10.0);
+    mCalculatedSeries->setMarkerType(QVESChartSerie::MarkerType::Triangle);
+    mCalculatedSeries->setModel(mDelegate->calculatedModel());
 }
 
 void MainChart::createModeledSeries()
 {
-    mModeledSeries->setName(tr("Datos modelados"));
-
-    mMapperModeled->setXColumn(0);
-    mMapperModeled->setYColumn(1);
-    mMapperModeled->setSeries(mModeledSeries);
-    mMapperModeled->setModel(mDelegate->chartModeledModel());
+    mModeledSeries = new QVESChartSerie(tr("Datos modelados"), QVESChartSerie::SeriesType::Line, this);
+    mModeledSeries->setSize(2.0);
+    mModeledSeries->setModel(mDelegate->chartModeledModel());
 }
 
 void MainChart::configureXYAxis()
@@ -63,10 +48,10 @@ void MainChart::configureXYAxis()
     axisX->setBase(10.0);
     axisX->setMinorTickCount(-1);
     chart->addAxis(axisX, Qt::AlignBottom);
-    chart->setAxisX(axisX, mFieldSeries);
-    chart->setAxisX(axisX, mSpliceSeries);
-    chart->setAxisX(axisX, mCalculatedSeries);
-    chart->setAxisX(axisX, mModeledSeries);
+    chart->setAxisX(axisX, mFieldSeries->series());
+    chart->setAxisX(axisX, mSpliceSeries->series());
+    chart->setAxisX(axisX, mCalculatedSeries->series());
+    chart->setAxisX(axisX, mModeledSeries->series());
     axisX->setRange(mDelegate->chartMinX(), mDelegate->chartMaxX());
 
     QLogValueAxis *axisY = new QLogValueAxis();
@@ -75,10 +60,10 @@ void MainChart::configureXYAxis()
     axisY->setBase(10.0);
     axisY->setMinorTickCount(-1);
     chart->addAxis(axisY, Qt::AlignLeft);
-    chart->setAxisY(axisY, mFieldSeries);
-    chart->setAxisY(axisY, mSpliceSeries);
-    chart->setAxisY(axisY, mCalculatedSeries);
-    chart->setAxisY(axisY, mModeledSeries);
+    chart->setAxisY(axisY, mFieldSeries->series());
+    chart->setAxisY(axisY, mSpliceSeries->series());
+    chart->setAxisY(axisY, mCalculatedSeries->series());
+    chart->setAxisY(axisY, mModeledSeries->series());
     axisY->setRange(mDelegate->chartMinY(), mDelegate->chartMaxY());
 }
 
@@ -88,30 +73,42 @@ MainChart::MainChart(QWidget *parent) : QWidget(parent)
 
     mDelegate = new QVESModelDelegate(this);
 
-    mFieldSeries = new QScatterSeries(this);
-    mMapperField = new QVXYModelMapper(this);
     createFieldSeries();
-    chart->addSeries(mFieldSeries);
+    chart->addSeries(mFieldSeries->series());
 
-    mSpliceSeries = new QScatterSeries(this);
-    mMapperSplice = new QVXYModelMapper(this);
     createSpliceSeries();
-    chart->addSeries(mSpliceSeries);
+    chart->addSeries(mSpliceSeries->series());
 
-    mCalculatedSeries = new QScatterSeries(this);
-    mMapperCalculated = new QVXYModelMapper(this);
     createCalculatedSeries();
-    chart->addSeries(mCalculatedSeries);
+    chart->addSeries(mCalculatedSeries->series());
 
-    mModeledSeries = new QLineSeries(this);
-    mMapperModeled = new QVXYModelMapper(this);
-    createModeledSeries();
-    chart->addSeries(mModeledSeries);
+   createModeledSeries();
+    chart->addSeries(mModeledSeries->series());
 
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
 
     chart->setAnimationOptions(QChart::AllAnimations);
     chart->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
+}
+
+void MainChart::setFieldVisible(const bool value)
+{
+    mFieldSeries->setVisible(value);
+}
+
+void MainChart::setSpliceVisible(const bool value)
+{
+    mSpliceSeries->setVisible(value);
+}
+
+void MainChart::setCalculatedVisible(const bool value)
+{
+    mCalculatedSeries->setVisible(value);
+}
+
+void MainChart::setModeledVisible(const bool value)
+{
+    mModeledSeries->setVisible(value);
 }
 
 void MainChart::chartDelegateChanged(QVESModelDelegate *del)
@@ -123,11 +120,13 @@ void MainChart::chartDelegateChanged(QVESModelDelegate *del)
 void MainChart::modelDelegateChanged()
 {
     chart->series().clear();
-    createFieldSeries();
-    createSpliceSeries();
-    createCalculatedSeries();
-    createModeledSeries();
+    mFieldSeries->setModel(mDelegate->fieldModel());
+    mSpliceSeries->setModel(mDelegate->spliceModel());
+    mCalculatedSeries->setModel(mDelegate->calculatedModel());
+    mModeledSeries->setModel(mDelegate->chartModeledModel());
 
     configureXYAxis();
     chart->setTitle(mDelegate->vesName());
 }
+
+

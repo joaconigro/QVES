@@ -4,7 +4,12 @@
 #include <QTabWidget>
 #include <QtCharts/QChartView>
 #include <QFileDialog>
+#include <QPixmap>
+#include <QOpenGLWidget>
 #include "NewCustomModelDialog.h"
+#include <QSettings>
+#include <QCoreApplication>
+#include <QMessageBox>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -34,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    QChartView *chartView = new QChartView(mChart->chart);
+    chartView = new QChartView(mChart->chart);
     chartView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameShape(QFrame::StyledPanel);
@@ -45,6 +50,12 @@ MainWindow::MainWindow(QWidget *parent) :
     splitter->addWidget(chartView);
     this->setCentralWidget(splitter);
     this->showMaximized();
+
+
+    QCoreApplication::setOrganizationName("Joaco's Soft");
+    QCoreApplication::setApplicationName("QVES");
+    loadSettings();
+
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +79,46 @@ void MainWindow::createConnections()
     connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainWindow::modelUpdated);
     connect(ui->actionMergeBeds, &QAction::triggered, mDelegate, &QVESModelDelegate::mergeSelectedBeds);
+    connect(ui->actionExportChart, &QAction::triggered, this, &MainWindow::exportChartAs);
+    connect(this, &MainWindow::fieldVisibleChanged, mChart, &MainChart::setFieldVisible);
+    connect(this, &MainWindow::spliceVisibleChanged, mChart, &MainChart::setSpliceVisible);
+    connect(this, &MainWindow::calculatedVisibleChanged, mChart, &MainChart::setCalculatedVisible);
+    connect(this, &MainWindow::modeledVisibleChanged, mChart, &MainChart::setModeledVisible);
+}
+
+void MainWindow::loadSettings()
+{
+    QSettings settings;
+
+    mQVESSettings = new QVESSettings(this);
+    mQVESSettings->setSettings(&settings);
+    mQVESSettings->readSettings();
+
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings;
+
+    mQVESSettings->setSettings(&settings);
+    mQVESSettings->writeSettings();
+}
+
+bool MainWindow::userWantsToSave() const
+{
+    bool result = true;
+    return result;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    writeSettings();
+//    if (maybeSave()) {
+//        writeSettings();
+//        event->accept();
+//    } else {
+//        event->ignore();
+//    }
 }
 
 void MainWindow::openProject()
@@ -129,4 +180,43 @@ void MainWindow::createEmptyModel()
     connect(diag, &NewCustomModelDialog::numberOfBedSelected, mDelegate, &QVESModelDelegate::createEmptyModel);
 
     diag->show();
+}
+
+void MainWindow::exportChartAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Guardar gráfico como..."),
+                                                    mDelegate->projectPath(),
+                                                    tr("Imágenes PNG (*.png)"));
+    if (!fileName.isNull()){
+        QPixmap p = chartView->grab();
+        QOpenGLWidget *glWidget  = chartView->findChild<QOpenGLWidget*>();
+        if(glWidget){
+            QPainter painter(&p);
+            QPoint d = glWidget->mapToGlobal(QPoint())-chartView->mapToGlobal(QPoint());
+            painter.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+            painter.drawImage(d, glWidget->grabFramebuffer());
+            painter.end();
+        }
+        p.save(fileName, "PNG");
+    }
+}
+
+void MainWindow::on_actionShowFieldData_triggered()
+{
+    emit fieldVisibleChanged(ui->actionShowFieldData->isChecked());
+}
+
+void MainWindow::on_actionShowSplices_triggered()
+{
+    emit spliceVisibleChanged(ui->actionShowSplices->isChecked());
+}
+
+void MainWindow::on_actionShowCalculatedData_triggered()
+{
+    emit calculatedVisibleChanged(ui->actionShowCalculatedData->isChecked());
+}
+
+void MainWindow::on_actionShowModels_triggered()
+{
+    emit modeledVisibleChanged(ui->actionShowModels->isChecked());
 }

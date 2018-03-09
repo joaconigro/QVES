@@ -3,10 +3,8 @@
 
 #include <QWidget>
 #include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QScatterSeries>
 #include "QVESModelDelegate.h"
-//#include "ChartDelegate.h"
+#include "QVESChartSerie.h"
 #include "VES.h"
 #include <QVXYModelMapper>
 
@@ -16,14 +14,10 @@ class MainChart : public QWidget
 {
     Q_OBJECT
     QVESModelDelegate *mDelegate;
-    QScatterSeries *mFieldSeries;
-    QScatterSeries *mSpliceSeries;
-    QScatterSeries *mCalculatedSeries;
-    QLineSeries *mModeledSeries;
-    QVXYModelMapper *mMapperField;
-    QVXYModelMapper *mMapperSplice;
-    QVXYModelMapper *mMapperCalculated;
-    QVXYModelMapper *mMapperModeled;
+    QVESChartSerie *mFieldSeries;
+    QVESChartSerie *mSpliceSeries;
+    QVESChartSerie *mCalculatedSeries;
+    QVESChartSerie *mModeledSeries;
 
     void createFieldSeries();
     void createSpliceSeries();
@@ -40,6 +34,10 @@ public:
 signals:
 
 public slots:
+   void setFieldVisible(const bool value);
+   void setSpliceVisible(const bool value);
+   void setCalculatedVisible(const bool value);
+   void setModeledVisible(const bool value);
    void chartDelegateChanged(QVESModelDelegate *del);
    void modelDelegateChanged();
 };
