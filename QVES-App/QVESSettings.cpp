@@ -1,4 +1,5 @@
 #include "QVESSettings.h"
+#include <QFile>
 
 QString QVESSettings::lastDirectory() const
 {
@@ -12,9 +13,10 @@ void QVESSettings::setLastDirectory(const QString &lastDirectory)
 
 void QVESSettings::appendLastProject(const QString &project)
 {
-    if(!mLastOpenedProjects.contains(project)){
-        mLastOpenedProjects.insert(0, project);
+    if(mLastOpenedProjects.contains(project)){
+        mLastOpenedProjects.removeAt(mLastOpenedProjects.indexOf(project));
     }
+    mLastOpenedProjects.insert(0, project);
 }
 
 QString QVESSettings::VESName() const
@@ -356,6 +358,18 @@ void QVESSettings::readGeneralSettings()
     mLastDirectory = mSettings->value("LastDirectory").toString();
     mLastOpenedProjects = mSettings->value("LastOpenedProjects").toStringList();
     mVESName = mSettings->value("VESName").toString();
+
+    QList<int> indices;
+    foreach (auto &s, mLastOpenedProjects) {
+        QFile f(s);
+        if(!f.exists()){
+            indices.append(mLastOpenedProjects.indexOf(s));
+        }
+    }
+
+    foreach (int i, indices) {
+        mLastOpenedProjects.removeAt(i);
+    }
 }
 
 void QVESSettings::readInversionSettings()
@@ -364,7 +378,7 @@ void QVESSettings::readInversionSettings()
     mAutoDarZarroukThreshold = mSettings->value("AutoDarZarroukThreshold").toDouble();
     mAutoDarZarrouk = mSettings->value("AutoDarZarrouk").toBool();
 
-    mVFSAInitialTemperature = mSettings->value("AutoDarZarroukThreshold").toDouble();
+    mVFSAInitialTemperature = mSettings->value("VFSAInitialTemperature").toDouble();
     mVFSAIterationsPerTemperature = mSettings->value("VFSAIterationsPerTemperature").toInt();
     mVFSAMovesPerTemperature = mSettings->value("VFSAMovesPerTemperature").toInt();
     mVFSASolutions = mSettings->value("VFSASolutions").toInt();
@@ -412,7 +426,7 @@ void QVESSettings::writeInversionSettings() const
     mSettings->setValue("AutoDarZarroukThreshold", mAutoDarZarroukThreshold);
     mSettings->setValue("AutoDarZarrouk", mAutoDarZarrouk);
 
-    mSettings->setValue("AutoDarZarroukThreshold", mVFSAInitialTemperature);
+    mSettings->setValue("VFSAInitialTemperature", mVFSAInitialTemperature);
     mSettings->setValue("VFSAIterationsPerTemperature", mVFSAIterationsPerTemperature);
     mSettings->setValue("VFSAMovesPerTemperature", mVFSAMovesPerTemperature);
     mSettings->setValue("VFSASolutions", mVFSASolutions);
@@ -470,8 +484,8 @@ void QVESSettings::readSettings()
     readGraphicsSettings();
 
     if(!mSettingsInitialized){
-        restoreDefaultSettings();
-        mSettingsInitialized = true;
+       restoreDefaultSettings();
+       mSettingsInitialized = true;
     }
 
     emit settingsLoaded();

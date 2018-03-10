@@ -1,7 +1,5 @@
 #include "MainChart.h"
 #include <QtCharts/QSplineSeries>
-#include <QtCharts/QLogValueAxis>
-#include <QtCharts/QValueAxis>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QVXYModelMapper>
@@ -42,8 +40,12 @@ void MainChart::createModeledSeries()
 
 void MainChart::configureXYAxis()
 {
-    QLogValueAxis *axisX = new QLogValueAxis();
-    axisX->setTitleText(tr("Distancia AB/2 (m)"));
+    axisX = new QLogValueAxis();
+    if(mModeledSeries->isVisible()){
+        axisX->setTitleText(tr("Distancia AB/2 - Profundidad (m)"));
+    } else {
+        axisX->setTitleText(tr("Distancia AB/2 (m)"));
+    }
     axisX->setLabelFormat("%g");
     axisX->setBase(10.0);
     axisX->setMinorTickCount(-1);
@@ -54,8 +56,8 @@ void MainChart::configureXYAxis()
     chart->setAxisX(axisX, mModeledSeries->series());
     axisX->setRange(mDelegate->chartMinX(), mDelegate->chartMaxX());
 
-    QLogValueAxis *axisY = new QLogValueAxis();
-    axisY->setTitleText(tr("Resistividad"));
+    axisY = new QLogValueAxis();
+    axisY->setTitleText(tr("Resistividad (Ohm.m)"));
     axisY->setLabelFormat("%g");
     axisY->setBase(10.0);
     axisY->setMinorTickCount(-1);
@@ -70,6 +72,8 @@ void MainChart::configureXYAxis()
 MainChart::MainChart(QWidget *parent) : QWidget(parent)
 {
     chart = new QChart();
+    axisX = new QLogValueAxis();
+    axisY = new QLogValueAxis();
 
     mDelegate = new QVESModelDelegate(this);
 
@@ -82,7 +86,7 @@ MainChart::MainChart(QWidget *parent) : QWidget(parent)
     createCalculatedSeries();
     chart->addSeries(mCalculatedSeries->series());
 
-   createModeledSeries();
+    createModeledSeries();
     chart->addSeries(mModeledSeries->series());
 
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
@@ -109,6 +113,11 @@ void MainChart::setCalculatedVisible(const bool value)
 void MainChart::setModeledVisible(const bool value)
 {
     mModeledSeries->setVisible(value);
+    if(mModeledSeries->isVisible()){
+        axisX->setTitleText(tr("Distancia AB/2 - Profundidad (m)"));
+    } else {
+        axisX->setTitleText(tr("Distancia AB/2 (m)"));
+    }
 }
 
 void MainChart::chartDelegateChanged(QVESModelDelegate *del)

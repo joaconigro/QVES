@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QtCharts/QChartView>
+#include <QtCharts/QLogValueAxis>
+#include <QtCharts/QValueAxis>
 #include "QVESModelDelegate.h"
 #include "QVESChartSerie.h"
 #include "VES.h"
@@ -18,6 +20,8 @@ class MainChart : public QWidget
     QVESChartSerie *mSpliceSeries;
     QVESChartSerie *mCalculatedSeries;
     QVESChartSerie *mModeledSeries;
+    QLogValueAxis *axisX;
+    QLogValueAxis *axisY;
 
     void createFieldSeries();
     void createSpliceSeries();
