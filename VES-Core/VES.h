@@ -98,7 +98,7 @@ signals:
 public slots:
     void createSplices();
     void dataEdited(const int dataType, const int row, const int column, const double value);
-    void zohdyInversion();
+    void zohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
     void selectModel(const int modelIndex);
     void darZarrouk(const QList<int> bedIndices);
     void newZohdyModel(const int numberOfBeds);

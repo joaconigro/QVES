@@ -11,6 +11,7 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QDir>
+#include "QVESSettingsDialog.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -19,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    recentProjectsMenu = new QMenu(tr("Proyectos recientes"), this);
+    QAction* before = ui->menuFile->actions().at(2);
+    ui->menuFile->insertMenu(before, recentProjectsMenu);
 
     rmsStatusLabel = new QLabel(this);
     ui->statusBar->addPermanentWidget(rmsStatusLabel);
@@ -76,7 +81,7 @@ void MainWindow::createConnections()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(ui->actionEmptyModel, &QAction::triggered, this, &MainWindow::createEmptyModel);
-    connect(ui->actionZohdy, &QAction::triggered, mDelegate, &QVESModelDelegate::carryOutZohdyInversion);
+    connect(ui->actionZohdy, &QAction::triggered, mDelegate, &QVESModelDelegate::onZohdyInversionRequested);
     connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainWindow::modelUpdated);
     connect(ui->actionMergeBeds, &QAction::triggered, mDelegate, &QVESModelDelegate::mergeSelectedBeds);
@@ -233,12 +238,10 @@ void MainWindow::onSettingsLoaded()
 {
     mLastDirectory = mQVESSettings->lastDirectory();
 
-    QMenu *recentsMenu = new QMenu(tr("Proyectos recientes"), this);
+    recentProjectsMenu->clear();
     foreach (auto &s, mQVESSettings->lastOpenedProjects()) {
-        recentsMenu->addAction(s, [=](){this->openProject(s);});
-    }
-    QAction* before = ui->menuFile->actions().at(2);
-    ui->menuFile->insertMenu(before, recentsMenu);
+        recentProjectsMenu->addAction(s, [=](){this->openProject(s);});
+    }    
 
     ui->actionShowFieldData->setChecked(mQVESSettings->showField());
     emit fieldVisibleChanged(mQVESSettings->showField());
@@ -251,6 +254,19 @@ void MainWindow::onSettingsLoaded()
 
     ui->actionShowModels->setChecked(mQVESSettings->showModel());
     emit modeledVisibleChanged(mQVESSettings->showModel());
+
+    mDelegate->setZohdyFilter(mQVESSettings->zohdyFilter());
+    mDelegate->setAutoDarZarrouk(mQVESSettings->autoDarZarrouk());
+    mDelegate->setAutoDarZarroukThreshold(mQVESSettings->autoDarZarroukThreshold());
+    mDelegate->setVFSAInitialTemperature(mQVESSettings->vFSAInitialTemperature());
+    mDelegate->setVFSAIterationsPerTemperature(mQVESSettings->vFSAIterationsPerTemperature());
+    mDelegate->setVFSAMaximunError(mQVESSettings->vFSAMaximunError());
+    mDelegate->setVFSAMinimunPdf(mQVESSettings->vFSAMinimunPdf());
+    mDelegate->setVFSAMovesPerTemperature(mQVESSettings->vFSAMovesPerTemperature());
+    mDelegate->setVFSANumberOfBeds(mQVESSettings->vFSANumberOfBeds());
+    mDelegate->setVFSASolutions(mQVESSettings->vFSASolutions());
+
+    mChart->loadQVESSettings(mQVESSettings);
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -259,4 +275,22 @@ void MainWindow::on_actionOpen_triggered()
                                                     mLastDirectory,
                                                     tr("Proyectos QVS (*.qvs);; Proyectos antiguos de SEVs (*.sev)"));
     openProject(fileName);
+}
+
+void MainWindow::on_actionInversionOptions_triggered()
+{
+    QVESSettingsDialog* diag = new QVESSettingsDialog(mQVESSettings, 1, this);
+    diag->exec();
+}
+
+void MainWindow::on_actionChartOptions_triggered()
+{
+    QVESSettingsDialog diag(mQVESSettings, 2, this);
+    diag.exec();
+}
+
+void MainWindow::on_actionGeneralOptions_triggered()
+{
+    QVESSettingsDialog diag(mQVESSettings, 0, this);
+    diag.exec();
 }

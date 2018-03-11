@@ -50,6 +50,106 @@ QList<int> QVESModelDelegate::selectedRows() const
     return mSelectedRows;
 }
 
+int QVESModelDelegate::zohdyFilter() const
+{
+    return mZohdyFilter;
+}
+
+void QVESModelDelegate::setZohdyFilter(int zohdyFilter)
+{
+    mZohdyFilter = zohdyFilter;
+}
+
+double QVESModelDelegate::autoDarZarroukThreshold() const
+{
+    return mAutoDarZarroukThreshold;
+}
+
+void QVESModelDelegate::setAutoDarZarroukThreshold(double autoDarZarroukThreshold)
+{
+    mAutoDarZarroukThreshold = autoDarZarroukThreshold;
+}
+
+bool QVESModelDelegate::autoDarZarrouk() const
+{
+    return mAutoDarZarrouk;
+}
+
+void QVESModelDelegate::setAutoDarZarrouk(bool autoDarZarrouk)
+{
+    mAutoDarZarrouk = autoDarZarrouk;
+}
+
+double QVESModelDelegate::vFSAInitialTemperature() const
+{
+    return mVFSAInitialTemperature;
+}
+
+void QVESModelDelegate::setVFSAInitialTemperature(double vFSAInitialTemperature)
+{
+    mVFSAInitialTemperature = vFSAInitialTemperature;
+}
+
+int QVESModelDelegate::vFSAIterationsPerTemperature() const
+{
+    return mVFSAIterationsPerTemperature;
+}
+
+void QVESModelDelegate::setVFSAIterationsPerTemperature(int vFSAIterationsPerTemperature)
+{
+    mVFSAIterationsPerTemperature = vFSAIterationsPerTemperature;
+}
+
+int QVESModelDelegate::vFSAMovesPerTemperature() const
+{
+    return mVFSAMovesPerTemperature;
+}
+
+void QVESModelDelegate::setVFSAMovesPerTemperature(int vFSAMovesPerTemperature)
+{
+    mVFSAMovesPerTemperature = vFSAMovesPerTemperature;
+}
+
+int QVESModelDelegate::vFSASolutions() const
+{
+    return mVFSASolutions;
+}
+
+void QVESModelDelegate::setVFSASolutions(int vFSASolutions)
+{
+    mVFSASolutions = vFSASolutions;
+}
+
+int QVESModelDelegate::vFSANumberOfBeds() const
+{
+    return mVFSANumberOfBeds;
+}
+
+void QVESModelDelegate::setVFSANumberOfBeds(int vFSANumberOfBeds)
+{
+    mVFSANumberOfBeds = vFSANumberOfBeds;
+}
+
+double QVESModelDelegate::vFSAMaximunError() const
+{
+    return mVFSAMaximunError;
+}
+
+void QVESModelDelegate::setVFSAMaximunError(double vFSAMaximunError)
+{
+    mVFSAMaximunError = vFSAMaximunError;
+}
+
+double QVESModelDelegate::vFSAMinimunPdf() const
+{
+    return mVFSAMinimunPdf;
+}
+
+void QVESModelDelegate::setVFSAMinimunPdf(double vFSAMinimunPdf)
+{
+    mVFSAMinimunPdf = vFSAMinimunPdf;
+}
+
 void QVESModelDelegate::readVESNames()
 {
     mVESNames.clear();
@@ -391,4 +491,9 @@ void QVESModelDelegate::createEmptyModel(const int numberOfBeds)
     if (mCurrentVES){
         mCurrentVES->newZohdyModel(numberOfBeds);
     }
+}
+
+void QVESModelDelegate::onZohdyInversionRequested()
+{
+    emit carryOutZohdyInversion(mZohdyFilter, mAutoDarZarrouk, mAutoDarZarroukThreshold);
 }

@@ -44,6 +44,18 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     QString mVESName;
     QList<int> mSelectedRows;
 
+    int mZohdyFilter;
+    double mAutoDarZarroukThreshold;
+    bool mAutoDarZarrouk;
+
+    double mVFSAInitialTemperature;
+    int mVFSAIterationsPerTemperature;
+    int mVFSAMovesPerTemperature;
+    int mVFSASolutions;
+    int mVFSANumberOfBeds;
+    double mVFSAMaximunError;
+    double mVFSAMinimunPdf;
+
     void readVESNames();
     void readModelNames();
     void selectModelForTable();
@@ -74,6 +86,36 @@ public:
     QString vesName() const;
     QList<int> selectedRows() const;
 
+    int zohdyFilter() const;
+    void setZohdyFilter(int zohdyFilter);
+
+    double autoDarZarroukThreshold() const;
+    void setAutoDarZarroukThreshold(double autoDarZarroukThreshold);
+
+    bool autoDarZarrouk() const;
+    void setAutoDarZarrouk(bool autoDarZarrouk);
+
+    double vFSAInitialTemperature() const;
+    void setVFSAInitialTemperature(double vFSAInitialTemperature);
+
+    int vFSAIterationsPerTemperature() const;
+    void setVFSAIterationsPerTemperature(int vFSAIterationsPerTemperature);
+
+    int vFSAMovesPerTemperature() const;
+    void setVFSAMovesPerTemperature(int vFSAMovesPerTemperature);
+
+    int vFSASolutions() const;
+    void setVFSASolutions(int vFSASolutions);
+
+    int vFSANumberOfBeds() const;
+    void setVFSANumberOfBeds(int vFSANumberOfBeds);
+
+    double vFSAMaximunError() const;
+    void setVFSAMaximunError(double vFSAMaximunError);
+
+    double vFSAMinimunPdf() const;
+    void setVFSAMinimunPdf(double vFSAMinimunPdf);
+
 public slots:
     void changeCurrentProject();
     void changeCurrentVES();
@@ -94,13 +136,14 @@ public slots:
     void currentVESFieldModified();
     void mergeSelectedBeds();
     void createEmptyModel(const int numberOfBeds);
+    void onZohdyInversionRequested();
 
 signals:
     void projectChanged();
     void vesChanged();
     void vesCurrentModelChanged();
     void tableModelChanged();
-    void carryOutZohdyInversion();
+    void carryOutZohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
     void carryOutDarZarrouk(const QList<int> beds);
 };
 

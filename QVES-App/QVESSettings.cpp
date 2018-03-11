@@ -99,16 +99,6 @@ void QVESSettings::setVFSASolutions(int vFSASolutions)
     mVFSASolutions = vFSASolutions;
 }
 
-int QVESSettings::vFSANumberOfParameters() const
-{
-    return mVFSANumberOfParameters;
-}
-
-void QVESSettings::setVFSANumberOfParameters(int vFSANumberOfParameters)
-{
-    mVFSANumberOfParameters = vFSANumberOfParameters;
-}
-
 int QVESSettings::vFSANumberOfBeds() const
 {
     return mVFSANumberOfBeds;
@@ -304,8 +294,24 @@ QStringList QVESSettings::lastOpenedProjects() const
     return mLastOpenedProjects;
 }
 
+int QVESSettings::language() const
+{
+    return mLanguage;
+}
+
+void QVESSettings::setLanguage(int language)
+{
+    mLanguage = language;
+}
+
+void QVESSettings::clearRecentProjects()
+{
+    mLastOpenedProjects.clear();
+}
+
 void QVESSettings::defaultGeneralSettings()
 {
+    mLanguage = 0;
     mLastDirectory = "";
     QStringList l;
     mLastOpenedProjects = l;
@@ -322,7 +328,6 @@ void QVESSettings::defaultInversionSettings()
     mVFSAIterationsPerTemperature = 1000;
     mVFSAMovesPerTemperature = 20;
     mVFSASolutions = 10;
-    mVFSANumberOfParameters = 5;
     mVFSANumberOfBeds = 3;
     mVFSAMaximunError = 0.0001;
     mVFSAMinimunPdf = 0.6825;
@@ -354,6 +359,7 @@ void QVESSettings::defaultGraphicsSettings()
 
 void QVESSettings::readGeneralSettings()
 {
+    mLanguage = mSettings->value("Language").toInt();
     mSettingsInitialized = mSettings->value("SettingsInitialized").toBool();
     mLastDirectory = mSettings->value("LastDirectory").toString();
     mLastOpenedProjects = mSettings->value("LastOpenedProjects").toStringList();
@@ -382,7 +388,6 @@ void QVESSettings::readInversionSettings()
     mVFSAIterationsPerTemperature = mSettings->value("VFSAIterationsPerTemperature").toInt();
     mVFSAMovesPerTemperature = mSettings->value("VFSAMovesPerTemperature").toInt();
     mVFSASolutions = mSettings->value("VFSASolutions").toInt();
-    mVFSANumberOfParameters = mSettings->value("VFSANumberOfParameters").toInt();
     mVFSANumberOfBeds = mSettings->value("VFSANumberOfBeds").toInt();
     mVFSAMaximunError = mSettings->value("VFSAMaximunError").toDouble();
     mVFSAMinimunPdf = mSettings->value("VFSAMinimunPdf").toDouble();
@@ -414,6 +419,7 @@ void QVESSettings::readGraphicsSettings()
 
 void QVESSettings::writeGeneralSettings() const
 {
+    mSettings->setValue("Language", mLanguage);
     mSettings->setValue("SettingsInitialized", mSettingsInitialized);
     mSettings->setValue("LastDirectory", mLastDirectory);
     mSettings->setValue("LastOpenedProjects", mLastOpenedProjects);
@@ -430,7 +436,6 @@ void QVESSettings::writeInversionSettings() const
     mSettings->setValue("VFSAIterationsPerTemperature", mVFSAIterationsPerTemperature);
     mSettings->setValue("VFSAMovesPerTemperature", mVFSAMovesPerTemperature);
     mSettings->setValue("VFSASolutions", mVFSASolutions);
-    mSettings->setValue("VFSANumberOfParameters", mVFSANumberOfParameters);
     mSettings->setValue("VFSANumberOfBeds", mVFSANumberOfBeds);
     mSettings->setValue("VFSAMaximunError", mVFSAMaximunError);
     mSettings->setValue("VFSAMinimunPdf", mVFSAMinimunPdf);

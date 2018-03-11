@@ -9,6 +9,7 @@
 #include "QVESChartSerie.h"
 #include "VES.h"
 #include <QVXYModelMapper>
+#include "QVESSettings.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -22,6 +23,7 @@ class MainChart : public QWidget
     QVESChartSerie *mModeledSeries;
     QLogValueAxis *axisX;
     QLogValueAxis *axisY;
+    QChart::ChartTheme mTheme;
 
     void createFieldSeries();
     void createSpliceSeries();
@@ -44,6 +46,7 @@ public slots:
    void setModeledVisible(const bool value);
    void chartDelegateChanged(QVESModelDelegate *del);
    void modelDelegateChanged();
+   void loadQVESSettings(const QVESSettings* settings);
 };
 
 #endif // MAINCHART_H

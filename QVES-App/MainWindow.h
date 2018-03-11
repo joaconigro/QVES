@@ -24,6 +24,7 @@ public:
 
 private:
     QLabel *rmsStatusLabel;
+    QMenu *recentProjectsMenu;
     Ui::MainWindow *ui;
     DataPanel *mDataPanel;
     VESPropertiesPanel *mPropertiesPanel;
@@ -62,6 +63,14 @@ private slots:
     void onSettingsLoaded();
 
     void on_actionOpen_triggered();
+
+    void on_actionInversionOptions_triggered();
+
+    void on_actionChartOptions_triggered();
+
+    void on_actionGeneralOptions_triggered();
+
+
 
 signals:
     void fieldVisibleChanged(const bool value);

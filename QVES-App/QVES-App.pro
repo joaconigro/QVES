@@ -32,7 +32,8 @@ SOURCES += \
     TableDelegate.cpp \
     NewCustomModelDialog.cpp \
     QVESChartSerie.cpp \
-    QVESSettings.cpp
+    QVESSettings.cpp \
+    QVESSettingsDialog.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -42,13 +43,15 @@ HEADERS += \
     TableDelegate.h \
     NewCustomModelDialog.h \
     QVESChartSerie.h \
-    QVESSettings.h
+    QVESSettings.h \
+    QVESSettingsDialog.h
 
 FORMS += \
         MainWindow.ui \
     DataPanel.ui \
     VESPropertiesPanel.ui \
-    NewCustomModelDialog.ui
+    NewCustomModelDialog.ui \
+    QVESSettingsDialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core

@@ -46,9 +46,13 @@ void MainChart::configureXYAxis()
     } else {
         axisX->setTitleText(tr("Distancia AB/2 (m)"));
     }
+    QBrush brush(Qt::gray);
+    QPen minorGridPen(brush, 0.2, Qt::DashLine);
+
     axisX->setLabelFormat("%g");
     axisX->setBase(10.0);
     axisX->setMinorTickCount(-1);
+    axisX->setMinorGridLinePen(minorGridPen);
     chart->addAxis(axisX, Qt::AlignBottom);
     chart->setAxisX(axisX, mFieldSeries->series());
     chart->setAxisX(axisX, mSpliceSeries->series());
@@ -61,6 +65,7 @@ void MainChart::configureXYAxis()
     axisY->setLabelFormat("%g");
     axisY->setBase(10.0);
     axisY->setMinorTickCount(-1);
+    axisY->setMinorGridLinePen(minorGridPen);
     chart->addAxis(axisY, Qt::AlignLeft);
     chart->setAxisY(axisY, mFieldSeries->series());
     chart->setAxisY(axisY, mSpliceSeries->series());
@@ -136,6 +141,12 @@ void MainChart::modelDelegateChanged()
 
     configureXYAxis();
     chart->setTitle(mDelegate->vesName());
+}
+
+void MainChart::loadQVESSettings(const QVESSettings *settings)
+{
+    mTheme = static_cast<QChart::ChartTheme>(settings->chartTheme());
+    chart->setTheme(mTheme);
 }
 
 

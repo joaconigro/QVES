@@ -12,6 +12,7 @@ class QVESSettings : public QObject
 
     QSettings* mSettings;
 
+    int mLanguage;
     bool mSettingsInitialized;
     QString mLastDirectory;
     QStringList mLastOpenedProjects;
@@ -26,7 +27,6 @@ class QVESSettings : public QObject
     int mVFSAIterationsPerTemperature;
     int mVFSAMovesPerTemperature;
     int mVFSASolutions;
-    int mVFSANumberOfParameters;
     int mVFSANumberOfBeds;
     double mVFSAMaximunError;
     double mVFSAMinimunPdf;
@@ -97,9 +97,6 @@ public:
     int vFSASolutions() const;
     void setVFSASolutions(int vFSASolutions);
 
-    int vFSANumberOfParameters() const;
-    void setVFSANumberOfParameters(int vFSANumberOfParameters);
-
     int vFSANumberOfBeds() const;
     void setVFSANumberOfBeds(int vFSANumberOfBeds);
 
@@ -159,10 +156,14 @@ public:
 
     QStringList lastOpenedProjects() const;
 
+    int language() const;
+    void setLanguage(int language);
+
 signals:
     void settingsLoaded();
 
 public slots:
+    void clearRecentProjects();
     void setSettings(QSettings *settings);
     void restoreDefaultSettings();
     void readSettings();

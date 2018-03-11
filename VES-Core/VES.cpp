@@ -454,16 +454,18 @@ void VES::updateFieldData(const int row, const int column, const double value)
 
 }
 
-void VES::zohdyInversion()
+void VES::zohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold)
 {
     int zohdyCounter = 0;
     foreach (const InversionModel *im, mModels) {
-        if (im->usedAlgorithm() != InversionModel::InversionAlgorithm::Zohdy){
+        if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
             ++zohdyCounter;
         }
     }
 
-    ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), InversionModel::ZohdyFilters::Johansen, this);
+    InversionModel::ZohdyFilters selectedFilter = static_cast<InversionModel::ZohdyFilters>(zohdyFilter);
+
+    ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), selectedFilter, this, autoDZ, autoDZThreshold);
     zm->setIsSmoothing(false);
     zm->inversion(splices());
 
