@@ -13,6 +13,7 @@ void MainChart::createFieldSeries()
     mFieldSeries->setSize(8.0);
     mFieldSeries->setMarkerType(QVESChartSerie::MarkerType::Circle);
     mFieldSeries->setModel(mDelegate->fieldModel());
+    mFieldSeries->removeBorderPen();
 }
 
 void MainChart::createSpliceSeries()
@@ -21,6 +22,7 @@ void MainChart::createSpliceSeries()
     mSpliceSeries->setSize(8.0);
     mSpliceSeries->setMarkerType(QVESChartSerie::MarkerType::Square);
     mSpliceSeries->setModel(mDelegate->spliceModel());
+    mSpliceSeries->removeBorderPen();
 }
 
 void MainChart::createCalculatedSeries()
@@ -29,6 +31,7 @@ void MainChart::createCalculatedSeries()
     mCalculatedSeries->setSize(10.0);
     mCalculatedSeries->setMarkerType(QVESChartSerie::MarkerType::Triangle);
     mCalculatedSeries->setModel(mDelegate->calculatedModel());
+    mCalculatedSeries->removeBorderPen();
 }
 
 void MainChart::createModeledSeries()
@@ -147,6 +150,30 @@ void MainChart::loadQVESSettings(const QVESSettings *settings)
 {
     mTheme = static_cast<QChart::ChartTheme>(settings->chartTheme());
     chart->setTheme(mTheme);
+
+    QBrush brush(Qt::gray);
+    QPen minorGridPen(brush, 0.2, Qt::DashLine);
+    axisX->setMinorGridLinePen(minorGridPen);
+    axisY->setMinorGridLinePen(minorGridPen);
+
+
+    mFieldSeries->setColor(settings->fieldColor());
+    mFieldSeries->setSize(settings->fieldPointSize());
+    mFieldSeries->setMarkerType(static_cast<QVESChartSerie::MarkerType>(settings->fieldMarkerType()));
+    mFieldSeries->removeBorderPen();
+
+    mSpliceSeries->setColor(settings->spliceColor());
+    mSpliceSeries->setSize(settings->splicePointSize());
+    mSpliceSeries->setMarkerType(static_cast<QVESChartSerie::MarkerType>(settings->spliceMarkerType()));
+    mSpliceSeries->removeBorderPen();
+
+    mCalculatedSeries->setColor(settings->calculatedColor());
+    mCalculatedSeries->setSize(settings->calculatedPointSize());
+    mCalculatedSeries->setMarkerType(static_cast<QVESChartSerie::MarkerType>(settings->calculatedMarkerType()));
+    mCalculatedSeries->removeBorderPen();
+
+    mModeledSeries->setColor(settings->modelColor());
+    mModeledSeries->setSize(settings->modelLineWidth());
 }
 
 

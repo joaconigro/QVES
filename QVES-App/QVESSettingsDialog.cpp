@@ -15,10 +15,6 @@ void QVESSettingsDialog::initialize()
     chartThemes.append(tr("Azul claro"));
     chartThemes.append(tr("Oscuro"));
     chartThemes.append(tr("Arena marrón"));
-    chartThemes.append(tr("Azul del sistema"));
-    chartThemes.append(tr("Alto contraste"));
-    chartThemes.append(tr("Azul hielo"));
-    chartThemes.append(tr("Qt"));
     ui->chartThemeComboBox->addItems(chartThemes);
 
     series.append(tr("Campo"));
@@ -111,6 +107,7 @@ void QVESSettingsDialog::configureSelectedSeries()
         ui->pointSymbolTypeComboBox->setVisible(false);
         ui->pointSymbolTypeLabel->setVisible(false);
         ui->sizeDoubleSpinBox->setVisible(true);
+        ui->sizeDoubleSpinBox->setValue(mModelLineWidth);
         ui->sizeLabel->setVisible(true);
         break;
     case 4:
@@ -126,6 +123,23 @@ void QVESSettingsDialog::configureSelectedSeries()
         ui->pointSymbolTypeLabel->setVisible(true);
         ui->sizeDoubleSpinBox->setVisible(true);
         ui->sizeLabel->setVisible(true);
+
+        switch (selectedSeries) {
+        case 0:
+            ui->pointSymbolTypeComboBox->setCurrentIndex(mFieldMarkerType);
+            ui->sizeDoubleSpinBox->setValue(mFieldPointSize);
+            break;
+        case 1:
+            ui->pointSymbolTypeComboBox->setCurrentIndex(mSpliceMarkerType);
+            ui->sizeDoubleSpinBox->setValue(mSplicePointSize);
+            break;
+        case 2:
+            ui->pointSymbolTypeComboBox->setCurrentIndex(mCalculatedMarkerType);
+            ui->sizeDoubleSpinBox->setValue(mCalculatedPointSize);
+            break;
+        default:
+            break;
+        }
         break;
     }
 }

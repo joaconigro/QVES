@@ -18,21 +18,20 @@ QImage QVESChartSerie::getStarMarker() const
 
     QPainter painter(&star);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(QRgb(0xf6a625));
+    painter.setPen(mSeries->color());
     painter.setBrush(painter.pen().color());
     painter.drawPath(starPath);
 
     int markerSize = (int)size();
-    return star.scaled(markerSize, markerSize, Qt::KeepAspectRatio);
+    return star.scaled(markerSize, markerSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 QImage QVESChartSerie::getTriangleMarker() const
 {
     QPainterPath trianglePath;
-    trianglePath.moveTo(0, 30);
-    trianglePath.lineTo(30, 30);
-    trianglePath.lineTo(15, 0);
-
+    trianglePath.moveTo(4, 26);
+    trianglePath.lineTo(26, 26);
+    trianglePath.lineTo(15, 4);
     trianglePath.closeSubpath();
 
     QImage triangle(30, 30, QImage::Format_ARGB32);
@@ -40,12 +39,12 @@ QImage QVESChartSerie::getTriangleMarker() const
 
     QPainter painter(&triangle);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(QRgb(0xf6a625));
+    painter.setPen(mSeries->color());
     painter.setBrush(painter.pen().color());
     painter.drawPath(trianglePath);
 
     int markerSize = (int)size();
-    return triangle.scaled(markerSize, markerSize, Qt::KeepAspectRatio);
+    return triangle.scaled(markerSize, markerSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 QVESChartSerie::QVESChartSerie(QObject *parent) : QObject(parent)
@@ -125,9 +124,12 @@ QString QVESChartSerie::markerType() const
 void QVESChartSerie::setSize(qreal size)
 {
     if (mType == SeriesType::Point){
-        return dynamic_cast<QScatterSeries*>(mSeries)->setMarkerSize(size);
+        static_cast<QScatterSeries*>(mSeries)->setMarkerSize(size);
     } else {
-        return dynamic_cast<QLineSeries*>(mSeries)->pen().setWidthF(size);
+        QPen newPen(mSeries->pen().color(), size);
+        mSeries->setPen(newPen);
+        //static_cast<QLineSeries*>(mSeries)->setPen(newPen);
+        //static_cast<QLineSeries*>(mSeries)->pen().setWidthF(size);
     }
 }
 
@@ -149,6 +151,7 @@ void QVESChartSerie::setModel(QAbstractItemModel *model)
 void QVESChartSerie::setMarkerType(QVESChartSerie::MarkerType type)
 {
     if (mType == SeriesType::Point){
+        mMarker = type;
         switch (type) {
         case MarkerType::Circle:
             dynamic_cast<QScatterSeries*>(mSeries)->setMarkerShape(QScatterSeries::MarkerShapeCircle);
@@ -158,14 +161,21 @@ void QVESChartSerie::setMarkerType(QVESChartSerie::MarkerType type)
             break;
         case MarkerType::Star:
             mSeries->setBrush(getStarMarker());
-            mSeries->setPen(QColor(Qt::transparent));
+            //mSeries->setPen(QColor(Qt::transparent));
             break;
         case MarkerType::Triangle:
             mSeries->setBrush(getTriangleMarker());
-            mSeries->setPen(QColor(Qt::transparent));
+            //mSeries->setPen(QColor(Qt::transparent));
             break;
         default:
             break;
         }
     }
+}
+
+void QVESChartSerie::removeBorderPen()
+{
+    QPen borderPen(QColor(Qt::transparent), 0.0);
+    mSeries->setPen(borderPen);
+    //static_cast<QScatterSeries*>(mSeries)->setPen(borderPen);
 }

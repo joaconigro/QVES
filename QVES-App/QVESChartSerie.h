@@ -47,6 +47,7 @@ public:
     void setVisible(bool value);
     void setModel(QAbstractItemModel* model);
     void setMarkerType(MarkerType type);
+    void removeBorderPen();
 
 signals:
 
