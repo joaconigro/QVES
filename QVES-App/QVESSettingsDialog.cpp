@@ -17,6 +17,12 @@ void QVESSettingsDialog::initialize()
     chartThemes.append(tr("Arena marrón"));
     ui->chartThemeComboBox->addItems(chartThemes);
 
+    chartAnimationOptions.append(tr("Sin animaciones"));
+    chartAnimationOptions.append(tr("Solo ejes animados"));
+    chartAnimationOptions.append(tr("Solo series animadas"));
+    chartAnimationOptions.append(tr("Todas las animaciones"));
+    ui->chartAnimationComboBox->addItems(chartAnimationOptions);
+
     series.append(tr("Campo"));
     series.append(tr("Empalmes"));
     series.append(tr("Calculados"));
@@ -50,6 +56,7 @@ void QVESSettingsDialog::readSettings()
     mVFSAMinimunPdf = mSettings->vFSAMinimunPdf();
 
     mChartTheme = mSettings->chartTheme();
+    mChartAnimation = mSettings->chartAnimation();
     mFieldPointSize = mSettings->fieldPointSize();
     mFieldColor = mSettings->fieldColor();
     mFieldMarkerType = mSettings->fieldMarkerType();
@@ -88,6 +95,7 @@ void QVESSettingsDialog::configureUi()
 
 
     ui->chartThemeComboBox->setCurrentIndex(mChartTheme);
+    ui->chartAnimationComboBox->setCurrentIndex(mChartAnimation);
     configureSelectedSeries();
 
 }
@@ -220,6 +228,7 @@ void QVESSettingsDialog::on_buttonBox_accepted()
 
 
     mSettings->setChartTheme(mChartTheme);
+    mSettings->setChartAnimation(mChartAnimation);
 
     mSettings->setFieldPointSize(mFieldPointSize);
     mSettings->setFieldColor(mFieldColor);
@@ -360,4 +369,9 @@ void QVESSettingsDialog::on_colorPushButton_clicked()
     default:
         break;
     }
+}
+
+void QVESSettingsDialog::on_chartAnimationComboBox_currentIndexChanged(int index)
+{
+    mChartAnimation = index;
 }

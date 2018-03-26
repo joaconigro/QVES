@@ -22,6 +22,7 @@ class QVESSettingsDialog : public QDialog
     QStringList chartThemes;
     QStringList series;
     QStringList markerSymbols;
+    QStringList chartAnimationOptions;
     int selectedSeries;
 
     int mLanguage;
@@ -40,6 +41,7 @@ class QVESSettingsDialog : public QDialog
     double mVFSAMinimunPdf;
 
     int mChartTheme;
+    int mChartAnimation;
     double mFieldPointSize;
     QColor mFieldColor;
     int mFieldMarkerType;
@@ -103,6 +105,8 @@ private slots:
     void on_pointSymbolTypeComboBox_currentIndexChanged(int index);
 
     void on_colorPushButton_clicked();
+
+    void on_chartAnimationComboBox_currentIndexChanged(int index);
 
 private:
     Ui::QVESSettingsDialog *ui;

@@ -309,6 +309,16 @@ void QVESSettings::clearRecentProjects()
     mLastOpenedProjects.clear();
 }
 
+int QVESSettings::chartAnimation() const
+{
+    return mChartAnimation;
+}
+
+void QVESSettings::setChartAnimation(int chartAnimation)
+{
+    mChartAnimation = chartAnimation;
+}
+
 void QVESSettings::defaultGeneralSettings()
 {
     mLanguage = 0;
@@ -336,6 +346,7 @@ void QVESSettings::defaultInversionSettings()
 void QVESSettings::defaultGraphicsSettings()
 {
     mChartTheme = 0;
+    mChartAnimation = 3;
 
     mFieldPointSize = 8.0;
     mFieldColor = QColor::fromRgb(32, 159, 223);
@@ -396,6 +407,7 @@ void QVESSettings::readInversionSettings()
 void QVESSettings::readGraphicsSettings()
 {
     mChartTheme = mSettings->value("ChartTheme").toInt();
+    mChartAnimation = mSettings->value("ChartAnimation").toInt();
 
     mFieldPointSize = mSettings->value("FieldPointSize").toDouble();
     mFieldColor = mSettings->value("FieldColor").value<QColor>();
@@ -444,6 +456,7 @@ void QVESSettings::writeInversionSettings() const
 void QVESSettings::writeGraphicsSettings() const
 {
     mSettings->setValue("ChartTheme", mChartTheme);
+    mSettings->setValue("ChartAnimation", mChartAnimation);
 
     mSettings->setValue("FieldPointSize", mFieldPointSize);
     mSettings->setValue("FieldColor", mFieldColor);

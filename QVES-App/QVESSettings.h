@@ -32,6 +32,7 @@ class QVESSettings : public QObject
     double mVFSAMinimunPdf;
 
     int mChartTheme;
+    int mChartAnimation;
 
     double mFieldPointSize;
     QColor mFieldColor;
@@ -158,6 +159,9 @@ public:
 
     int language() const;
     void setLanguage(int language);
+
+    int chartAnimation() const;
+    void setChartAnimation(int chartAnimation);
 
 signals:
     void settingsLoaded();

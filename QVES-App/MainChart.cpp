@@ -150,6 +150,7 @@ void MainChart::loadQVESSettings(const QVESSettings *settings)
 {
     mTheme = static_cast<QChart::ChartTheme>(settings->chartTheme());
     chart->setTheme(mTheme);
+    chart->setAnimationOptions(static_cast<QChart::AnimationOption>(settings->chartAnimation()));
 
     QBrush brush(Qt::gray);
     QPen minorGridPen(brush, 0.2, Qt::DashLine);
