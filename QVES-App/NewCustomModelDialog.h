@@ -14,12 +14,11 @@ class NewCustomModelDialog : public QDialog
     int mNumberOfBeds;
 
 public:
-    explicit NewCustomModelDialog(QWidget *parent = 0);
-    ~NewCustomModelDialog();
+    explicit NewCustomModelDialog(const int beds, QWidget *parent = nullptr);
+    ~NewCustomModelDialog() override;
 
 private slots:
     void on_spinBoxNumberOfBeds_valueChanged(int arg1);
-
     void on_buttonBox_accepted();
 
 private:

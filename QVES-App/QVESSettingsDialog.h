@@ -31,6 +31,7 @@ class QVESSettingsDialog : public QDialog
     int mZohdyFilter;
     double mAutoDarZarroukThreshold;
     bool mAutoDarZarrouk;
+    int mDefaultNumberOfLayers;
 
     double mVFSAInitialTemperature;
     int mVFSAIterationsPerTemperature;
@@ -60,53 +61,32 @@ class QVESSettingsDialog : public QDialog
     void configureSelectedSeries();
 
 public:
-    explicit QVESSettingsDialog(QVESSettings* settings, int selectedTab = 0, QWidget *parent = 0);
-    ~QVESSettingsDialog();
-
-
+    explicit QVESSettingsDialog(QVESSettings* settings, int selectedTab = 0, QWidget *parent = nullptr);
+    ~QVESSettingsDialog() override;
 
 private slots:
     void on_languageComboBox_currentIndexChanged(int index);
-
     void on_defaultVESNameLineEdit_textChanged(const QString &arg1);
-
     void on_clearRecentsPushButton_clicked();
-
     void on_resetSettingsPushButton_clicked();
-
     void on_zohdyFiltersComboBox_currentIndexChanged(int index);
-
     void on_autoDarZarroukCheckBox_clicked();
-
     void on_thresholdDoubleSpinBox_valueChanged(double arg1);
-
     void on_buttonBox_accepted();
-
     void on_vfsaSolutionsSpinBox_valueChanged(int arg1);
-
     void on_vfsaIterationPerSolutionsSpinBox_valueChanged(int arg1);
-
     void on_vfsaMovesPerTemperatureSpinBox_valueChanged(int arg1);
-
     void on_vfsaNumberOfBedSpinBox_valueChanged(int arg1);
-
     void on_vfsaInitialTemperatureDoubleSpinBox_valueChanged(double arg1);
-
     void on_vfsaMaxErrorDoubleSpinBox_valueChanged(double arg1);
-
     void on_vfsaMinPDFDoubleSpinBox_valueChanged(double arg1);
-
     void on_chartThemeComboBox_currentIndexChanged(int index);
-
     void on_seriesListWidget_currentRowChanged(int currentRow);
-
     void on_sizeDoubleSpinBox_valueChanged(double arg1);
-
     void on_pointSymbolTypeComboBox_currentIndexChanged(int index);
-
     void on_colorPushButton_clicked();
-
     void on_chartAnimationComboBox_currentIndexChanged(int index);
+    void on_defautlNumberOfLayersSpinBox_valueChanged(int arg1);
 
 private:
     Ui::QVESSettingsDialog *ui;

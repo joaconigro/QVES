@@ -100,7 +100,7 @@ public slots:
     void dataEdited(const int dataType, const int row, const int column, const double value);
     void zohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
     void selectModel(const int modelIndex);
-    void darZarrouk(const QList<int> bedIndices);
+    void darZarrouk(const QList<int>& bedIndices);
     void newZohdyModel(const int numberOfBeds);
 };
 

@@ -319,6 +319,16 @@ void QVESSettings::setChartAnimation(int chartAnimation)
     mChartAnimation = chartAnimation;
 }
 
+int QVESSettings::defaultNumberOfLayers() const
+{
+    return mDefaultNumberOfLayers;
+}
+
+void QVESSettings::setDefaultNumberOfLayers(int defaultNumberOfLayers)
+{
+    mDefaultNumberOfLayers = defaultNumberOfLayers;
+}
+
 void QVESSettings::defaultGeneralSettings()
 {
     mLanguage = 0;
@@ -333,6 +343,7 @@ void QVESSettings::defaultInversionSettings()
     mZohdyFilter = 0;
     mAutoDarZarroukThreshold = 0.12;
     mAutoDarZarrouk = true;
+    mDefaultNumberOfLayers = 3;
 
     mVFSAInitialTemperature = 0.01;
     mVFSAIterationsPerTemperature = 1000;
@@ -394,6 +405,7 @@ void QVESSettings::readInversionSettings()
     mZohdyFilter = mSettings->value("ZohdyFilter").toInt();
     mAutoDarZarroukThreshold = mSettings->value("AutoDarZarroukThreshold").toDouble();
     mAutoDarZarrouk = mSettings->value("AutoDarZarrouk").toBool();
+    mDefaultNumberOfLayers = mSettings->value("DefaultNumberOfLayers").toInt();
 
     mVFSAInitialTemperature = mSettings->value("VFSAInitialTemperature").toDouble();
     mVFSAIterationsPerTemperature = mSettings->value("VFSAIterationsPerTemperature").toInt();
@@ -443,6 +455,7 @@ void QVESSettings::writeInversionSettings() const
     mSettings->setValue("ZohdyFilter", mZohdyFilter);
     mSettings->setValue("AutoDarZarroukThreshold", mAutoDarZarroukThreshold);
     mSettings->setValue("AutoDarZarrouk", mAutoDarZarrouk);
+    mSettings->setValue("DefaultNumberOfLayers", mDefaultNumberOfLayers);
 
     mSettings->setValue("VFSAInitialTemperature", mVFSAInitialTemperature);
     mSettings->setValue("VFSAIterationsPerTemperature", mVFSAIterationsPerTemperature);

@@ -355,6 +355,7 @@ Project *OldProject::readOldProject(const QString &filename)
             } else {
                 reader->skipCurrentElement();
             }
+            break;
         case QXmlStreamReader::TokenType::EndElement:
             if (reader->name() == "proyectoSEVs"){
                 read = false;

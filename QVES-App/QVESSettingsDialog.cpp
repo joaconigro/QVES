@@ -46,6 +46,7 @@ void QVESSettingsDialog::readSettings()
     mZohdyFilter = mSettings->zohdyFilter();
     mAutoDarZarroukThreshold = mSettings->autoDarZarroukThreshold();
     mAutoDarZarrouk = mSettings->autoDarZarrouk();
+    mDefaultNumberOfLayers = mSettings->defaultNumberOfLayers();
 
     mVFSAInitialTemperature = mSettings->vFSAInitialTemperature();
     mVFSAIterationsPerTemperature = mSettings->vFSAIterationsPerTemperature();
@@ -84,6 +85,7 @@ void QVESSettingsDialog::configureUi()
     ui->zohdyFiltersComboBox->setCurrentIndex(mZohdyFilter);
     ui->autoDarZarroukCheckBox->setChecked(mAutoDarZarrouk);
     ui->thresholdDoubleSpinBox->setValue(mAutoDarZarroukThreshold);
+    ui->defautlNumberOfLayersSpinBox->setValue(mDefaultNumberOfLayers);
 
     ui->vfsaInitialTemperatureDoubleSpinBox->setValue(mVFSAInitialTemperature);
     ui->vfsaIterationPerSolutionsSpinBox->setValue(mVFSAIterationsPerTemperature);
@@ -217,6 +219,7 @@ void QVESSettingsDialog::on_buttonBox_accepted()
     mSettings->setZohdyFilter(mZohdyFilter);
     mSettings->setAutoDarZarroukThreshold(mAutoDarZarroukThreshold);
     mSettings->setAutoDarZarrouk(mAutoDarZarrouk);
+    mSettings->setDefaultNumberOfLayers(mDefaultNumberOfLayers);
 
     mSettings->setVFSAInitialTemperature(mVFSAInitialTemperature);
     mSettings->setVFSAIterationsPerTemperature(mVFSAIterationsPerTemperature);
@@ -374,4 +377,9 @@ void QVESSettingsDialog::on_colorPushButton_clicked()
 void QVESSettingsDialog::on_chartAnimationComboBox_currentIndexChanged(int index)
 {
     mChartAnimation = index;
+}
+
+void QVESSettingsDialog::on_defautlNumberOfLayersSpinBox_valueChanged(int arg1)
+{
+    mDefaultNumberOfLayers = arg1;
 }

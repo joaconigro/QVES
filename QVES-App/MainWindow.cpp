@@ -184,7 +184,7 @@ void MainWindow::modelUpdated()
 
 void MainWindow::createEmptyModel()
 {
-    NewCustomModelDialog* diag = new NewCustomModelDialog(this);
+    NewCustomModelDialog* diag = new NewCustomModelDialog(mQVESSettings->defaultNumberOfLayers(), this);
     connect(diag, &NewCustomModelDialog::numberOfBedSelected, mDelegate, &QVESModelDelegate::createEmptyModel);
 
     diag->show();

@@ -18,7 +18,7 @@ public:
     explicit BasicData(QObject *parent = nullptr);
     explicit BasicData(const double ab2, const double res, const double sd = 0.0, QObject *parent = nullptr);
     BasicData(const BasicData& bd);
-    ~BasicData();
+    ~BasicData() override;
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;

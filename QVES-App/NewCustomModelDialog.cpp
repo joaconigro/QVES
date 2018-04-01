@@ -2,7 +2,7 @@
 #include "ui_NewCustomModelDialog.h"
 #include <QPushButton>
 
-NewCustomModelDialog::NewCustomModelDialog(QWidget *parent) :
+NewCustomModelDialog::NewCustomModelDialog(const int beds, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewCustomModelDialog)
 {
@@ -11,7 +11,8 @@ NewCustomModelDialog::NewCustomModelDialog(QWidget *parent) :
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Aceptar"));
     ui->buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancelar"));
 
-    mNumberOfBeds = 2;
+    mNumberOfBeds = beds;
+    ui->spinBoxNumberOfBeds->setValue(beds);
 }
 
 NewCustomModelDialog::~NewCustomModelDialog()

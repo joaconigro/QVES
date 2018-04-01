@@ -22,6 +22,7 @@ class QVESSettings : public QObject
     int mZohdyFilter;
     double mAutoDarZarroukThreshold;
     bool mAutoDarZarrouk;
+    int mDefaultNumberOfLayers;
 
     double mVFSAInitialTemperature;
     int mVFSAIterationsPerTemperature;
@@ -162,6 +163,9 @@ public:
 
     int chartAnimation() const;
     void setChartAnimation(int chartAnimation);
+
+    int defaultNumberOfLayers() const;
+    void setDefaultNumberOfLayers(int defaultNumberOfLayers);
 
 signals:
     void settingsLoaded();

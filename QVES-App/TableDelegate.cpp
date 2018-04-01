@@ -6,6 +6,8 @@ TableDelegate::TableDelegate(QWidget *parent) : QStyledItemDelegate(parent)
 
 QWidget *TableDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index)
+    Q_UNUSED(option)
     QDoubleValidator *dValidator = new QDoubleValidator(parent);
     dValidator->setBottom(0.0001);
     dValidator->setNotation(QDoubleValidator::Notation::StandardNotation);
@@ -30,7 +32,10 @@ void TableDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, con
 {
     QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
     QLocale qLoc;
-    double value = qLoc.toDouble(lineEdit->text());
+    QString tempText = lineEdit->text();
+    tempText.replace(".", qLoc.decimalPoint());
+    tempText.replace(",", qLoc.decimalPoint());
+    double value = qLoc.toDouble(tempText);
 
     model->setData(index, value, Qt::EditRole);
 }

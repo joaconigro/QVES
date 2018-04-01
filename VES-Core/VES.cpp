@@ -485,7 +485,7 @@ void VES::selectModel(const int modelIndex)
     setCurrentIndexModel(modelIndex);
 }
 
-void VES::darZarrouk(const QList<int> bedIndices)
+void VES::darZarrouk(const QList<int>& bedIndices)
 {
     if (mCurrentModel && bedIndices.count()>1){
         mCurrentModel->darZarrouk(bedIndices);
@@ -499,7 +499,7 @@ void VES::newZohdyModel(const int numberOfBeds)
 {
     int zohdyCounter = 0;
     foreach (const InversionModel *im, mModels) {
-        if (im->usedAlgorithm() != InversionModel::InversionAlgorithm::Zohdy){
+        if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Zohdy){
             ++zohdyCounter;
         }
     }
