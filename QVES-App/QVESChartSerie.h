@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QScatterSeries>
-#include "QVESModelDelegate.h"
+//#include "QVESModelDelegate.h"
 #include <QVXYModelMapper>
 
 QT_CHARTS_USE_NAMESPACE
@@ -20,7 +20,6 @@ private:
 
     SeriesType mType;
     MarkerType mMarker;
-    QVESModelDelegate *mDelegate;
     QXYSeries *mSeries;
     QVXYModelMapper *mMapper;
 

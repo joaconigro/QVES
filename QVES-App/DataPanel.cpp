@@ -83,7 +83,8 @@ void DataPanel::selectionChanged(const QItemSelection &selected, const QItemSele
         if(!(indices.contains(i)))
             indices.append(i);
     }
-    emit rowSelectionChanged(indices);
+
+    emit rowSelectionChanged(indices, mSelectedData);
 }
 
 

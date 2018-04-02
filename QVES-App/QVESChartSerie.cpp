@@ -145,7 +145,7 @@ void QVESChartSerie::setVisible(bool value)
 
 void QVESChartSerie::setModel(QAbstractItemModel *model)
 {
-    mMapper->setModel(model);
+   mMapper->setModel(model);
 }
 
 void QVESChartSerie::setMarkerType(QVESChartSerie::MarkerType type)

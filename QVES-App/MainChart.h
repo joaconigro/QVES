@@ -21,6 +21,8 @@ class MainChart : public QWidget
     QVESChartSerie *mSpliceSeries;
     QVESChartSerie *mCalculatedSeries;
     QVESChartSerie *mModeledSeries;
+    QVESChartSerie *mHighlightedPointSeries;
+    QVESChartSerie *mHighlightedLineSeries;
     QLogValueAxis *axisX;
     QLogValueAxis *axisY;
     QChart::ChartTheme mTheme;
@@ -29,13 +31,15 @@ class MainChart : public QWidget
     void createSpliceSeries();
     void createCalculatedSeries();
     void createModeledSeries();
+    void createHighlightedSeries();
 
+    void configureHighlightedSeries();
     void configureXYAxis();
 public:
 
     QChart *chart;
 
-    explicit MainChart(QWidget *parent = nullptr);
+    explicit MainChart(QVESModelDelegate *delegate, QWidget *parent = nullptr);
 
 signals:
 
@@ -44,9 +48,11 @@ public slots:
    void setSpliceVisible(const bool value);
    void setCalculatedVisible(const bool value);
    void setModeledVisible(const bool value);
-   void chartDelegateChanged(QVESModelDelegate *del);
+   void setDelegateChanged(QVESModelDelegate *del);
    void modelDelegateChanged();
    void loadQVESSettings(const QVESSettings* settings);
+   void onSelectionChanged(const int dataType);
+   void hideHighlightedSeries();
 };
 
 #endif // MAINCHART_H

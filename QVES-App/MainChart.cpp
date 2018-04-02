@@ -1,9 +1,11 @@
 #include "MainChart.h"
 #include <QtCharts/QSplineSeries>
+#include <QtCharts/QLegendMarker>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QVXYModelMapper>
 #include <QLegend>
+#include <QtMath>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -41,6 +43,29 @@ void MainChart::createModeledSeries()
     mModeledSeries->setModel(mDelegate->chartModeledModel());
 }
 
+void MainChart::createHighlightedSeries()
+{
+    mHighlightedPointSeries = new QVESChartSerie(tr("Selección"), QVESChartSerie::SeriesType::Point, this);
+    mHighlightedPointSeries->setMarkerType(QVESChartSerie::MarkerType::Circle);
+    mHighlightedPointSeries->removeBorderPen();
+
+    mHighlightedLineSeries = new QVESChartSerie(tr("Selección"), QVESChartSerie::SeriesType::Line, this);
+
+    hideHighlightedSeries();
+}
+
+void MainChart::configureHighlightedSeries()
+{
+    qreal maxPointSize = 0.0;
+    maxPointSize = qMax(maxPointSize, mFieldSeries->size());
+    maxPointSize = qMax(maxPointSize, mSpliceSeries->size());
+    maxPointSize = qMax(maxPointSize, mCalculatedSeries->size());
+    maxPointSize += 2.0;
+    mHighlightedPointSeries->setSize(maxPointSize);
+
+    mHighlightedLineSeries->setSize(mModeledSeries->size() + 2.0);
+}
+
 void MainChart::configureXYAxis()
 {
     axisX = new QLogValueAxis();
@@ -61,6 +86,8 @@ void MainChart::configureXYAxis()
     chart->setAxisX(axisX, mSpliceSeries->series());
     chart->setAxisX(axisX, mCalculatedSeries->series());
     chart->setAxisX(axisX, mModeledSeries->series());
+    chart->setAxisX(axisX, mHighlightedLineSeries->series());
+    chart->setAxisX(axisX, mHighlightedPointSeries->series());
     axisX->setRange(mDelegate->chartMinX(), mDelegate->chartMaxX());
 
     axisY = new QLogValueAxis();
@@ -74,16 +101,19 @@ void MainChart::configureXYAxis()
     chart->setAxisY(axisY, mSpliceSeries->series());
     chart->setAxisY(axisY, mCalculatedSeries->series());
     chart->setAxisY(axisY, mModeledSeries->series());
+    chart->setAxisY(axisY, mHighlightedLineSeries->series());
+    chart->setAxisY(axisY, mHighlightedPointSeries->series());
     axisY->setRange(mDelegate->chartMinY(), mDelegate->chartMaxY());
 }
 
-MainChart::MainChart(QWidget *parent) : QWidget(parent)
+MainChart::MainChart(QVESModelDelegate *delegate, QWidget *parent) : QWidget(parent),
+  mDelegate(delegate)
 {
     chart = new QChart();
     axisX = new QLogValueAxis();
     axisY = new QLogValueAxis();
 
-    mDelegate = new QVESModelDelegate(this);
+    //mDelegate = new QVESModelDelegate(this);
 
     createFieldSeries();
     chart->addSeries(mFieldSeries->series());
@@ -97,10 +127,16 @@ MainChart::MainChart(QWidget *parent) : QWidget(parent)
     createModeledSeries();
     chart->addSeries(mModeledSeries->series());
 
-    connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
+    createHighlightedSeries();
+    chart->addSeries(mHighlightedLineSeries->series());
+    chart->addSeries(mHighlightedPointSeries->series());
+
+
 
     chart->setAnimationOptions(QChart::AllAnimations);
     chart->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
+    chart->legend()->markers(mHighlightedLineSeries->series()).first()->setVisible(false);
+    chart->legend()->markers(mHighlightedPointSeries->series()).first()->setVisible(false);
 }
 
 void MainChart::setFieldVisible(const bool value)
@@ -128,9 +164,12 @@ void MainChart::setModeledVisible(const bool value)
     }
 }
 
-void MainChart::chartDelegateChanged(QVESModelDelegate *del)
+void MainChart::setDelegateChanged(QVESModelDelegate *del)
 {
+    if(mDelegate)
+        disconnect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
     mDelegate = del;
+    connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
     modelDelegateChanged();
 }
 
@@ -141,6 +180,7 @@ void MainChart::modelDelegateChanged()
     mSpliceSeries->setModel(mDelegate->spliceModel());
     mCalculatedSeries->setModel(mDelegate->calculatedModel());
     mModeledSeries->setModel(mDelegate->chartModeledModel());
+    hideHighlightedSeries();
 
     configureXYAxis();
     chart->setTitle(mDelegate->vesName());
@@ -175,6 +215,30 @@ void MainChart::loadQVESSettings(const QVESSettings *settings)
 
     mModeledSeries->setColor(settings->modelColor());
     mModeledSeries->setSize(settings->modelLineWidth());
+
+    mHighlightedLineSeries->setColor(settings->highlightColor());
+    mHighlightedPointSeries->setColor(settings->highlightColor());
+    configureHighlightedSeries();
+}
+
+void MainChart::onSelectionChanged(const int dataType)
+{
+    hideHighlightedSeries();
+    if (dataType == 3) {
+        mHighlightedLineSeries->setVisible(true);
+        mHighlightedLineSeries->setModel(mDelegate->selectionModel());
+    } else {
+        mHighlightedPointSeries->setVisible(true);
+        mHighlightedPointSeries->setModel(mDelegate->selectionModel());
+    }
+    chart->legend()->markers(mHighlightedLineSeries->series()).first()->setVisible(false);
+    chart->legend()->markers(mHighlightedPointSeries->series()).first()->setVisible(false);
+}
+
+void MainChart::hideHighlightedSeries()
+{
+    mHighlightedLineSeries->setVisible(false);
+    mHighlightedPointSeries->setVisible(false);
 }
 
 

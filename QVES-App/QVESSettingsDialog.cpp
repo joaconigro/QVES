@@ -69,6 +69,7 @@ void QVESSettingsDialog::readSettings()
     mCalculatedMarkerType = mSettings->calculatedMarkerType();
     mModelLineWidth = mSettings->modelLineWidth();
     mModelColor = mSettings->modelColor();
+    mHighlightColor = mSettings->highlightColor();
 }
 
 void QVESSettingsDialog::configureUi()
@@ -248,6 +249,8 @@ void QVESSettingsDialog::on_buttonBox_accepted()
     mSettings->setModelLineWidth(mModelLineWidth);
     mSettings->setModelColor(mModelColor);
 
+    mSettings->setHighlightColor(mHighlightColor);
+
     emit mSettings->settingsLoaded();
 }
 
@@ -350,6 +353,9 @@ void QVESSettingsDialog::on_colorPushButton_clicked()
     case 3:
         seriesColor = mModelColor;
         break;
+    case 4:
+        seriesColor = mHighlightColor;
+        break;
     default:
         break;
     }
@@ -368,6 +374,9 @@ void QVESSettingsDialog::on_colorPushButton_clicked()
         break;
     case 3:
         mModelColor = selectedColor;
+        break;
+    case 4:
+        mHighlightColor = selectedColor;
         break;
     default:
         break;

@@ -19,7 +19,7 @@ class VESCORESHARED_EXPORT ModelData : public QObject, public Serializable
 
 public:
     explicit ModelData(QObject *parent = nullptr);
-    explicit ModelData(const ModelData &md);
+    ModelData(const ModelData &md);
 
     ~ModelData();
 

@@ -54,6 +54,7 @@ class QVESSettings : public QObject
     QColor mModelColor;
     bool mShowModel;
 
+    QColor mHighlightColor;
 
     void defaultGeneralSettings();
     void defaultInversionSettings();
@@ -166,6 +167,9 @@ public:
 
     int defaultNumberOfLayers() const;
     void setDefaultNumberOfLayers(int defaultNumberOfLayers);
+
+    QColor highlightColor() const;
+    void setHighlightColor(const QColor &highlightColor);
 
 signals:
     void settingsLoaded();

@@ -329,6 +329,16 @@ void QVESSettings::setDefaultNumberOfLayers(int defaultNumberOfLayers)
     mDefaultNumberOfLayers = defaultNumberOfLayers;
 }
 
+QColor QVESSettings::highlightColor() const
+{
+    return mHighlightColor;
+}
+
+void QVESSettings::setHighlightColor(const QColor &highlightColor)
+{
+    mHighlightColor = highlightColor;
+}
+
 void QVESSettings::defaultGeneralSettings()
 {
     mLanguage = 0;
@@ -357,7 +367,7 @@ void QVESSettings::defaultInversionSettings()
 void QVESSettings::defaultGraphicsSettings()
 {
     mChartTheme = 0;
-    mChartAnimation = 3;
+    mChartAnimation = 2;
 
     mFieldPointSize = 8.0;
     mFieldColor = QColor::fromRgb(32, 159, 223);
@@ -377,6 +387,8 @@ void QVESSettings::defaultGraphicsSettings()
     mModelLineWidth = 2.0;
     mModelColor = QColor::fromRgb(109, 95, 213);
     mShowModel = true;
+
+    mHighlightColor = QColor::fromRgb(255, 255, 0);
 }
 
 void QVESSettings::readGeneralSettings()
@@ -439,6 +451,8 @@ void QVESSettings::readGraphicsSettings()
     mModelLineWidth = mSettings->value("ModelLineWidth").toDouble();
     mModelColor = mSettings->value("ModelColor").value<QColor>();
     mShowModel = mSettings->value("ShowModel").toBool();
+
+    mHighlightColor = mSettings->value("HighlightColor").value<QColor>();
 }
 
 void QVESSettings::writeGeneralSettings() const
@@ -489,6 +503,8 @@ void QVESSettings::writeGraphicsSettings() const
     mSettings->setValue("ModelLineWidth", mModelLineWidth);
     mSettings->setValue("ModelColor", mModelColor);
     mSettings->setValue("ShowModel", mShowModel);
+
+    mSettings->setValue("HighlightColor", mHighlightColor);
 }
 
 QVESSettings::QVESSettings(QObject *parent) : QObject(parent)

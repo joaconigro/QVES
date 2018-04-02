@@ -31,9 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QSplitter *splitter = new QSplitter(this);
     QTabWidget *mainTabs = new QTabWidget(splitter);
     mDelegate = new QVESModelDelegate(this);
-    mDataPanel = new DataPanel;
-    mPropertiesPanel = new VESPropertiesPanel;
-    mChart = new MainChart;
+    mDataPanel = new DataPanel();
+    mPropertiesPanel = new VESPropertiesPanel();
+    mChart = new MainChart(mDelegate);
 
     createConnections();
 
@@ -73,7 +73,8 @@ void MainWindow::createConnections()
 {
     connect(mDataPanel, &DataPanel::currentVESIndexChanged, mDelegate, &QVESModelDelegate::selectedVESChanged);
     connect(mDataPanel, &DataPanel::currentVESModelIndexChanged, mDelegate, &QVESModelDelegate::changeCurrentModel);
-    connect(mDataPanel, &DataPanel::rowSelectionChanged, mDelegate, &QVESModelDelegate::dataSelectionChanged);
+    connect(mDataPanel, &DataPanel::rowSelectionChanged, mDelegate, &QVESModelDelegate::onSelectionChanged);
+    connect(mDelegate, &QVESModelDelegate::selectionChanged, mChart, &MainChart::onSelectionChanged);
     connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
     connect(mDelegate, &QVESModelDelegate::vesChanged, this, &MainWindow::loadVES);
     connect(mDelegate, &QVESModelDelegate::vesCurrentModelChanged, this, &MainWindow::modelChanged);
@@ -146,7 +147,8 @@ void MainWindow::loadProject()
 void MainWindow::loadVES()
 {
     mDataPanel->setMyModel(mDelegate->currentModel());
-    mChart->chartDelegateChanged(mDelegate);
+    mChart->setDelegateChanged(mDelegate);
+    //mChart->hideHighlightedSeries();
     mDataPanel->loadModelNames(mDelegate->modelNames(), mDelegate->currentVESModelIndex());
     rmsStatusLabel->setText(mDelegate->modelError());
 }
@@ -279,8 +281,8 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionInversionOptions_triggered()
 {
-    QVESSettingsDialog* diag = new QVESSettingsDialog(mQVESSettings, 1, this);
-    diag->exec();
+    QVESSettingsDialog diag(mQVESSettings, 1, this);
+    diag.exec();
 }
 
 void MainWindow::on_actionChartOptions_triggered()

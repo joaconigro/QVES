@@ -54,6 +54,7 @@ class QVESSettingsDialog : public QDialog
     int mCalculatedMarkerType;
     double mModelLineWidth;
     QColor mModelColor;
+    QColor mHighlightColor;
 
     void initialize();
     void readSettings();

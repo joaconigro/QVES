@@ -31,6 +31,7 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     TableModel *mCalculatedModel;
     TableModel *mTableModeledModel;
     TableModel *mChartModeledModel;
+    TableModel *mSelectionModel;
     TableModel::DataType mShowedTableData;
 //    ChartDelegate *mChartDelegate;
     QStringList mVESNames;
@@ -74,6 +75,7 @@ public:
     TableModel *calculatedModel();
     TableModel *tableModeledModel();
     TableModel *chartModeledModel();
+
     int currentVESIndex() const;
     int currentVESModelIndex() const;
     QString projectFileName() const;
@@ -116,6 +118,10 @@ public:
     double vFSAMinimunPdf() const;
     void setVFSAMinimunPdf(double vFSAMinimunPdf);
 
+    TableModel *selectionModel() const;
+    void createSelectionModel(const QList<int>& indices, const TableModel::DataType selectedData);
+
+
 public slots:
     void changeCurrentProject();
     void changeCurrentVES();
@@ -131,7 +137,7 @@ public slots:
     void changeCurrentModel(int index);
     void updateVESModels(const int newIndex);
     void projectClosed();
-    void dataSelectionChanged(const QList<int> indices);
+    void onSelectionChanged(const QList<int> indices, TableModel::DataType dataType);
     void currentVESModelModified();
     void currentVESFieldModified();
     void mergeSelectedBeds();
@@ -145,6 +151,7 @@ signals:
     void tableModelChanged();
     void carryOutZohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
     void carryOutDarZarrouk(const QList<int> beds);
+    void selectionChanged(const int dataType);
 };
 
 #endif // QVESMODELDELEGATE_H

@@ -38,7 +38,7 @@ signals:
     void currentVESIndexChanged(int index);
     void currentVESModelIndexChanged(int index);
     void showedDataChanged(const TableModel::DataType dataType);
-    void rowSelectionChanged(const QList<int> indices);
+    void rowSelectionChanged(const QList<int> indices, TableModel::DataType dataType);
 };
 
 #endif // DATAPANEL_H
