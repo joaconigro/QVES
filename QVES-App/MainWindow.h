@@ -9,6 +9,7 @@
 #include "TableModel.h"
 #include <QLabel>
 #include "QVESSettings.h"
+#include <QUndoStack>
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,7 @@ private:
     MainChart *mChart;
     QVESModelDelegate *mDelegate;
     QChartView *chartView;
+    QUndoStack *mUndoStack;
 
     QString mLastDirectory;
     QVESSettings* mQVESSettings;
@@ -71,6 +73,12 @@ private slots:
     void on_actionGeneralOptions_triggered();
 
 
+
+    void on_actionZohdy_triggered();
+
+    void on_actionUndo_triggered();
+
+    void on_actionRedo_triggered();
 
 signals:
     void fieldVisibleChanged(const bool value);

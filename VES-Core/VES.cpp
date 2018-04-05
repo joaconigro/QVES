@@ -454,7 +454,7 @@ void VES::updateFieldData(const int row, const int column, const double value)
 
 }
 
-void VES::zohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold)
+ZohdyModel* VES::zohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold)
 {
     int zohdyCounter = 0;
     foreach (const InversionModel *im, mModels) {
@@ -476,8 +476,9 @@ void VES::zohdyInversion(const int zohdyFilter, const bool autoDZ, const double 
     zm->setIsSmoothing(true);
     zm->inversion(calcData);
     zm->updateModelError(splices());
-    mModels.append(zm);
-    setCurrentIndexModel(mModels.indexOf(zm));
+    return zm;
+//    mModels.append(zm);
+//    setCurrentIndexModel(mModels.indexOf(zm));
 }
 
 void VES::selectModel(const int modelIndex)
@@ -507,4 +508,17 @@ void VES::newZohdyModel(const int numberOfBeds)
     ZohdyModel* zm = new ZohdyModel("Zohdy "+ QString::number(zohdyCounter), numberOfBeds, this);
     mModels.append(zm);
     setCurrentIndexModel(mModels.indexOf(zm));
+}
+
+void VES::addInversionModel(InversionModel *model)
+{
+    mModels.append(model);
+    setCurrentIndexModel(mModels.indexOf(model));
+}
+
+void VES::removeInversionModel(InversionModel *model, const int newModelIndex)
+{
+    int modelIndex = mModels.indexOf(model);
+    mModels.removeAt(modelIndex);
+    setCurrentIndexModel(newModelIndex);
 }

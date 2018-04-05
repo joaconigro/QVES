@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QDir>
 #include "QVESSettingsDialog.h"
+#include "ZohdyInversionCommand.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mDataPanel = new DataPanel();
     mPropertiesPanel = new VESPropertiesPanel();
     mChart = new MainChart(mDelegate);
+    mUndoStack = new QUndoStack(this);
 
     createConnections();
 
@@ -62,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QCoreApplication::setApplicationName("QVES");
     loadSettings();
 
+    ui->actionUndo->setShortcut(QKeySequence::Undo);
+    ui->actionRedo->setShortcut(QKeySequence::Redo);
 }
 
 MainWindow::~MainWindow()
@@ -82,7 +86,7 @@ void MainWindow::createConnections()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(ui->actionEmptyModel, &QAction::triggered, this, &MainWindow::createEmptyModel);
-    connect(ui->actionZohdy, &QAction::triggered, mDelegate, &QVESModelDelegate::onZohdyInversionRequested);
+    //connect(ui->actionZohdy, &QAction::triggered, mDelegate, &QVESModelDelegate::onZohdyInversionRequested);
     connect(mDataPanel, &DataPanel::showedDataChanged, mDelegate, &QVESModelDelegate::showedTableDataChanged);
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainWindow::modelUpdated);
     connect(ui->actionMergeBeds, &QAction::triggered, mDelegate, &QVESModelDelegate::mergeSelectedBeds);
@@ -295,4 +299,20 @@ void MainWindow::on_actionGeneralOptions_triggered()
 {
     QVESSettingsDialog diag(mQVESSettings, 0, this);
     diag.exec();
+}
+
+void MainWindow::on_actionZohdy_triggered()
+{
+    ZohdyInversionCommand *command = new ZohdyInversionCommand(mDelegate, mQVESSettings->zohdyFilter(), mQVESSettings->autoDarZarrouk(), mQVESSettings->autoDarZarroukThreshold());
+    mUndoStack->push(command);
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    mUndoStack->undo();
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    mUndoStack->redo();
 }

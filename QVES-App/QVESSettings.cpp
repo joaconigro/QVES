@@ -337,6 +337,7 @@ QColor QVESSettings::highlightColor() const
 void QVESSettings::setHighlightColor(const QColor &highlightColor)
 {
     mHighlightColor = highlightColor;
+    mHighlightColor.setAlpha(125);
 }
 
 void QVESSettings::defaultGeneralSettings()
@@ -388,7 +389,7 @@ void QVESSettings::defaultGraphicsSettings()
     mModelColor = QColor::fromRgb(109, 95, 213);
     mShowModel = true;
 
-    mHighlightColor = QColor::fromRgb(255, 255, 0);
+    mHighlightColor = QColor::fromRgb(255, 255, 0, 125);
 }
 
 void QVESSettings::readGeneralSettings()
@@ -453,6 +454,7 @@ void QVESSettings::readGraphicsSettings()
     mShowModel = mSettings->value("ShowModel").toBool();
 
     mHighlightColor = mSettings->value("HighlightColor").value<QColor>();
+    mHighlightColor.setAlpha(125);
 }
 
 void QVESSettings::writeGeneralSettings() const

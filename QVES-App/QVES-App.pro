@@ -33,7 +33,9 @@ SOURCES += \
     NewCustomModelDialog.cpp \
     QVESChartSerie.cpp \
     QVESSettings.cpp \
-    QVESSettingsDialog.cpp
+    QVESSettingsDialog.cpp \
+    AddInversionModelCommand.cpp \
+    ZohdyInversionCommand.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -44,7 +46,9 @@ HEADERS += \
     NewCustomModelDialog.h \
     QVESChartSerie.h \
     QVESSettings.h \
-    QVESSettingsDialog.h
+    QVESSettingsDialog.h \
+    AddInversionModelCommand.h \
+    ZohdyInversionCommand.h
 
 FORMS += \
         MainWindow.ui \

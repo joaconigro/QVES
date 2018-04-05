@@ -122,6 +122,9 @@ public:
     void createSelectionModel(const QList<int>& indices, const TableModel::DataType selectedData);
 
 
+    VES *currentVES() const;
+    void setCurrentVES(VES *currentVES);
+
 public slots:
     void changeCurrentProject();
     void changeCurrentVES();

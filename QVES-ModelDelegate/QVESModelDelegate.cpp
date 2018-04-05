@@ -207,6 +207,16 @@ void QVESModelDelegate::createSelectionModel(const QList<int> &indices, const Ta
     }
 }
 
+VES *QVESModelDelegate::currentVES() const
+{
+    return mCurrentVES;
+}
+
+void QVESModelDelegate::setCurrentVES(VES *currentVES)
+{
+    mCurrentVES = currentVES;
+}
+
 void QVESModelDelegate::readVESNames()
 {
     mVESNames.clear();
