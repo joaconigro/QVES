@@ -5,7 +5,6 @@ ZohdyInversionCommand::ZohdyInversionCommand(const QVESModelDelegate *delegate, 
     mDelegate = delegate;
     mPreviousModelIndex = mDelegate->currentVES()->currentIndexModel();
     model = mDelegate->currentVES()->zohdyInversion(zohdyFilter, autoDZ, autoDZThreshold);
-    //mNewModelIndex = mDelegate->currentVES()->currentIndexModel();
 }
 
 void ZohdyInversionCommand::undo()

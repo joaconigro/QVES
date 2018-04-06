@@ -1,20 +1,16 @@
 #include "DataPanel.h"
 #include "ui_DataPanel.h"
 
-DataPanel::DataPanel(QWidget *parent) :
+DataPanel::DataPanel(QVESModelDelegate *delegate, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DataPanel)
+    ui(new Ui::DataPanel),
+    mainDelegate(delegate)
 {
     ui->setupUi(this);
     ui->radioButtonField->setChecked(true);
     changeShowedData();
     ui->tableView->setItemDelegate(new TableDelegate);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //selectionModel = ui->tableView->selectionModel();
-
-    //selectionModel->selectionChanged(selectionModel->selection(), QItemSelection);
-    //connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
-    //connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged2);
 
     connect(ui->comboBoxCurrentVes, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESIndexChanged);
     connect(ui->comboBoxVesModel, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESModelIndexChanged);
@@ -25,32 +21,34 @@ DataPanel::~DataPanel()
     delete ui;
 }
 
-void DataPanel::setMyModel(TableModel *mod)
+void DataPanel::setMyModel()
 {
     ui->tableView->reset();
-    ui->tableView->setModel(mod);
+    ui->tableView->setModel(mainDelegate->currentModel());
+    if (selectionModel)
+        disconnect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
     selectionModel = ui->tableView->selectionModel();
     connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
-    //connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged2);
 
     for (int c = 0; c < ui->tableView->horizontalHeader()->count(); ++c)
     {
         ui->tableView->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
     }
+    loadModelNames();
 }
 
-void DataPanel::loadVESNames(const QStringList &list, const int index)
+void DataPanel::loadVESNames()
 {
     ui->comboBoxCurrentVes->clear();
-    ui->comboBoxCurrentVes->addItems(list);
-    ui->comboBoxCurrentVes->setCurrentIndex(index);
+    ui->comboBoxCurrentVes->addItems(mainDelegate->vesNames());
+    ui->comboBoxCurrentVes->setCurrentIndex(mainDelegate->currentVESIndex());
 }
 
-void DataPanel::loadModelNames(const QStringList &list, const int index)
+void DataPanel::loadModelNames()
 {
     ui->comboBoxVesModel->clear();
-    ui->comboBoxVesModel->addItems(list);
-    ui->comboBoxVesModel->setCurrentIndex(index);
+    ui->comboBoxVesModel->addItems(mainDelegate->modelNames());
+    ui->comboBoxVesModel->setCurrentIndex(mainDelegate->currentVESModelIndex());
 }
 
 void DataPanel::changeShowedData()

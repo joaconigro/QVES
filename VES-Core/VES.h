@@ -91,6 +91,7 @@ public:
     void findMaxAndMin();
 
 signals:
+    void nameChanged();
     void selectedModelChanged(const int newIndex);
     void currentModelModified();
     void fieldDataModified();

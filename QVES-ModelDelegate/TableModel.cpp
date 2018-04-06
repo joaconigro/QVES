@@ -112,14 +112,3 @@ void TableModel::setTableFromVES(const QList<XYDataTable *> &table, DataType typ
     }
     endResetModel();
 }
-
-//TableModel *TableModel::modelFromSelection(const QList<int> &indices, QObject *parent)
-//{
-//    TableModel *selectedData = new TableModel(parent);
-//    QList<XYDataTable *> newTable;
-//    foreach (auto i, indices) {
-//        newTable.append(mTable.at(i));
-//    }
-//    selectedData->setTableFromVES(newTable, mTypeOfData);
-//    return selectedData;
-//}

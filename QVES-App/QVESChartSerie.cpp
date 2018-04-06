@@ -128,8 +128,6 @@ void QVESChartSerie::setSize(qreal size)
     } else {
         QPen newPen(mSeries->pen().color(), size);
         mSeries->setPen(newPen);
-        //static_cast<QLineSeries*>(mSeries)->setPen(newPen);
-        //static_cast<QLineSeries*>(mSeries)->pen().setWidthF(size);
     }
 }
 
@@ -161,11 +159,9 @@ void QVESChartSerie::setMarkerType(QVESChartSerie::MarkerType type)
             break;
         case MarkerType::Star:
             mSeries->setBrush(getStarMarker());
-            //mSeries->setPen(QColor(Qt::transparent));
             break;
         case MarkerType::Triangle:
             mSeries->setBrush(getTriangleMarker());
-            //mSeries->setPen(QColor(Qt::transparent));
             break;
         default:
             break;
@@ -177,5 +173,4 @@ void QVESChartSerie::removeBorderPen()
 {
     QPen borderPen(QColor(Qt::transparent), 0.0);
     mSeries->setPen(borderPen);
-    //static_cast<QScatterSeries*>(mSeries)->setPen(borderPen);
 }

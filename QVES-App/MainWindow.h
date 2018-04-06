@@ -10,6 +10,7 @@
 #include <QLabel>
 #include "QVESSettings.h"
 #include <QUndoStack>
+#include "PanelsDelegateMediator.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,7 +21,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -33,6 +34,7 @@ private:
     QVESModelDelegate *mDelegate;
     QChartView *chartView;
     QUndoStack *mUndoStack;
+    PanelsDelegateMediator *mMediator;
 
     QString mLastDirectory;
     QVESSettings* mQVESSettings;
@@ -52,7 +54,6 @@ private slots:
     void modelChanged();
     void saveProject();
     void saveAsProject();
-    void modelUpdated();
     void createEmptyModel();
     void exportChartAs();
     void on_actionShowFieldData_triggered();
@@ -79,12 +80,15 @@ private slots:
     void on_actionUndo_triggered();
 
     void on_actionRedo_triggered();
+    void currentVESChanged(const int index);
+    void onVESNameEdited(const QString& name);
 
 signals:
     void fieldVisibleChanged(const bool value);
     void spliceVisibleChanged(const bool value);
     void calculatedVisibleChanged(const bool value);
     void modeledVisibleChanged(const bool value);
+
 
 };
 

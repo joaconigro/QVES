@@ -26,7 +26,6 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     void setTableFromVES(const QList<XYDataTable*> &table, DataType type);
-    //TableModel *modelFromSelection(const QList<int>& indices, QObject *parent);
 
 signals:
     void myTableChanged(const QModelIndex &index);

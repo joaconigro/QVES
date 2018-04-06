@@ -41,18 +41,13 @@ void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
                         modelRead = false;
                     } else {
                         InversionModel* im = readOldModelo(reader);
-                        //readOldModelo(reader, im);
                         if (im){
                             im->updateModelError(newVes->splices());
-                        if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Vfsa){
-                            //ZohdyModel *zm = static_cast<ZohdyModel*>(im);
-                            tempList.append(static_cast<VFSAInversionModel*>(im));
-                        }else {
-                            tempList.append(static_cast<ZohdyModel*>(im));
-                        }
-
-
-
+                            if (im->usedAlgorithm() == InversionModel::InversionAlgorithm::Vfsa){
+                                tempList.append(static_cast<VFSAInversionModel*>(im));
+                            }else {
+                                tempList.append(static_cast<ZohdyModel*>(im));
+                            }
                         }
                     }
                     reader->readNext();
@@ -175,7 +170,6 @@ QList<BasicData> OldProject::readOldListaPuntoCampo(QXmlStreamReader *reader, co
 
 InversionModel * OldProject::readOldModelo(QXmlStreamReader *reader)
 {
-    //InversionModel *tempModel = new InversionModel();
     QVariant tempVariant;
 
     bool read = true;
@@ -195,21 +189,13 @@ InversionModel * OldProject::readOldModelo(QXmlStreamReader *reader)
         case QXmlStreamReader::TokenType::StartElement:
             if (reader->name() == "nombre"){
                 tempName = reader->readElementText();
-                //tempModel->setName(reader->readElementText());
             } else if (reader->name() == "tipo") {
                 tempVariant = reader->readElementText();
                 inversionAlgorithm = tempVariant.toInt();
-//                if (tempVariant.toInt() == 0) {
-//                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Zohdy);
-//                } else {
-//                    tempModel->setUsedAlgorithm(InversionModel::InversionAlgorithm::Vfsa);
-//                }
             } else if (reader->name() == "listaPuntoCalculado"){
                 basicDataList = readOldListaPuntoCampo(reader, "listaPuntoCalculado");
-                //tempModel->setCalculatedData(readOldListaPuntoCampo(reader, "listaPuntoCalculado"));
             } else if (reader->name() == "listaModeloSEVs"){
                 modeledList = readOldModeloSEVs(reader);
-                //tempModel->setModelData(readOldModeloSEVs(reader));
             } else {
                 reader->skipCurrentElement();
             }

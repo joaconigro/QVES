@@ -241,4 +241,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <signal>VESNameEdited(QString)</signal>
+ </slots>
 </ui>

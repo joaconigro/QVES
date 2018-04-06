@@ -29,7 +29,6 @@ VFSAInversionModel::VFSAInversionModel(const VFSAInversionModel &vm)
     mName = vm.name();
     mErrorResult = vm.errorResult();
     mUsedAlgorithm = vm.usedAlgorithm();
-    //mZohdyFilter = vm.zohdyFilter();
     mCalculatedData = vm.calculatedData();
     mModel = vm.model();
     this->setParent(vm.parent());
@@ -37,25 +36,22 @@ VFSAInversionModel::VFSAInversionModel(const VFSAInversionModel &vm)
 
 QVariant VFSAInversionModel::toVariant() const
 {
-//    QVariantMap map = InversionModel::toVariant().toMap();
     QVariantMap map;
-    //map = InversionModel::toVariant();
     map.insert("mName", mName);
     map.insert("mId", mId);
     map.insert("mErrorResult", mErrorResult);
     map.insert("mErrorString", mErrorString);
     map.insert("mUsedAlgorithm", static_cast<int>(mUsedAlgorithm));
-    //map.insert("mZohdyFilter", static_cast<int>(mZohdyFilter));
 
     QVariantList calculated;
     for (const auto& cd : mCalculatedData) {
-    calculated.append(cd.toVariant());
+        calculated.append(cd.toVariant());
     }
     map.insert("mCalculatedData", calculated);
 
     QVariantList modeled;
     for (const auto& md : mModel) {
-    modeled.append(md.toVariant());
+        modeled.append(md.toVariant());
     }
     map.insert("mModel", modeled);
 
@@ -65,14 +61,12 @@ QVariant VFSAInversionModel::toVariant() const
 
 void VFSAInversionModel::fromVariant(const QVariant &variant)
 {
-//    InversionModel::fromVariant(variant);
     QVariantMap map = variant.toMap();
     mName = map.value("mName").toString();
     mId = map.value("mId").toString();
     mErrorResult = map.value("mErrorResult").toDouble();
     mErrorString = map.value("mErrorString").toString();
     mUsedAlgorithm = static_cast<InversionModel::InversionAlgorithm>(map.value("mUsedAlgorithm").toInt());
-    //mZohdyFilter = static_cast<InversionModel::ZohdyFilters>(map.value("mZohdyFilter").toInt());
 
     QVariantList calculated = map.value("mCalculatedData").toList();
     for(const QVariant& data : calculated) {

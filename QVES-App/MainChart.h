@@ -44,11 +44,11 @@ public:
 signals:
 
 public slots:
+   void setChartTitle();
    void setFieldVisible(const bool value);
    void setSpliceVisible(const bool value);
    void setCalculatedVisible(const bool value);
    void setModeledVisible(const bool value);
-   void setDelegateChanged(QVESModelDelegate *del);
    void modelDelegateChanged();
    void loadQVESSettings(const QVESSettings* settings);
    void onSelectionChanged(const int dataType);

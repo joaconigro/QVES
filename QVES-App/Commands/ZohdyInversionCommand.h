@@ -10,7 +10,6 @@ class ZohdyInversionCommand : public QUndoCommand
     ZohdyModel *model;
     const QVESModelDelegate *mDelegate;
     int mPreviousModelIndex;
-    int mNewModelIndex;
 
 public:
     ZohdyInversionCommand(const QVESModelDelegate *delegate, const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);

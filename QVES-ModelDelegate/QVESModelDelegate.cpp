@@ -40,114 +40,9 @@ double QVESModelDelegate::chartMaxY() const
     return mChartMaxY;
 }
 
-QString QVESModelDelegate::vesName() const
-{
-    return mCurrentVES->name();
-}
-
 QList<int> QVESModelDelegate::selectedRows() const
 {
     return mSelectedRows;
-}
-
-int QVESModelDelegate::zohdyFilter() const
-{
-    return mZohdyFilter;
-}
-
-void QVESModelDelegate::setZohdyFilter(int zohdyFilter)
-{
-    mZohdyFilter = zohdyFilter;
-}
-
-double QVESModelDelegate::autoDarZarroukThreshold() const
-{
-    return mAutoDarZarroukThreshold;
-}
-
-void QVESModelDelegate::setAutoDarZarroukThreshold(double autoDarZarroukThreshold)
-{
-    mAutoDarZarroukThreshold = autoDarZarroukThreshold;
-}
-
-bool QVESModelDelegate::autoDarZarrouk() const
-{
-    return mAutoDarZarrouk;
-}
-
-void QVESModelDelegate::setAutoDarZarrouk(bool autoDarZarrouk)
-{
-    mAutoDarZarrouk = autoDarZarrouk;
-}
-
-double QVESModelDelegate::vFSAInitialTemperature() const
-{
-    return mVFSAInitialTemperature;
-}
-
-void QVESModelDelegate::setVFSAInitialTemperature(double vFSAInitialTemperature)
-{
-    mVFSAInitialTemperature = vFSAInitialTemperature;
-}
-
-int QVESModelDelegate::vFSAIterationsPerTemperature() const
-{
-    return mVFSAIterationsPerTemperature;
-}
-
-void QVESModelDelegate::setVFSAIterationsPerTemperature(int vFSAIterationsPerTemperature)
-{
-    mVFSAIterationsPerTemperature = vFSAIterationsPerTemperature;
-}
-
-int QVESModelDelegate::vFSAMovesPerTemperature() const
-{
-    return mVFSAMovesPerTemperature;
-}
-
-void QVESModelDelegate::setVFSAMovesPerTemperature(int vFSAMovesPerTemperature)
-{
-    mVFSAMovesPerTemperature = vFSAMovesPerTemperature;
-}
-
-int QVESModelDelegate::vFSASolutions() const
-{
-    return mVFSASolutions;
-}
-
-void QVESModelDelegate::setVFSASolutions(int vFSASolutions)
-{
-    mVFSASolutions = vFSASolutions;
-}
-
-int QVESModelDelegate::vFSANumberOfBeds() const
-{
-    return mVFSANumberOfBeds;
-}
-
-void QVESModelDelegate::setVFSANumberOfBeds(int vFSANumberOfBeds)
-{
-    mVFSANumberOfBeds = vFSANumberOfBeds;
-}
-
-double QVESModelDelegate::vFSAMaximunError() const
-{
-    return mVFSAMaximunError;
-}
-
-void QVESModelDelegate::setVFSAMaximunError(double vFSAMaximunError)
-{
-    mVFSAMaximunError = vFSAMaximunError;
-}
-
-double QVESModelDelegate::vFSAMinimunPdf() const
-{
-    return mVFSAMinimunPdf;
-}
-
-void QVESModelDelegate::setVFSAMinimunPdf(double vFSAMinimunPdf)
-{
-    mVFSAMinimunPdf = vFSAMinimunPdf;
 }
 
 TableModel *QVESModelDelegate::selectionModel() const
@@ -215,6 +110,16 @@ VES *QVESModelDelegate::currentVES() const
 void QVESModelDelegate::setCurrentVES(VES *currentVES)
 {
     mCurrentVES = currentVES;
+}
+
+Project *QVESModelDelegate::currentProject() const
+{
+    return mCurrentProject;
+}
+
+void QVESModelDelegate::setCurrentProject(Project *currentProject)
+{
+    mCurrentProject = currentProject;
 }
 
 void QVESModelDelegate::readVESNames()
@@ -385,7 +290,6 @@ int QVESModelDelegate::currentVESModelIndex() const
 
 void QVESModelDelegate::changeCurrentProject()
 {
-    //disconnect(mCurrentProject, &Project::currentVESChanged, this, &QVESModelDelegate::changeCurrentVES);
     mCurrentProject = mCore->project();
     connect(mCurrentProject, &Project::currentVESChanged, this, &QVESModelDelegate::changeCurrentVES);
     mCurrentVESIndex = mCurrentProject->currentIndex();
@@ -404,6 +308,7 @@ void QVESModelDelegate::changeCurrentVES()
         disconnect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
         disconnect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
         disconnect(mCurrentVES, &VES::fieldDataModified, this, &QVESModelDelegate::currentVESFieldModified);
+        disconnect(mCurrentVES, &VES::nameChanged, this, &QVESModelDelegate::onCurrentVESNameChanged);
     }
     mCurrentVES = mCurrentProject->currentVES();
     mCurrentVES->findMaxAndMin();
@@ -415,7 +320,8 @@ void QVESModelDelegate::changeCurrentVES()
     connect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
     connect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
     connect(mCurrentVES, &VES::fieldDataModified, this, &QVESModelDelegate::currentVESFieldModified);
-    emit vesChanged();
+    connect(mCurrentVES, &VES::nameChanged, this, &QVESModelDelegate::onCurrentVESNameChanged);
+    emit VESChanged();
 }
 
 void QVESModelDelegate::setDataTableModel()
@@ -484,24 +390,9 @@ void QVESModelDelegate::updateVESData(const QModelIndex &index) const
 
     mCore->changeDataForCurrentVES(index.row(), index.column(), dt, tempValue);
 
-
-//    switch (mShowedTableData) {
-//    case TableModel::DataType::Field:
-//        if (index.column() == 0){
-//            mCurrentVES->fieldData()[index.row()].setAb2Distance(mCurrentModel->data(index, Qt::DisplayRole).toDouble());
-//        }else if (index.column() == 1){
-//            mCurrentVES->fieldData()[index.row()].setResistivity(mCurrentModel->data(index, Qt::DisplayRole).toDouble());
-//        } else {
-//            return;
-//        }
-
-//        break;
-//    default:
-//        break;
-//    }
 }
 
-void QVESModelDelegate::selectedVESChanged(int index)
+void QVESModelDelegate::selectedVESChanged(int index) const
 {
     mCurrentProject->setCurrentIndex(index);
 }
@@ -517,7 +408,7 @@ void QVESModelDelegate::updateVESModels(const int newIndex)
     mCurrentVESModelIndex = newIndex;
     readModelNames();
     setDataTableModel();
-    emit vesChanged();
+    emit VESChanged();
 }
 
 void QVESModelDelegate::projectClosed()
@@ -528,7 +419,6 @@ void QVESModelDelegate::projectClosed()
 
 void QVESModelDelegate::onSelectionChanged(const QList<int> indices, TableModel::DataType dataType)
 {
-    //Q_UNUSED(dataType)
     mSelectedRows.clear();
     mSelectedRows.append(indices);
     createSelectionModel(indices, dataType);
@@ -565,7 +455,9 @@ void QVESModelDelegate::createEmptyModel(const int numberOfBeds)
     }
 }
 
-void QVESModelDelegate::onZohdyInversionRequested()
+void QVESModelDelegate::onCurrentVESNameChanged()
 {
-    emit carryOutZohdyInversion(mZohdyFilter, mAutoDarZarrouk, mAutoDarZarroukThreshold);
+    readVESNames();
+    emit currentVESNameChanged();
 }
+

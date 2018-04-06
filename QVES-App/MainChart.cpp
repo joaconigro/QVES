@@ -113,8 +113,6 @@ MainChart::MainChart(QVESModelDelegate *delegate, QWidget *parent) : QWidget(par
     axisX = new QLogValueAxis();
     axisY = new QLogValueAxis();
 
-    //mDelegate = new QVESModelDelegate(this);
-
     createFieldSeries();
     chart->addSeries(mFieldSeries->series());
 
@@ -137,6 +135,11 @@ MainChart::MainChart(QVESModelDelegate *delegate, QWidget *parent) : QWidget(par
     chart->legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
     chart->legend()->markers(mHighlightedLineSeries->series()).first()->setVisible(false);
     chart->legend()->markers(mHighlightedPointSeries->series()).first()->setVisible(false);
+}
+
+void MainChart::setChartTitle()
+{
+    chart->setTitle(mDelegate->currentVES()->name());
 }
 
 void MainChart::setFieldVisible(const bool value)
@@ -164,15 +167,6 @@ void MainChart::setModeledVisible(const bool value)
     }
 }
 
-void MainChart::setDelegateChanged(QVESModelDelegate *del)
-{
-    if(mDelegate)
-        disconnect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
-    mDelegate = del;
-    connect(mDelegate, &QVESModelDelegate::tableModelChanged, this, &MainChart::modelDelegateChanged);
-    modelDelegateChanged();
-}
-
 void MainChart::modelDelegateChanged()
 {
     chart->series().clear();
@@ -183,7 +177,7 @@ void MainChart::modelDelegateChanged()
     hideHighlightedSeries();
 
     configureXYAxis();
-    chart->setTitle(mDelegate->vesName());
+    chart->setTitle(mDelegate->currentVES()->name());
 }
 
 void MainChart::loadQVESSettings(const QVESSettings *settings)

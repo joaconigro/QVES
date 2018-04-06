@@ -6,6 +6,7 @@
 #include <QStringList>
 #include "TableDelegate.h"
 #include "QItemSelectionModel"
+#include "QVESModelDelegate.h"
 
 namespace Ui {
 class DataPanel;
@@ -15,22 +16,21 @@ class DataPanel : public QWidget
 {
     Q_OBJECT
 
-    TableModel::DataType  mSelectedData;
-    TableDelegate *myDelegate;
-    QItemSelectionModel *selectionModel;
-
 public:
-    explicit DataPanel(QWidget *parent = 0);
+    explicit DataPanel(QVESModelDelegate *delegate, QWidget *parent = nullptr);
     ~DataPanel();
-
-    void setMyModel(TableModel *mod);
 
 private:
     Ui::DataPanel *ui;
+    TableModel::DataType mSelectedData;
+    TableDelegate *myDelegate;
+    QItemSelectionModel *selectionModel;
+    QVESModelDelegate *mainDelegate;
 
 public slots:
-    void loadVESNames(const QStringList &list, const int index);
-    void loadModelNames(const QStringList &list, const int index);
+    void setMyModel();
+    void loadVESNames();
+    void loadModelNames();
     void changeShowedData();
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 

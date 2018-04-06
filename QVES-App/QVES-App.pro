@@ -34,8 +34,10 @@ SOURCES += \
     QVESChartSerie.cpp \
     QVESSettings.cpp \
     QVESSettingsDialog.cpp \
-    AddInversionModelCommand.cpp \
-    ZohdyInversionCommand.cpp
+    Commands/ChangeCurrentVESCommand.cpp \
+    Commands/ZohdyInversionCommand.cpp \
+    PanelsDelegateMediator.cpp \
+    Commands/EditVESNameCommand.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -47,8 +49,10 @@ HEADERS += \
     QVESChartSerie.h \
     QVESSettings.h \
     QVESSettingsDialog.h \
-    AddInversionModelCommand.h \
-    ZohdyInversionCommand.h
+    Commands/ChangeCurrentVESCommand.h \
+    Commands/ZohdyInversionCommand.h \
+    PanelsDelegateMediator.h \
+    Commands/EditVESNameCommand.h
 
 FORMS += \
         MainWindow.ui \

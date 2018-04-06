@@ -415,7 +415,6 @@ void ZohdyModel::autoMergeBeds()
     bool merge;
     double diff1, diff2, tempDiff;
     QVector<int> indices(2);
-    //indices.reserve(2);
 
     //Do loop through mModel list to find the lower difference between
     //two consecutive beds. The difference must be lower than the threshold

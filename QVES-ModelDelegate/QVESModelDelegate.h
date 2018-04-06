@@ -33,7 +33,6 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     TableModel *mChartModeledModel;
     TableModel *mSelectionModel;
     TableModel::DataType mShowedTableData;
-//    ChartDelegate *mChartDelegate;
     QStringList mVESNames;
     QStringList mModelNames;
     QString mProjectFileName;
@@ -42,20 +41,9 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
     double mChartMinY;
     double mChartMaxX;
     double mChartMaxY;
-    QString mVESName;
+
     QList<int> mSelectedRows;
 
-    int mZohdyFilter;
-    double mAutoDarZarroukThreshold;
-    bool mAutoDarZarrouk;
-
-    double mVFSAInitialTemperature;
-    int mVFSAIterationsPerTemperature;
-    int mVFSAMovesPerTemperature;
-    int mVFSASolutions;
-    int mVFSANumberOfBeds;
-    double mVFSAMaximunError;
-    double mVFSAMinimunPdf;
 
     void readVESNames();
     void readModelNames();
@@ -85,38 +73,8 @@ public:
     double chartMinY() const;
     double chartMaxX() const;
     double chartMaxY() const;
-    QString vesName() const;
     QList<int> selectedRows() const;
 
-    int zohdyFilter() const;
-    void setZohdyFilter(int zohdyFilter);
-
-    double autoDarZarroukThreshold() const;
-    void setAutoDarZarroukThreshold(double autoDarZarroukThreshold);
-
-    bool autoDarZarrouk() const;
-    void setAutoDarZarrouk(bool autoDarZarrouk);
-
-    double vFSAInitialTemperature() const;
-    void setVFSAInitialTemperature(double vFSAInitialTemperature);
-
-    int vFSAIterationsPerTemperature() const;
-    void setVFSAIterationsPerTemperature(int vFSAIterationsPerTemperature);
-
-    int vFSAMovesPerTemperature() const;
-    void setVFSAMovesPerTemperature(int vFSAMovesPerTemperature);
-
-    int vFSASolutions() const;
-    void setVFSASolutions(int vFSASolutions);
-
-    int vFSANumberOfBeds() const;
-    void setVFSANumberOfBeds(int vFSANumberOfBeds);
-
-    double vFSAMaximunError() const;
-    void setVFSAMaximunError(double vFSAMaximunError);
-
-    double vFSAMinimunPdf() const;
-    void setVFSAMinimunPdf(double vFSAMinimunPdf);
 
     TableModel *selectionModel() const;
     void createSelectionModel(const QList<int>& indices, const TableModel::DataType selectedData);
@@ -124,6 +82,9 @@ public:
 
     VES *currentVES() const;
     void setCurrentVES(VES *currentVES);
+
+    Project *currentProject() const;
+    void setCurrentProject(Project *currentProject);
 
 public slots:
     void changeCurrentProject();
@@ -136,7 +97,7 @@ public slots:
     QStringList vesNames() const;
     QStringList modelNames() const;
     void updateVESData(const QModelIndex &index) const;
-    void selectedVESChanged(int index);
+    void selectedVESChanged(int index) const;
     void changeCurrentModel(int index);
     void updateVESModels(const int newIndex);
     void projectClosed();
@@ -145,11 +106,13 @@ public slots:
     void currentVESFieldModified();
     void mergeSelectedBeds();
     void createEmptyModel(const int numberOfBeds);
-    void onZohdyInversionRequested();
+
+    void onCurrentVESNameChanged();
 
 signals:
+    void currentVESNameChanged();
     void projectChanged();
-    void vesChanged();
+    void VESChanged();
     void vesCurrentModelChanged();
     void tableModelChanged();
     void carryOutZohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);

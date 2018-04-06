@@ -189,7 +189,10 @@ double VES::maxY() const
 
 void VES::setName(const QString name)
 {
-    mName = name;
+    if (mName != name){
+        mName = name;
+        emit nameChanged();
+    }
 }
 
 void VES::setFieldOperator(const QString fieldOp)
@@ -226,11 +229,11 @@ void VES::setCurrentIndexModel(const int value)
             mCurrentIndexModel = value;
             mCurrentModel = mModels[mCurrentIndexModel];
             findMaxAndMin();
-            emit selectedModelChanged(value);
         }
     } else {
         mCurrentModel = nullptr;
     }
+    emit selectedModelChanged(value);
 }
 
 void VES::setFieldData(const QList<BasicData> &list)
@@ -477,8 +480,6 @@ ZohdyModel* VES::zohdyInversion(const int zohdyFilter, const bool autoDZ, const 
     zm->inversion(calcData);
     zm->updateModelError(splices());
     return zm;
-//    mModels.append(zm);
-//    setCurrentIndexModel(mModels.indexOf(zm));
 }
 
 void VES::selectModel(const int modelIndex)
