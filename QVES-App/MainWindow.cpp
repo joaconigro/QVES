@@ -15,6 +15,7 @@
 #include "Commands/ZohdyInversionCommand.h"
 #include "Commands/ChangeCurrentVESCommand.h"
 #include "Commands/EditVESNameCommand.h"
+#include "Commands/EditVESDataCommand.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -81,6 +82,7 @@ void MainWindow::createConnections()
 {
     connect(mPropertiesPanel, &VESPropertiesPanel::VESNameEdited, this, &MainWindow::onVESNameEdited);
     connect(mDataPanel, &DataPanel::currentVESIndexChanged, this, &MainWindow::currentVESChanged);
+    connect(mDelegate, &QVESModelDelegate::onVESDataChanged, this, &MainWindow::onVESDataChanged);
 
     connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
     connect(mDelegate, &QVESModelDelegate::VESChanged, this, &MainWindow::loadVES);
@@ -307,5 +309,11 @@ void MainWindow::currentVESChanged(const int index)
 void MainWindow::onVESNameEdited(const QString &name)
 {
     auto command = new EditVESNameCommand(mDelegate, name);
+    mUndoStack->push(command);
+}
+
+void MainWindow::onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const
+{
+    auto command = new EditVESDataCommand(mDelegate, index, oldValue, newValue, dataType);
     mUndoStack->push(command);
 }

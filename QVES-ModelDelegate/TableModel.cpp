@@ -62,6 +62,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole) {
+        double oldValue = data(index, Qt::DisplayRole).toDouble();
         XYDataTable *temp = new XYDataTable(mTable.at(index.row())->x(), mTable.at(index.row())->y());
         double tempValue = value.toDouble();
         if (index.column() == 0) {
@@ -76,16 +77,19 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
             } else if ((tempValue > mTable.at(index.row() - 1)->x()) && (tempValue < mTable.at(index.row() + 1)->x())){
                 temp->setX(tempValue);
             } else {
+                delete  temp;
                 return false;
             }
         } else if (index.column() == 1) {
             if (tempValue > 0.0)
                 temp->setY(tempValue);
-        } else
+        } else {
+            delete  temp;
             return false;
+        }
 
         mTable.replace(index.row(), temp);
-        emit myTableChanged(index);
+        emit myTableChanged(index, static_cast<int>(mTypeOfData), oldValue, tempValue);
         emit dataChanged(index, index);
         return true;
     }
@@ -107,8 +111,8 @@ void TableModel::setTableFromVES(const QList<XYDataTable *> &table, DataType typ
     beginResetModel();
     mTypeOfData = type;
     mTable.clear();
-    for (int i = 0; i<table.count(); i++){
-        mTable.append(table.at(i));
+    foreach (auto row, table) {
+        mTable.append(row);
     }
     endResetModel();
 }

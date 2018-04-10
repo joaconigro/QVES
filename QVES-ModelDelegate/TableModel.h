@@ -28,7 +28,7 @@ public:
     void setTableFromVES(const QList<XYDataTable*> &table, DataType type);
 
 signals:
-    void myTableChanged(const QModelIndex &index);
+    void myTableChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue);
 };
 
 #endif // TABLEMODEL_H

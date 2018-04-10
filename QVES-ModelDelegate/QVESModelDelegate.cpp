@@ -138,7 +138,7 @@ void QVESModelDelegate::readModelNames()
     }
 }
 
-void QVESModelDelegate::selectModelForTable()
+void QVESModelDelegate::selectModelForTable(const bool emitSignal)
 {
     switch (mShowedTableData) {
     case TableModel::DataType::Field:
@@ -155,8 +155,12 @@ void QVESModelDelegate::selectModelForTable()
         break;
     }
 
-    connect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::updateVESData);
-    emit tableModelChanged();
+    //if (mCurrentModel)
+    //    disconnect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::updateVESData);
+    connect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::onVESDataChanged);
+
+    if (emitSignal)
+        emit tableModelChanged();
 }
 
 void QVESModelDelegate::fillFieldModel()
@@ -280,7 +284,7 @@ TableModel *QVESModelDelegate::chartModeledModel()
 
 int QVESModelDelegate::currentVESIndex() const
 {
-    return mCurrentVESIndex;
+    return mCurrentProject->currentIndex();
 }
 
 int QVESModelDelegate::currentVESModelIndex() const
@@ -303,7 +307,7 @@ void QVESModelDelegate::changeCurrentProject()
 void QVESModelDelegate::changeCurrentVES()
 {
     if (mCurrentVES){
-        disconnect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
+        //disconnect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
         disconnect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
         disconnect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
         disconnect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
@@ -315,7 +319,7 @@ void QVESModelDelegate::changeCurrentVES()
     mCurrentVESModelIndex = mCurrentVES->currentIndexModel();
     readModelNames();
     setDataTableModel();
-    connect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
+    //connect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
     connect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
     connect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
     connect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
@@ -349,7 +353,7 @@ void QVESModelDelegate::setDataTableModel()
         fillCalculatedModel();
         fillModeledModels();
     }
-    selectModelForTable();
+    selectModelForTable(false);
 }
 
 void QVESModelDelegate::openProject(const QString &filename)
@@ -383,13 +387,9 @@ QStringList QVESModelDelegate::modelNames() const
     return mModelNames;
 }
 
-void QVESModelDelegate::updateVESData(const QModelIndex &index) const
+void QVESModelDelegate::updateVESData(const QModelIndex &index, const int dataType, const double newValue) const
 {
-    double tempValue = mCurrentModel->data(index, Qt::DisplayRole).toDouble();
-    int dt = static_cast<int>(mShowedTableData);
-
-    mCore->changeDataForCurrentVES(index.row(), index.column(), dt, tempValue);
-
+    mCore->changeDataForCurrentVES(index.row(), index.column(), dataType, newValue);
 }
 
 void QVESModelDelegate::selectedVESChanged(int index) const

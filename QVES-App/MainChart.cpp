@@ -62,6 +62,7 @@ void MainChart::configureHighlightedSeries()
     maxPointSize = qMax(maxPointSize, mCalculatedSeries->size());
     maxPointSize += 2.0;
     mHighlightedPointSeries->setSize(maxPointSize);
+    mHighlightedPointSeries->removeBorderPen();
 
     mHighlightedLineSeries->setSize(mModeledSeries->size() + 2.0);
 }

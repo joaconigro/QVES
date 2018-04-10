@@ -39,6 +39,10 @@ signals:
     void currentVESModelIndexChanged(int index);
     void showedDataChanged(const TableModel::DataType dataType);
     void rowSelectionChanged(const QList<int> indices, TableModel::DataType dataType);
+
+private slots:
+//    void on_comboBoxCurrentVes_currentIndexChanged(int index);
+//    void on_comboBoxVesModel_currentIndexChanged(int index);
 };
 
 #endif // DATAPANEL_H

@@ -37,7 +37,8 @@ SOURCES += \
     Commands/ChangeCurrentVESCommand.cpp \
     Commands/ZohdyInversionCommand.cpp \
     PanelsDelegateMediator.cpp \
-    Commands/EditVESNameCommand.cpp
+    Commands/EditVESNameCommand.cpp \
+    Commands/EditVESDataCommand.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     Commands/ChangeCurrentVESCommand.h \
     Commands/ZohdyInversionCommand.h \
     PanelsDelegateMediator.h \
-    Commands/EditVESNameCommand.h
+    Commands/EditVESNameCommand.h \
+    Commands/EditVESDataCommand.h
 
 FORMS += \
         MainWindow.ui \

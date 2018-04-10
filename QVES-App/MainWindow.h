@@ -82,6 +82,7 @@ private slots:
     void on_actionRedo_triggered();
     void currentVESChanged(const int index);
     void onVESNameEdited(const QString& name);
+    void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const;
 
 signals:
     void fieldVisibleChanged(const bool value);

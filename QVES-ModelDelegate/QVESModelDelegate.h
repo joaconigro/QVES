@@ -47,7 +47,7 @@ class QVESMODELDELEGATESHARED_EXPORT QVESModelDelegate: public QObject
 
     void readVESNames();
     void readModelNames();
-    void selectModelForTable();
+    void selectModelForTable(const bool emitSignal = true);
     void fillFieldModel();
     void fillSpliceModel();
     void fillCalculatedModel();
@@ -96,7 +96,7 @@ public slots:
     void showedTableDataChanged(const TableModel::DataType dt = TableModel::DataType::Field);
     QStringList vesNames() const;
     QStringList modelNames() const;
-    void updateVESData(const QModelIndex &index) const;
+    void updateVESData(const QModelIndex &index, const int dataType, const double newValue) const;
     void selectedVESChanged(int index) const;
     void changeCurrentModel(int index);
     void updateVESModels(const int newIndex);
@@ -115,9 +115,10 @@ signals:
     void VESChanged();
     void vesCurrentModelChanged();
     void tableModelChanged();
-    void carryOutZohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
+    //void carryOutZohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
     void carryOutDarZarrouk(const QList<int> beds);
     void selectionChanged(const int dataType);
+    void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue);
 };
 
 #endif // QVESMODELDELEGATE_H
