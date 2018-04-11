@@ -29,6 +29,7 @@ public:
 
 signals:
     void myTableChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue);
+    void restoreSelection(const QModelIndex &index);
 };
 
 #endif // TABLEMODEL_H

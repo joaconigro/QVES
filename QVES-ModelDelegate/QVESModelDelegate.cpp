@@ -158,6 +158,7 @@ void QVESModelDelegate::selectModelForTable(const bool emitSignal)
     //if (mCurrentModel)
     //    disconnect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::updateVESData);
     connect(mCurrentModel, &TableModel::myTableChanged, this, &QVESModelDelegate::onVESDataChanged);
+    connect(mCurrentModel, &TableModel::restoreSelection, this, &QVESModelDelegate::restoreSelection);
 
     if (emitSignal)
         emit tableModelChanged();

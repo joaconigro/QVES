@@ -8,6 +8,7 @@ void PanelsDelegateMediator::delegateDataPanelConnections() const
     connect(mDelegate, &QVESModelDelegate::currentVESNameChanged, mDataPanel, &DataPanel::loadVESNames);
     connect(mDelegate, &QVESModelDelegate::tableModelChanged, mDataPanel, &DataPanel::setMyModel);
     connect(mDelegate, &QVESModelDelegate::VESChanged, mDataPanel, &DataPanel::setMyModel);
+    connect(mDelegate, &QVESModelDelegate::restoreSelection, mDataPanel, &DataPanel::restoreSelection);
 }
 
 void PanelsDelegateMediator::delegatePropertiesPanelConnections() const

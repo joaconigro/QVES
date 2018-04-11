@@ -8,11 +8,13 @@ DataPanel::DataPanel(QVESModelDelegate *delegate, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->radioButtonField->setChecked(true);
+    mResetSelection = false;
+    selectionModel = nullptr;
     changeShowedData();
     ui->tableView->setItemDelegate(new TableDelegate);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    selectionModel = nullptr;
+
     connect(ui->comboBoxCurrentVes, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESIndexChanged);
     connect(ui->comboBoxVesModel, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), this, &DataPanel::currentVESModelIndexChanged);
 }
@@ -24,13 +26,9 @@ DataPanel::~DataPanel()
 
 void DataPanel::setMyModel()
 {
-     ui->tableView->reset();
-//    auto currentSelectionModel = ui->tableView->selectionModel();
-//    delete currentSelectionModel;
+    ui->tableView->reset();
     ui->tableView->setModel(mainDelegate->currentModel());
-//    if (selectionModel){
-//        disconnect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
-//    }
+
     selectionModel = ui->tableView->selectionModel();
     connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &DataPanel::selectionChanged);
 
@@ -40,8 +38,11 @@ void DataPanel::setMyModel()
         ui->tableView->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
     }
     loadVESNames();
-    //ui->comboBoxCurrentVes->setCurrentIndex(mainDelegate->currentVESIndex());
     loadModelNames();
+    if (mResetSelection){
+        selectionModel->select(mPreviousIndex, QItemSelectionModel::Select);
+        mResetSelection = false;
+    }
 }
 
 void DataPanel::loadVESNames()
@@ -75,6 +76,8 @@ void DataPanel::changeShowedData()
         mSelectedData = TableModel::DataType::Model;
         ui->tableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     }
+    if (selectionModel)
+        selectionModel->clearSelection();
     emit showedDataChanged(mSelectedData);
 }
 
@@ -94,15 +97,8 @@ void DataPanel::selectionChanged(const QItemSelection &selected, const QItemSele
     emit rowSelectionChanged(indices, mSelectedData);
 }
 
-
-
-//void DataPanel::on_comboBoxCurrentVes_currentIndexChanged(int index)
-//{
-//    if (mainDelegate->currentVESIndex() != index)
-//        emit currentVESIndexChanged(index);
-//}
-
-//void DataPanel::on_comboBoxVesModel_currentIndexChanged(int index)
-//{
-//    emit currentVESModelIndexChanged(index);
-//}
+void DataPanel::restoreSelection(const QModelIndex &index)
+{
+    mPreviousIndex = index;
+    mResetSelection = true;
+}

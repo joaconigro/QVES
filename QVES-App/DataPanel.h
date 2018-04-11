@@ -26,6 +26,8 @@ private:
     TableDelegate *myDelegate;
     QItemSelectionModel *selectionModel;
     QVESModelDelegate *mainDelegate;
+    bool mResetSelection;
+    QModelIndex mPreviousIndex;
 
 public slots:
     void setMyModel();
@@ -33,6 +35,7 @@ public slots:
     void loadModelNames();
     void changeShowedData();
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void restoreSelection(const QModelIndex &index);
 
 signals:
     void currentVESIndexChanged(int index);

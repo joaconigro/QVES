@@ -119,6 +119,7 @@ signals:
     void carryOutDarZarrouk(const QList<int> beds);
     void selectionChanged(const int dataType);
     void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue);
+    void restoreSelection(const QModelIndex &index);
 };
 
 #endif // QVESMODELDELEGATE_H
