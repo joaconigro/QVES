@@ -10,7 +10,7 @@
 #include "VES.h"
 #include "TableModel.h"
 #include <QList>
-#include "XYDataTable.h"
+#include "XYData.h"
 #include "QItemSelection"
 #include <QStringList>
 
@@ -81,10 +81,10 @@ public:
 
 
     VES *currentVES() const;
-    void setCurrentVES(VES *currentVES);
+    //void setCurrentVES(VES *currentVES);
 
     Project *currentProject() const;
-    void setCurrentProject(Project *currentProject);
+    //void setCurrentProject(Project *currentProject);
 
 public slots:
     void changeCurrentProject();
@@ -116,7 +116,7 @@ signals:
     void vesCurrentModelChanged();
     void tableModelChanged();
     //void carryOutZohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
-    void carryOutDarZarrouk(const QList<int> beds);
+    //void carryOutDarZarrouk(const QList<int> beds);
     void selectionChanged(const int dataType);
     void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue);
     void restoreSelection(const QModelIndex &index);

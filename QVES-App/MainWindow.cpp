@@ -12,10 +12,6 @@
 #include <QMessageBox>
 #include <QDir>
 #include "QVESSettingsDialog.h"
-#include "Commands/ZohdyInversionCommand.h"
-#include "Commands/ChangeCurrentVESCommand.h"
-#include "Commands/EditVESNameCommand.h"
-#include "Commands/EditVESDataCommand.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -38,9 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mDataPanel = new DataPanel(mDelegate);
     mPropertiesPanel = new VESPropertiesPanel(mDelegate);
     mChart = new MainChart(mDelegate);
-    mUndoStack = new QUndoStack(this);
+    //mUndoStack = new QUndoStack(this);
 
-    createConnections();
+
 
     mDataPanel->setMaximumWidth(mDataPanel->sizeHint().width());
     mainTabs->addTab(mDataPanel, tr("Datos del SEV"));
@@ -70,7 +66,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionUndo->setShortcut(QKeySequence::Undo);
     ui->actionRedo->setShortcut(QKeySequence::Redo);
 
-    mMediator = new PanelsDelegateMediator(mDelegate, mDataPanel, mPropertiesPanel, mChart);
+    mCommandManager = new CommandsManager(mDelegate, mQVESSettings, this);
+    mMediator = new PanelsDelegateMediator(mDelegate, mDataPanel, mPropertiesPanel, mChart, mCommandManager);
+
+    createConnections();
 }
 
 MainWindow::~MainWindow()
@@ -80,10 +79,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::createConnections()
 {
-    connect(mPropertiesPanel, &VESPropertiesPanel::VESNameEdited, this, &MainWindow::onVESNameEdited);
-    connect(mDataPanel, &DataPanel::currentVESIndexChanged, this, &MainWindow::currentVESChanged);
-    connect(mDelegate, &QVESModelDelegate::onVESDataChanged, this, &MainWindow::onVESDataChanged);
-
     connect(mDelegate, &QVESModelDelegate::projectChanged, this, &MainWindow::loadProject);
     connect(mDelegate, &QVESModelDelegate::VESChanged, this, &MainWindow::loadVES);
     connect(mDelegate, &QVESModelDelegate::vesCurrentModelChanged, this, &MainWindow::modelChanged);
@@ -91,6 +86,10 @@ void MainWindow::createConnections()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveProject);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(ui->actionEmptyModel, &QAction::triggered, this, &MainWindow::createEmptyModel);
+
+    connect(ui->actionUndo, &QAction::triggered, mCommandManager, &CommandsManager::undo);
+    connect(ui->actionRedo, &QAction::triggered, mCommandManager, &CommandsManager::redo);
+    connect(ui->actionZohdy, &QAction::triggered, mCommandManager, &CommandsManager::onZohdyInversion);
 
     connect(ui->actionMergeBeds, &QAction::triggered, mDelegate, &QVESModelDelegate::mergeSelectedBeds);
     connect(ui->actionExportChart, &QAction::triggered, this, &MainWindow::exportChartAs);
@@ -284,36 +283,36 @@ void MainWindow::on_actionGeneralOptions_triggered()
     diag.exec();
 }
 
-void MainWindow::on_actionZohdy_triggered()
-{
-    auto command = new ZohdyInversionCommand(mDelegate, mQVESSettings->zohdyFilter(), mQVESSettings->autoDarZarrouk(), mQVESSettings->autoDarZarroukThreshold());
-    mUndoStack->push(command);
-}
+//void MainWindow::on_actionZohdy_triggered()
+//{
+//    auto command = new ZohdyInversionCommand(mDelegate, mQVESSettings->zohdyFilter(), mQVESSettings->autoDarZarrouk(), mQVESSettings->autoDarZarroukThreshold());
+//    mUndoStack->push(command);
+//}
 
-void MainWindow::on_actionUndo_triggered()
-{
-    mUndoStack->undo();
-}
+//void MainWindow::on_actionUndo_triggered()
+//{
+//    mUndoStack->undo();
+//}
 
-void MainWindow::on_actionRedo_triggered()
-{
-    mUndoStack->redo();
-}
+//void MainWindow::on_actionRedo_triggered()
+//{
+//    mUndoStack->redo();
+//}
 
-void MainWindow::currentVESChanged(const int index)
-{
-    auto command = new ChangeCurrentVESCommand(mDelegate, index);
-    mUndoStack->push(command);
-}
+//void MainWindow::currentVESChanged(const int index)
+//{
+//    auto command = new ChangeCurrentVESCommand(mDelegate, index);
+//    mUndoStack->push(command);
+//}
 
-void MainWindow::onVESNameEdited(const QString &name)
-{
-    auto command = new EditVESNameCommand(mDelegate, name);
-    mUndoStack->push(command);
-}
+//void MainWindow::onVESNameEdited(const QString &name)
+//{
+//    auto command = new EditVESNameCommand(mDelegate, name);
+//    mUndoStack->push(command);
+//}
 
-void MainWindow::onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const
-{
-    auto command = new EditVESDataCommand(mDelegate, index, oldValue, newValue, dataType);
-    mUndoStack->push(command);
-}
+//void MainWindow::onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const
+//{
+//    auto command = new EditVESDataCommand(mDelegate, index, oldValue, newValue, dataType);
+//    mUndoStack->push(command);
+//}

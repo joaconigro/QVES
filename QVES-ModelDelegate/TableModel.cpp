@@ -5,7 +5,6 @@
 TableModel::TableModel(QObject *parent)
     :QAbstractTableModel(parent)
 {
-
 }
 
 int TableModel::rowCount(const QModelIndex &parent) const
@@ -63,36 +62,40 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
 {
     if (index.isValid() && role == Qt::EditRole) {
         double oldValue = data(index, Qt::DisplayRole).toDouble();
-        XYDataTable *temp = new XYDataTable(mTable.at(index.row())->x(), mTable.at(index.row())->y());
+        XYData temp(mTable.at(index.row())->x(), mTable.at(index.row())->y());
         double tempValue = value.toDouble();
         if (index.column() == 0) {
             if (index.row() == 0){
                 if (tempValue < mTable.at(index.row() + 1)->x()){
-                    temp->setX(tempValue);
+                    temp.setX(tempValue);
                 }
             }else if (index.row() == mTable.count() - 1) {
                 if (tempValue > mTable.at(index.row() - 1)->x()){
-                    temp->setX(tempValue);
+                    temp.setX(tempValue);
                 }
             } else if ((tempValue > mTable.at(index.row() - 1)->x()) && (tempValue < mTable.at(index.row() + 1)->x())){
-                temp->setX(tempValue);
+                temp.setX(tempValue);
             } else {
-                delete  temp;
+                //delete  temp;
                 return false;
             }
         } else if (index.column() == 1) {
             if (tempValue > 0.0)
-                temp->setY(tempValue);
+                temp.setY(tempValue);
         } else {
-            delete  temp;
+            //delete  temp;
             return false;
         }
 
-        mTable.replace(index.row(), temp);
-        emit restoreSelection(index);
-        emit myTableChanged(index, static_cast<int>(mTypeOfData), oldValue, tempValue);
-        emit dataChanged(index, index);
-        return true;
+        XYData current(mTable.at(index.row()));
+        if (temp != current){
+            mTable.replace(index.row(), &temp);
+            emit restoreSelection(index);
+            emit myTableChanged(index, static_cast<int>(mTypeOfData), oldValue, tempValue);
+            emit dataChanged(index, index);
+            return true;
+        }
+        return false;
     }
 
     return false;
@@ -107,13 +110,11 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-void TableModel::setTableFromVES(const QList<XYDataTable *> &table, DataType type)
+void TableModel::setDataTable(const QList<XYData *> &table, DataType type)
 {
-    beginResetModel();
-    mTypeOfData = type;
-    mTable.clear();
-    foreach (auto row, table) {
-        mTable.append(row);
-    }
-    endResetModel();
+        beginResetModel();
+        mTypeOfData = type;
+        mTable.clear();
+        mTable.append(table);
+        endResetModel();
 }

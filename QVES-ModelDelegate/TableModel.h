@@ -3,7 +3,7 @@
 #include <QAbstractTableModel>
 #include "qves-modeldelegate_global.h"
 #include <QList>
-#include "XYDataTable.h"
+#include "XYData.h"
 
 class QVESMODELDELEGATESHARED_EXPORT TableModel: public QAbstractTableModel
 {
@@ -13,7 +13,7 @@ public:
 private:
     Q_OBJECT
 
-    QList<XYDataTable*> mTable;
+    QList<XYData*> mTable;
     DataType mTypeOfData;
 
 public:
@@ -25,7 +25,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void setTableFromVES(const QList<XYDataTable*> &table, DataType type);
+    void setDataTable(const QList<XYData*> &table, DataType type);
 
 signals:
     void myTableChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue);

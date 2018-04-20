@@ -9,7 +9,7 @@
 #include "TableModel.h"
 #include <QLabel>
 #include "QVESSettings.h"
-#include <QUndoStack>
+#include "Commands/CommandsManager.h"
 #include "PanelsDelegateMediator.h"
 
 namespace Ui {
@@ -33,7 +33,7 @@ private:
     MainChart *mChart;
     QVESModelDelegate *mDelegate;
     QChartView *chartView;
-    QUndoStack *mUndoStack;
+    CommandsManager *mCommandManager;
     PanelsDelegateMediator *mMediator;
 
     QString mLastDirectory;
@@ -75,14 +75,14 @@ private slots:
 
 
 
-    void on_actionZohdy_triggered();
+//    void on_actionZohdy_triggered();
 
-    void on_actionUndo_triggered();
+//    void on_actionUndo_triggered();
 
-    void on_actionRedo_triggered();
-    void currentVESChanged(const int index);
-    void onVESNameEdited(const QString& name);
-    void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const;
+//    void on_actionRedo_triggered();
+//    void currentVESChanged(const int index);
+//    void onVESNameEdited(const QString& name);
+//    void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const;
 
 signals:
     void fieldVisibleChanged(const bool value);

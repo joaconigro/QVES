@@ -6,6 +6,7 @@
 #include "QVESModelDelegate.h"
 #include "DataPanel.h"
 #include "VESPropertiesPanel.h"
+#include "Commands/CommandsManager.h"
 
 class PanelsDelegateMediator : public QObject
 {
@@ -15,15 +16,18 @@ class PanelsDelegateMediator : public QObject
     DataPanel *mDataPanel;
     VESPropertiesPanel *mPropertiesPanel;
     MainChart *mChart;
-
+    CommandsManager *mCommandManager;
 
     void delegateDataPanelConnections() const;
     void delegatePropertiesPanelConnections() const;
     void delegateChartConnections() const;
+    void delegateUndoManagerConnections() const;
+    void propertiesPanelManagerConnections() const;
+    void dataPanelManagerConnections() const;
 
 public:
     explicit PanelsDelegateMediator(QVESModelDelegate *delegate, DataPanel *dataPanel, VESPropertiesPanel *propertiesPanel,
-                                    MainChart *chart, QObject *parent = nullptr);
+                                    MainChart *chart, CommandsManager *manager, QObject *parent = nullptr);
 
 signals:
 

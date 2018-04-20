@@ -53,26 +53,26 @@ TableModel *QVESModelDelegate::selectionModel() const
 void QVESModelDelegate::createSelectionModel(const QList<int> &indices, const TableModel::DataType selectedData)
 {
     if (indices.count()>0){
-        QList<XYDataTable *> tempTable;
+        QList<XYData *> tempTable;
         switch (selectedData) {
         case TableModel::DataType::Field:
             foreach (auto i, indices) {
                 auto item = mCurrentVES->fieldData().at(i);
-                XYDataTable *value = new XYDataTable(item.ab2Distance(), item.resistivity());
+                XYData *value = new XYData(item.ab2Distance(), item.resistivity());
                 tempTable.append(value);
             }
             break;
         case TableModel::DataType::Splice:
             foreach (auto i, indices) {
                 auto item = mCurrentVES->splices().at(i);
-                XYDataTable *value = new XYDataTable(item.ab2Distance(), item.resistivity());
+                XYData *value = new XYData(item.ab2Distance(), item.resistivity());
                 tempTable.append(value);
             }
             break;
         case TableModel::DataType::Calculated:
             foreach (auto i, indices) {
                 auto item = mCurrentVES->currentModel()->calculatedData().at(i);
-                XYDataTable *value = new XYDataTable(item.ab2Distance(), item.resistivity());
+                XYData *value = new XYData(item.ab2Distance(), item.resistivity());
                 tempTable.append(value);
             }
             break;
@@ -80,25 +80,23 @@ void QVESModelDelegate::createSelectionModel(const QList<int> &indices, const Ta
             foreach (auto i, indices) {
                 auto item = mCurrentVES->currentModel()->model().at(i);
                 if (item.from() == 0.0){
-                    XYDataTable *value1 = new XYDataTable(mChartMinX, item.resistivity());
+                    XYData *value1 = new XYData(mChartMinX, item.resistivity());
                     tempTable.append(value1);
                 } else {
-                    XYDataTable *value1 = new XYDataTable(item.from(), item.resistivity());
+                    XYData *value1 = new XYData(item.from(), item.resistivity());
                     tempTable.append(value1);
                 }
                 if (item.until() == qInf()){
-                    XYDataTable *value2 = new XYDataTable(mChartMaxX, item.resistivity());
+                    XYData *value2 = new XYData(mChartMaxX, item.resistivity());
                     tempTable.append(value2);
                 } else {
-                    XYDataTable *value2 = new XYDataTable(item.until(), item.resistivity());
+                    XYData *value2 = new XYData(item.until(), item.resistivity());
                     tempTable.append(value2);
                 }
             }
             break;
-        default:
-            break;
         }
-        mSelectionModel->setTableFromVES(tempTable, TableModel::DataType::Field);
+        mSelectionModel->setDataTable(tempTable, TableModel::DataType::Field);
     }
 }
 
@@ -107,20 +105,20 @@ VES *QVESModelDelegate::currentVES() const
     return mCurrentVES;
 }
 
-void QVESModelDelegate::setCurrentVES(VES *currentVES)
-{
-    mCurrentVES = currentVES;
-}
+//void QVESModelDelegate::setCurrentVES(VES *currentVES)
+//{
+//    mCurrentVES = currentVES;
+//}
 
 Project *QVESModelDelegate::currentProject() const
 {
     return mCurrentProject;
 }
 
-void QVESModelDelegate::setCurrentProject(Project *currentProject)
-{
-    mCurrentProject = currentProject;
-}
+//void QVESModelDelegate::setCurrentProject(Project *currentProject)
+//{
+//    mCurrentProject = currentProject;
+//}
 
 void QVESModelDelegate::readVESNames()
 {
@@ -166,60 +164,61 @@ void QVESModelDelegate::selectModelForTable(const bool emitSignal)
 
 void QVESModelDelegate::fillFieldModel()
 {
-    QList<XYDataTable *> tempTable;
+    QList<XYData *> tempTable;
     foreach (const auto &item, mCurrentVES->fieldData()) {
-        XYDataTable *value = new XYDataTable(item.ab2Distance(), item.resistivity());
+        XYData *value = new XYData(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
-    mFieldModel->setTableFromVES(tempTable, TableModel::DataType::Field);
+    mFieldModel->setDataTable(tempTable, TableModel::DataType::Field);
 }
 
 void QVESModelDelegate::fillSpliceModel()
 {
-    QList<XYDataTable *> tempTable;
+    QList<XYData *> tempTable;
     foreach (const auto &item, mCurrentVES->splices()) {
-        XYDataTable *value = new XYDataTable(item.ab2Distance(), item.resistivity());
+        XYData *value = new XYData(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
-    mSpliceModel->setTableFromVES(tempTable, TableModel::DataType::Splice);
+    mSpliceModel->setDataTable(tempTable, TableModel::DataType::Splice);
 }
 
 void QVESModelDelegate::fillCalculatedModel()
 {
-    QList<XYDataTable *> tempTable;
+    QList<XYData *> tempTable;
     foreach (const auto &item, mCurrentVES->currentModel()->calculatedData()) {
-        XYDataTable *value = new XYDataTable(item.ab2Distance(), item.resistivity());
+        XYData *value = new XYData(item.ab2Distance(), item.resistivity());
         tempTable.append(value);
     }
-    mCalculatedModel->setTableFromVES(tempTable, TableModel::DataType::Calculated);
+    mCalculatedModel->setDataTable(tempTable, TableModel::DataType::Calculated);
 }
 
 void QVESModelDelegate::fillModeledModels()
 {
-    QList<XYDataTable *> tempTable;
-    QList<XYDataTable *> tempTable2;
+    QList<XYData *> tempTable;
+    QList<XYData *> tempTable2;
 
     foreach (const auto &item, mCurrentVES->currentModel()->model()) {
-        XYDataTable *value0 = new XYDataTable(item.depth(), item.resistivity());
+        XYData *value0 = new XYData(item.depth(), item.resistivity());
         tempTable2.append(value0);
 
         if (item.from() == 0.0){
-            XYDataTable *value1 = new XYDataTable(mChartMinX, item.resistivity());
+            XYData *value1 = new XYData(mChartMinX, item.resistivity());
             tempTable.append(value1);
         } else {
-            XYDataTable *value1 = new XYDataTable(item.from(), item.resistivity());
+            XYData *value1 = new XYData(item.from(), item.resistivity());
             tempTable.append(value1);
         }
         if (item.until() == qInf()){
-            XYDataTable *value2 = new XYDataTable(mChartMaxX, item.resistivity());
+            XYData *value2 = new XYData(mChartMaxX, item.resistivity());
             tempTable.append(value2);
         } else {
-            XYDataTable *value2 = new XYDataTable(item.until(), item.resistivity());
+            XYData *value2 = new XYData(item.until(), item.resistivity());
             tempTable.append(value2);
         }
     }
-    mTableModeledModel->setTableFromVES(tempTable2, TableModel::DataType::Model);
-    mChartModeledModel->setTableFromVES(tempTable, TableModel::DataType::Model);
+        mTableModeledModel->setDataTable(tempTable2, TableModel::DataType::Model);
+        mChartModeledModel->setDataTable(tempTable, TableModel::DataType::Model);
+
 }
 
 void QVESModelDelegate::resetTableModels()
@@ -238,16 +237,18 @@ QVESModelDelegate::QVESModelDelegate(QObject *parent) : QObject(parent)
     mCurrentProject = nullptr;
     mCurrentVES = nullptr;
     mCore = new VESCore(this);
-    mCurrentModel = new TableModel(this);
+    //mCurrentModel = new TableModel(this);
     mShowedTableData = TableModel::DataType::Field;
 
     mProjectFileName = mProjectPath = "";
+    mCurrentModel = nullptr;
     mFieldModel = nullptr;
     mSpliceModel = nullptr;
     mCalculatedModel = nullptr;
     mTableModeledModel = nullptr;
     mChartModeledModel = nullptr;
     mSelectionModel = nullptr;
+
 
     connect(mCore, &VESCore::projectLoaded, this, &QVESModelDelegate::changeCurrentProject);
     connect(mCore, &VESCore::projectClosed, this, &QVESModelDelegate::projectClosed);
@@ -309,7 +310,7 @@ void QVESModelDelegate::changeCurrentVES()
 {
     if (mCurrentVES){
         //disconnect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
-        disconnect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
+        //disconnect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
         disconnect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
         disconnect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
         disconnect(mCurrentVES, &VES::fieldDataModified, this, &QVESModelDelegate::currentVESFieldModified);
@@ -321,7 +322,7 @@ void QVESModelDelegate::changeCurrentVES()
     readModelNames();
     setDataTableModel();
     //connect(this, &QVESModelDelegate::carryOutZohdyInversion, mCurrentVES, &VES::zohdyInversion);
-    connect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
+    //connect(this, &QVESModelDelegate::carryOutDarZarrouk, mCurrentVES, &VES::darZarrouk);
     connect(mCurrentVES, &VES::selectedModelChanged, this, &QVESModelDelegate::updateVESModels);
     connect(mCurrentVES, &VES::currentModelModified, this, &QVESModelDelegate::currentVESModelModified);
     connect(mCurrentVES, &VES::fieldDataModified, this, &QVESModelDelegate::currentVESFieldModified);
@@ -375,7 +376,8 @@ void QVESModelDelegate::saveProject()
 void QVESModelDelegate::showedTableDataChanged(const TableModel::DataType dt)
 {
     mShowedTableData = dt;
-    selectModelForTable();
+    if(mCurrentVES)
+        selectModelForTable();
 }
 
 QStringList QVESModelDelegate::vesNames() const
@@ -445,7 +447,8 @@ void QVESModelDelegate::mergeSelectedBeds()
 {
     if (mShowedTableData == TableModel::DataType::Model){
         if(mSelectedRows.count()>1)
-            emit carryOutDarZarrouk(mSelectedRows);
+            mCurrentVES->darZarrouk(mSelectedRows);
+            //emit carryOutDarZarrouk(mSelectedRows);
     }
 }
 
