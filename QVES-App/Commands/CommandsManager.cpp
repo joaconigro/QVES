@@ -27,6 +27,12 @@ void CommandsManager::onZohdyInversion()
     mUndoStack->push(command);
 }
 
+void CommandsManager::onVFSAInversion()
+{
+    auto command = new VFSAInversionCommand(mDelegate);
+    mUndoStack->push(command);
+}
+
 void CommandsManager::currentVESChanged(const int index)
 {
     auto command = new ChangeCurrentVESCommand(mDelegate, index);

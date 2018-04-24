@@ -11,6 +11,13 @@ VfsaData::VfsaData(const double value, const double pdf, QObject *parent) : QObj
     mPdf = pdf;
 }
 
+VfsaData::VfsaData(const VfsaData &vd) : QObject(vd.parent())
+{
+    mValue = vd.value();
+    mPdf = vd.pdf();
+    this->setParent(vd.parent());
+}
+
 double VfsaData::value() const
 {
     return mValue;

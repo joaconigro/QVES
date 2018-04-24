@@ -7,6 +7,32 @@
 
 //}
 
+QList<VfsaData> VFSAInversionModel::getVFSAParameters() const
+{
+    return mVFSAParameters;
+}
+
+double VFSAInversionModel::getVFSAError() const
+{
+    return mVFSAError;
+}
+
+void VFSAInversionModel::setVFSAError(double vFSAError)
+{
+    mVFSAError = vFSAError;
+}
+
+void VFSAInversionModel::addVFSAData(const VfsaData &data)
+{
+    mVFSAParameters.append(data);
+}
+
+void VFSAInversionModel::addVFSAData(const double &data)
+{
+    VfsaData newData(data, 0.0, this);
+    mVFSAParameters.append(newData);
+}
+
 VFSAInversionModel::VFSAInversionModel(QObject *parent): InversionModel(parent)
 {
     mUsedAlgorithm = InversionAlgorithm::Vfsa;
@@ -29,8 +55,10 @@ VFSAInversionModel::VFSAInversionModel(const VFSAInversionModel &vm)
     mName = vm.name();
     mErrorResult = vm.errorResult();
     mUsedAlgorithm = vm.usedAlgorithm();
-    mCalculatedData = vm.calculatedData();
-    mModel = vm.model();
+    mCalculatedData.append(vm.calculatedData());
+    mModel.append(vm.model());
+    mVFSAError = vm.getVFSAError();
+    mVFSAParameters.append(vm.getVFSAParameters());
     this->setParent(vm.parent());
 }
 

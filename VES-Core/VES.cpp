@@ -1,6 +1,7 @@
 #include "VES.h"
 #include <QUuid>
 #include "QtMath"
+#include "VFSA/VFSACalculator.h"
 
 int VES::searchSections()
 {
@@ -480,6 +481,12 @@ ZohdyModel* VES::zohdyInversion(const int zohdyFilter, const bool autoDZ, const 
     zm->inversion(calcData);
     zm->updateModelError(splices());
     return zm;
+}
+
+void VES::VFSAInversion()
+{
+    auto vfsaCalculator = new VFSACalculator(mSplices, mCurrentParameters, this);
+    vfsaCalculator->startInversion();
 }
 
 void VES::selectModel(const int modelIndex)

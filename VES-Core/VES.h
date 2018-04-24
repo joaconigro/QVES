@@ -12,7 +12,7 @@
 #include <QList>
 #include "Serializable.h"
 #include <QDate>
-#include "VfsaParameters.h"
+#include "VFSA/VfsaParameters.h"
 
 class VESCORESHARED_EXPORT VES : public QObject, public Serializable
 {
@@ -100,6 +100,7 @@ public slots:
     void createSplices();
     void dataEdited(const int dataType, const int row, const int column, const double value);
     ZohdyModel *zohdyInversion(const int zohdyFilter, const bool autoDZ, const double autoDZThreshold);
+    void VFSAInversion();
     void selectModel(const int modelIndex);
     void darZarrouk(const QList<int>& bedIndices);
     void newZohdyModel(const int numberOfBeds);

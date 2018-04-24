@@ -79,10 +79,9 @@ InversionModel::InversionModel(const InversionModel& im)
 
     mName = im.name();
     mErrorResult = im.errorResult();
-    //mErrorString = im.errorString();
     mUsedAlgorithm = im.usedAlgorithm();
-    mCalculatedData = im.calculatedData();
-    mModel = im.model();
+    mCalculatedData.append(im.calculatedData());
+    mModel.append(im.model());
     this->setParent(im.parent());
 }
 
@@ -139,6 +138,11 @@ void InversionModel::setCalculatedData(const QList<BasicData> &list)
         BasicData newBd(bd.ab2Distance(), bd.resistivity(), bd.standardDeviation(), this);
         mCalculatedData.append(newBd);
     }
+}
+
+void InversionModel::appendCalculatedData(const BasicData &data)
+{
+    mCalculatedData.append(data);
 }
 
 void InversionModel::setModelData(const QList<ModelData> &list)

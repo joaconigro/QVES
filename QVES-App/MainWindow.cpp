@@ -90,6 +90,7 @@ void MainWindow::createConnections()
     connect(ui->actionUndo, &QAction::triggered, mCommandManager, &CommandsManager::undo);
     connect(ui->actionRedo, &QAction::triggered, mCommandManager, &CommandsManager::redo);
     connect(ui->actionZohdy, &QAction::triggered, mCommandManager, &CommandsManager::onZohdyInversion);
+    connect(ui->actionV_F_S_A, &QAction::triggered, mCommandManager, &CommandsManager::onVFSAInversion);
 
     connect(ui->actionMergeBeds, &QAction::triggered, mDelegate, &QVESModelDelegate::mergeSelectedBeds);
     connect(ui->actionExportChart, &QAction::triggered, this, &MainWindow::exportChartAs);

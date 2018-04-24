@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += network svg
+QT       += core network svg
 
 QT       -= gui
 
@@ -30,17 +30,19 @@ SOURCES += \
     SpliceData.cpp \
     ModelData.cpp \
     LocationData.cpp \
-    VfsaParameters.cpp \
-    VfsaParameterLimit.cpp \
-    VfsaData.cpp \
     InversionModel.cpp \
     VES.cpp \
     XmlSerializer.cpp \
-    VfsaModel.cpp \
     Project.cpp \
     OldProject.cpp \
     ZohdyModel.cpp \
-    VFSAInversionModel.cpp
+    VFSAInversionModel.cpp \
+    VFSA/VFSASolutionJob.cpp \
+    VFSA/VfsaParameterLimit.cpp \
+    VFSA/VfsaParameters.cpp \
+    VFSA/VfsaData.cpp \
+    VFSA/VFSAJobResult.cpp \
+    VFSA/VFSACalculator.cpp
 
 HEADERS += \
         VESCore.h \
@@ -49,19 +51,21 @@ HEADERS += \
     SpliceData.h \
     ModelData.h \
     LocationData.h \
-    VfsaParameters.h \
-    VfsaParameterLimit.h \
-    VfsaData.h \
     InversionModel.h \
     VES.h \
     Serializable.h \
     Serializer.h \
     XmlSerializer.h \
-    VfsaModel.h \
     Project.h \
     OldProject.h \
     ZohdyModel.h \
-    VFSAInversionModel.h
+    VFSAInversionModel.h \
+    VFSA/VFSASolutionJob.h \
+    VFSA/VfsaParameterLimit.h \
+    VFSA/VfsaParameters.h \
+    VFSA/VfsaData.h \
+    VFSA/VFSAJobResult.h \
+    VFSA/VFSACalculator.h
 
 #unix {
 #    target.path = /usr/lib

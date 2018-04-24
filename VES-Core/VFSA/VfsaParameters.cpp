@@ -23,7 +23,7 @@ VfsaParameters::VfsaParameters(const VfsaParameters &vp)
     mNumberOfParameters = vp.numberOfParameters();
     mNumberOfBeds = vp.numberOfBeds();
     mMaximunError = vp.maximunError();
-    mMaximunError = vp.minimunPdf();
+    mMinimunPdf = vp.minimunPdf();
     mLimits = vp.limits();
 }
 

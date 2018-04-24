@@ -9,6 +9,7 @@
 #include "Commands/ChangeCurrentVESCommand.h"
 #include "Commands/EditVESNameCommand.h"
 #include "Commands/EditVESDataCommand.h"
+#include "Commands/VFSAInversionCommand.h"
 
 class CommandsManager : public QObject
 {
@@ -30,6 +31,7 @@ public slots:
 
 
     void onZohdyInversion();
+    void onVFSAInversion();
     void currentVESChanged(const int index);
     void onVESNameEdited(const QString& name);
     void onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const;

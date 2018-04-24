@@ -14,6 +14,7 @@ class VESCORESHARED_EXPORT VfsaData : public QObject
 public:
     explicit VfsaData(QObject *parent = nullptr);
     explicit VfsaData(const double value, const double pdf = 0.0, QObject *parent = nullptr);
+    VfsaData(const VfsaData &vd);
 
     //Getters
     double value() const;

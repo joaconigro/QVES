@@ -39,7 +39,8 @@ SOURCES += \
     PanelsDelegateMediator.cpp \
     Commands/EditVESNameCommand.cpp \
     Commands/EditVESDataCommand.cpp \
-    Commands/CommandsManager.cpp
+    Commands/CommandsManager.cpp \
+    Commands/VFSAInversionCommand.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -56,7 +57,8 @@ HEADERS += \
     PanelsDelegateMediator.h \
     Commands/EditVESNameCommand.h \
     Commands/EditVESDataCommand.h \
-    Commands/CommandsManager.h
+    Commands/CommandsManager.h \
+    Commands/VFSAInversionCommand.h
 
 FORMS += \
         MainWindow.ui \

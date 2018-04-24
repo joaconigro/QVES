@@ -6,7 +6,7 @@
 #include "BasicData.h"
 #include "SpliceData.h"
 #include "ModelData.h"
-#include "VfsaParameters.h"
+#include "VFSA/VfsaParameters.h"
 #include <QList>
 #include "Serializable.h"
 #include <QVector>
@@ -55,6 +55,7 @@ public:
     void setName(const QString value);
     void setUsedAlgorithm(const InversionAlgorithm value);
     void setCalculatedData(const QList<BasicData> &list);
+    void appendCalculatedData(const BasicData &data);
     void setModelData(const QList<ModelData> &list);
 
     //Inversion functions
