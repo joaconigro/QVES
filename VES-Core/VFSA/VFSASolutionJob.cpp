@@ -18,17 +18,18 @@ VFSASolutionJob::VFSASolutionJob(const int threadNumber, const QList<SpliceData>
     mMaximunError = parameters->maximunError();
     mMinimunPdf = parameters->minimunPdf();
 
-    int seed = QTime::currentTime().msec();
-    randomGenerator = new QRandomGenerator(seed);
+    //int seed = QTime::currentTime().msec();
+    randomGenerator = new QRandomGenerator();
+
 }
 
 void VFSASolutionJob::run()
 {
+    mJobResult = new VFSAJobResult();
     double temperature = mInitialTemperature;
-    mJobResult = new VFSAJobResult(this);
 
     //Create an initial model with initial temperature
-    auto initialModel = new VFSAInversionModel(static_cast<QObject*>(this));
+    auto initialModel = new VFSAInversionModel();
 
     //Create random parameters for initial model
     foreach (auto limit, mLimits) {
@@ -49,7 +50,7 @@ void VFSASolutionJob::run()
 
         int l = 1;
         int tries = 0;
-        while (l < mMovesPerTemperature && tries < 100) {
+        while (l < mMovesPerTemperature + 1 && tries < 100) {
             auto newModel = randomModel(previousModel, temperature);
 
             if (newModel->getVFSAError() < previousModel->getVFSAError()){
@@ -128,14 +129,14 @@ void VFSASolutionJob::calculateResistivity(VFSAInversionModel *model) const
     for(int i = mNumberOfBeds; i < model->getVFSAParameters().count(); i++){
         thicknesses[i - mNumberOfBeds] = model->getVFSAParameters().at(i).value();
     }
-    thicknesses.append(std::numeric_limits<double>::max());
+    thicknesses.append(std::numeric_limits<int>::max());
 
     //Schlumberger device (MM, MP, MN, DS, SHIFT, AJ)
     const QVector<double> AJ = {0.014, 0.0282, 0.0838, 0.2427, 0.6217, 1.1877, 0.3954, -3.4531, 2.7568, -1.2075, 0.4595, -0.1975, 0.1042, -0.0359};
     const int MM = 3;
     const int MP = 10;
     const int MN = 13;
-    const double DS = qLn(10) / 6.0;;
+    const double DS = qLn(10) / 6.0;
     const double SHIFT = 0.1343115;
 
 
@@ -176,7 +177,7 @@ void VFSASolutionJob::vfsaInternalError(VFSAInversionModel *model) const
 
     double finalError = 0.0;
     for(int i = 0; i < mFieldData.count(); i++){
-        finalError = pow((mFieldData.at(i).resistivity() - model->calculatedData().at(i).resistivity()), 2.0);
+        finalError += pow((log10(mFieldData.at(i).resistivity()) - log10(model->calculatedData().at(i).resistivity())), 2.0);
     }
     finalError /= mFieldData.count();
     model->setVFSAError(finalError);
@@ -184,14 +185,17 @@ void VFSASolutionJob::vfsaInternalError(VFSAInversionModel *model) const
 
 VFSAInversionModel *VFSASolutionJob::randomModel(const VFSAInversionModel *previousModel, const double temperature)
 {
-    auto newModel = new VFSAInversionModel(static_cast<QObject*>(this));
+    auto newModel = new VFSAInversionModel();
 
     for(int i = 0; i < previousModel->getVFSAParameters().count(); i++){
         VfsaData data;
         int tries = 0;
         bool getOut = false;
-        double aRandom, ayy, dif, yy, pwr, xmod, lower, upper;
+        double aRandom, ayy, dif, yy, pwr, xmod, lower, upper, value;
 
+        lower = qLn(mLimits.at(i).lower());
+        upper = qLn(mLimits.at(i).upper());
+        value = qLn(previousModel->getVFSAParameters().at(i).value());
         do {
             aRandom = randomGenerator->generateDouble();
             ayy = 0.0;
@@ -201,11 +205,9 @@ VFSAInversionModel *VFSASolutionJob::randomModel(const VFSAInversionModel *previ
             } else if (dif > 0.0) {
                 ayy = 1.0;
             }
-            pwr = qAbs(2.0 - aRandom -1);
+            pwr = qAbs(2.0 * aRandom - 1.0);
             yy = ayy * temperature * (pow(1.0 + 1.0 / temperature,  pwr) - 1.0);
-            lower = qLn(mLimits.at(i).lower());
-            upper = qLn(mLimits.at(i).upper());
-            xmod = qLn(previousModel->getVFSAParameters().at(i).value()) + yy * (upper - lower);
+            xmod = value + yy * (upper - lower);
             if ((xmod < lower) || (xmod > upper)){
                 tries +=1;
             } else {
