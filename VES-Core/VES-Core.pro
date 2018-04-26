@@ -40,7 +40,6 @@ SOURCES += \
     VFSA/VFSASolutionJob.cpp \
     VFSA/VfsaParameterLimit.cpp \
     VFSA/VfsaParameters.cpp \
-    VFSA/VfsaData.cpp \
     VFSA/VFSAJobResult.cpp \
     VFSA/VFSACalculator.cpp
 
@@ -63,7 +62,6 @@ HEADERS += \
     VFSA/VFSASolutionJob.h \
     VFSA/VfsaParameterLimit.h \
     VFSA/VfsaParameters.h \
-    VFSA/VfsaData.h \
     VFSA/VFSAJobResult.h \
     VFSA/VFSACalculator.h
 

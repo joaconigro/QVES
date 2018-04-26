@@ -10,6 +10,7 @@ QVariant ModelData::toVariant() const
     map.insert("mDepth", mDepth);
     map.insert("mTransverseResistence", mTransverseResistence);
     map.insert("mLongitudinalConductance", mLongitudinalConductance);
+    map.insert("mProbabilityDensityFunction", mProbabilityDensityFunction);
     return map;
 }
 
@@ -23,11 +24,12 @@ void ModelData::fromVariant(const QVariant &variant)
     mDepth = map.value("mDepth").toDouble();
     mTransverseResistence = map.value("mTransverseResistence").toDouble();
     mLongitudinalConductance = map.value("mLongitudinalConductance").toDouble();
+    mProbabilityDensityFunction = map.value("mProbabilityDensityFunction").toDouble();
 }
 
 ModelData::ModelData(QObject *parent) : QObject(parent)
 {
-    mFrom = mUntil = mResistivity = mThickness = mDepth = mTransverseResistence = mLongitudinalConductance = 0.0;
+    mFrom = mUntil = mResistivity = mThickness = mDepth = mTransverseResistence = mLongitudinalConductance = mProbabilityDensityFunction = 0.0;
 }
 
 ModelData::ModelData(const ModelData &md)
@@ -39,6 +41,7 @@ ModelData::ModelData(const ModelData &md)
     mDepth = md.depth();
     mTransverseResistence = md.transverseResistence();
     mLongitudinalConductance = md.longitudinalConductance();
+    mProbabilityDensityFunction = md.probabilityDensityFunction();
     this->setParent(md.parent());
 }
 
@@ -51,6 +54,7 @@ ModelData &ModelData::operator=(const ModelData &rhs)
     mDepth = rhs.depth();
     mTransverseResistence = rhs.transverseResistence();
     mLongitudinalConductance = rhs.longitudinalConductance();
+    mProbabilityDensityFunction = rhs.probabilityDensityFunction();
     this->setParent(rhs.parent());
     return *this;
 }
@@ -95,6 +99,11 @@ double ModelData::longitudinalConductance() const
     return mLongitudinalConductance;
 }
 
+double ModelData::probabilityDensityFunction() const
+{
+    return mProbabilityDensityFunction;
+}
+
 void ModelData::setFrom(const double value)
 {
     mFrom = value;
@@ -128,4 +137,9 @@ void ModelData::setTransverseResistence(const double value)
 void ModelData::setLongitudinalConductance(const double value)
 {
     mLongitudinalConductance = value;
+}
+
+void ModelData::setProbabilityDensityFunction(double value)
+{
+    mProbabilityDensityFunction = value;
 }

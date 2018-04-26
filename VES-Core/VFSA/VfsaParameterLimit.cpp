@@ -60,3 +60,13 @@ VfsaParameterLimit &VfsaParameterLimit::operator =(const VfsaParameterLimit &rhs
     this->setParent(rhs.parent());
     return *this;
 }
+
+bool VfsaParameterLimit::operator ==(const VfsaParameterLimit &rhs) const
+{
+    return (mLower == rhs.lower() && mUpper == rhs.upper());
+}
+
+bool VfsaParameterLimit::operator !=(const VfsaParameterLimit &rhs) const
+{
+    return (mLower != rhs.lower() || mUpper != rhs.upper());
+}

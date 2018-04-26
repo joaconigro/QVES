@@ -487,6 +487,10 @@ void VES::VFSAInversion()
 {
     auto vfsaCalculator = new VFSACalculator(mSplices, mCurrentParameters, this);
     vfsaCalculator->startInversion();
+//    foreach (auto model, vfsaCalculator->getFinalModels()) {
+//        mModels.append(new VFSAInversionModel(*model));
+//    }
+//    delete vfsaCalculator;
 }
 
 void VES::selectModel(const int modelIndex)

@@ -16,6 +16,7 @@ class VESCORESHARED_EXPORT ModelData : public QObject, public Serializable
     double mDepth;
     double mTransverseResistence;
     double mLongitudinalConductance;
+    double mProbabilityDensityFunction;
 
 public:
     explicit ModelData(QObject *parent = nullptr);
@@ -33,6 +34,7 @@ public:
     double depth() const;
     double transverseResistence() const;
     double longitudinalConductance() const;
+    double probabilityDensityFunction() const;
 
     void setFrom(const double value);
     void setUntil(const double value);
@@ -41,8 +43,12 @@ public:
     void setDepth(const double value);
     void setTransverseResistence(const double value);
     void setLongitudinalConductance(const double value);
+    void setProbabilityDensityFunction(double value);
 
     ModelData& operator=(const ModelData &rhs);
+
+
+
 
 signals:
 

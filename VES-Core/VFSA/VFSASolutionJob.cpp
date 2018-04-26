@@ -9,6 +9,7 @@ VFSASolutionJob::VFSASolutionJob(const int threadNumber, const QList<SpliceData>
     mFieldData(fieldData),
     mThreadNumber(threadNumber)
 {
+    mSolutions = parameters->solutions();
     mInitialTemperature = parameters->initialTemperature();
     mIterationsPerTemperature = parameters->iterationsPerTemperature();
     mMovesPerTemperature = parameters->movesPerTemperature();
@@ -32,9 +33,9 @@ void VFSASolutionJob::run()
     auto initialModel = new VFSAInversionModel();
 
     //Create random parameters for initial model
-    foreach (auto limit, mLimits) {
-        auto value = randomData(limit.lower(), limit.upper());
-        initialModel->addVFSAData(value);
+    for(int limit = 0; limit < mLimits.count(); limit++) {
+        auto value = randomData(mLimits.at(limit).lower(), mLimits.at(limit).upper());
+        initialModel->addVFSAData(limit, value, mNumberOfBeds);
     }
 
     //Calculate internal VFSA error and save the model
@@ -67,6 +68,7 @@ void VFSASolutionJob::run()
                     l += 1;
                 } else {
                     tries += 1;
+                    delete newModel;
                 }
             }
         }
@@ -79,14 +81,17 @@ void VFSASolutionJob::run()
             return;
         }
 
-        int progress = j * 100 / mIterationsPerTemperature;
-        emit reportProgress(progress);
+        double partialProgress = ((double)j / (double)mIterationsPerTemperature) * 100.0 / mSolutions;
+        emit reportProgress(partialProgress);
 
     }
 
     //Take the last model as the best model
     mJobResult->setFinalModel(mJobResult->allModels().last());
     mJobResult->finalModel()->setName("VFSA "+ QString::number(mThreadNumber));
+
+    mJobResult->discardErroneousModels(mMaximunError);
+
     emit jobCompleted(mJobResult);
 
 }
@@ -110,70 +115,10 @@ double VFSASolutionJob::randomData(const double min, const double max) const
     return result;
 }
 
-void VFSASolutionJob::calculateResistivity(VFSAInversionModel *model) const
-{
-    //Necessary variables.
-    QVector<double> rho(mNumberOfBeds);
-    QVector<double> thicknesses(mNumberOfBeds - 1);
-    int m;
-    double ep;
-    int nn;
-    QVector<double> t(mNumberOfBeds);
-    QVector<double> tt(14);
-    double xx;
-    double appRes;
-
-    for(int i = 0; i < mNumberOfBeds; i++){
-        rho[i] = model->getVFSAParameters().at(i).value();
-    }
-    for(int i = mNumberOfBeds; i < model->getVFSAParameters().count(); i++){
-        thicknesses[i - mNumberOfBeds] = model->getVFSAParameters().at(i).value();
-    }
-    thicknesses.append(std::numeric_limits<int>::max());
-
-    //Schlumberger device (MM, MP, MN, DS, SHIFT, AJ)
-    const QVector<double> AJ = {0.014, 0.0282, 0.0838, 0.2427, 0.6217, 1.1877, 0.3954, -3.4531, 2.7568, -1.2075, 0.4595, -0.1975, 0.1042, -0.0359};
-    const int MM = 3;
-    const int MP = 10;
-    const int MN = 13;
-    const double DS = qLn(10) / 6.0;
-    const double SHIFT = 0.1343115;
-
-
-    foreach (auto item, mFieldData) {
-        BasicData pCalc;
-        pCalc.setAb2Distance(item.ab2Distance());
-        m = -MP;
-
-        do{
-            nn = mNumberOfBeds - 1;
-            ep = item.ab2Distance() * exp(m * DS - SHIFT);
-            t[nn] = rho.at(nn);
-
-            do{
-                xx = thicknesses.at(nn - 1) / ep;
-                t[nn - 1] = (t[nn] + rho[nn - 1] * tanh(xx)) / (1 + t[nn] * tanh(xx) / rho[nn - 1]);
-                nn -= 1;
-            } while (nn >= 1);
-
-            tt[m + MP] = t.at(nn);
-            m += 1;
-
-        } while (m <= MM);
-
-        appRes = 0.0;
-        for(int j = 0; j<AJ.count(); j++){
-            appRes += tt.at(MN - j) * AJ.at(j);
-        }
-        pCalc.setResistivity(appRes);
-        model->appendCalculatedData(pCalc);
-        //model->calculatedData().append(pCalc);
-    }
-}
-
 void VFSASolutionJob::vfsaInternalError(VFSAInversionModel *model) const
 {
-    calculateResistivity(model);
+    //Invert the model
+    model->inversion(mFieldData);
 
     double finalError = 0.0;
     for(int i = 0; i < mFieldData.count(); i++){
@@ -187,15 +132,16 @@ VFSAInversionModel *VFSASolutionJob::randomModel(const VFSAInversionModel *previ
 {
     auto newModel = new VFSAInversionModel();
 
-    for(int i = 0; i < previousModel->getVFSAParameters().count(); i++){
-        VfsaData data;
+    auto parameters = previousModel->getVFSAParameters();
+    for(int i = 0; i < parameters.count(); i++){
+        double data;
         int tries = 0;
         bool getOut = false;
         double aRandom, ayy, dif, yy, pwr, xmod, lower, upper, value;
 
         lower = qLn(mLimits.at(i).lower());
         upper = qLn(mLimits.at(i).upper());
-        value = qLn(previousModel->getVFSAParameters().at(i).value());
+        value = qLn(parameters.at(i));
         do {
             aRandom = randomGenerator->generateDouble();
             ayy = 0.0;
@@ -216,8 +162,8 @@ VFSAInversionModel *VFSASolutionJob::randomModel(const VFSAInversionModel *previ
 
         } while (tries < 100 && !getOut);
 
-        data.setValue(qExp(xmod));
-        newModel->addVFSAData(data);
+        data = qExp(xmod);
+        newModel->addVFSAData(i, data, mNumberOfBeds);
     }
 
     vfsaInternalError(newModel);

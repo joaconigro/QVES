@@ -29,6 +29,8 @@ public:
     void setUpper(const double value);
 
     VfsaParameterLimit& operator =(const VfsaParameterLimit &rhs);
+    bool operator ==(const VfsaParameterLimit &rhs) const;
+    bool operator !=(const VfsaParameterLimit &rhs) const;
 
 signals:
 

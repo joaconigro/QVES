@@ -2,21 +2,19 @@
 #define VFSAINVERSIONMODEL_H
 #include "InversionModel.h"
 #include "ves-core_global.h"
-#include "VFSA/VfsaData.h"
 
 class VESCORESHARED_EXPORT VFSAInversionModel : public InversionModel
 {
     Q_OBJECT
 
-    QList<VfsaData> mVFSAParameters;
     double mVFSAError;
+    QList<double> mParameterPDFs;
 
 public:
     explicit VFSAInversionModel(QObject *parent = nullptr);
     explicit VFSAInversionModel(const QString &name, QObject *parent = nullptr);
     explicit VFSAInversionModel(const InversionModel& im);
     VFSAInversionModel(const VFSAInversionModel& vm);
-    //VFSAInversionModel();
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
@@ -25,12 +23,15 @@ public:
     void updateInversionModelEdited(const QList<SpliceData> &fieldData) override;
 
 
-    QList<VfsaData> getVFSAParameters() const;
+    QList<double> getVFSAParameters() const;
     double getVFSAError() const;
     void setVFSAError(double getVFSAError);
 
-    void addVFSAData(const VfsaData &data);
-    void addVFSAData(const double &data);
+    void addVFSAData(int index, const double data, const int numberOfBeds);
+    bool getRemoveByPDF() const;
+    void setRemoveByPDF(const bool removeByPDF);
+    QList<double> getParameterPDFs() const;
+    void setParameterPDF(const int index, const double value);
 };
 
 Q_DECLARE_METATYPE(VFSAInversionModel)

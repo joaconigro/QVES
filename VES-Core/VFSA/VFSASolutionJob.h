@@ -9,8 +9,6 @@
 #include "VFSAJobResult.h"
 #include "VfsaParameters.h"
 #include "VfsaParameterLimit.h"
-//#include "VfsaModel.h"
-#include "VfsaData.h"
 #include "../SpliceData.h"
 #include "../VFSAInversionModel.h"
 
@@ -23,13 +21,14 @@ public:
 
 signals:
     void jobCompleted(VFSAJobResult *jobResult);
-    void reportProgress(int progress);
+    void reportProgress(double progress);
 
 public slots:
     void abort();
 
 private:
     QAtomicInteger<bool> mAbort;
+    int mSolutions;
     double mInitialTemperature;
     int mIterationsPerTemperature;
     int mMovesPerTemperature;
@@ -44,7 +43,7 @@ private:
     int mThreadNumber;
 
     double randomData(const double min, const double max) const;
-    void calculateResistivity(VFSAInversionModel *model) const;
+    //void calculateResistivity(VFSAInversionModel *model) const;
     void vfsaInternalError(VFSAInversionModel *model) const;
     VFSAInversionModel *randomModel(const VFSAInversionModel *previousModel, const double temperature);
 };
