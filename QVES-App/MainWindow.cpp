@@ -6,12 +6,12 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <QOpenGLWidget>
-#include "NewCustomModelDialog.h"
+#include "Dialogs/NewCustomModelDialog.h"
 #include <QSettings>
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QDir>
-#include "QVESSettingsDialog.h"
+#include "Dialogs/QVESSettingsDialog.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -284,36 +284,3 @@ void MainWindow::on_actionGeneralOptions_triggered()
     diag.exec();
 }
 
-//void MainWindow::on_actionZohdy_triggered()
-//{
-//    auto command = new ZohdyInversionCommand(mDelegate, mQVESSettings->zohdyFilter(), mQVESSettings->autoDarZarrouk(), mQVESSettings->autoDarZarroukThreshold());
-//    mUndoStack->push(command);
-//}
-
-//void MainWindow::on_actionUndo_triggered()
-//{
-//    mUndoStack->undo();
-//}
-
-//void MainWindow::on_actionRedo_triggered()
-//{
-//    mUndoStack->redo();
-//}
-
-//void MainWindow::currentVESChanged(const int index)
-//{
-//    auto command = new ChangeCurrentVESCommand(mDelegate, index);
-//    mUndoStack->push(command);
-//}
-
-//void MainWindow::onVESNameEdited(const QString &name)
-//{
-//    auto command = new EditVESNameCommand(mDelegate, name);
-//    mUndoStack->push(command);
-//}
-
-//void MainWindow::onVESDataChanged(const QModelIndex &index, const int dataType, const double oldValue, const double newValue) const
-//{
-//    auto command = new EditVESDataCommand(mDelegate, index, oldValue, newValue, dataType);
-//    mUndoStack->push(command);
-//}

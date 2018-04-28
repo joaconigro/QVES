@@ -29,7 +29,7 @@ void CommandsManager::onZohdyInversion()
 
 void CommandsManager::onVFSAInversion()
 {
-    auto command = new VFSAInversionCommand(mDelegate);
+    auto command = new VFSAInversionCommand(mDelegate, mSettings);
     mUndoStack->push(command);
 }
 

@@ -78,19 +78,19 @@
         <translation>Selection</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainChart.cpp" line="73"/>
-        <location filename="QVES-App/MainChart.cpp" line="161"/>
+        <location filename="QVES-App/MainChart.cpp" line="74"/>
+        <location filename="QVES-App/MainChart.cpp" line="165"/>
         <source>Distancia AB/2 - Profundidad (m)</source>
         <translation>AB/2 distance - Depth (m)</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainChart.cpp" line="75"/>
-        <location filename="QVES-App/MainChart.cpp" line="163"/>
+        <location filename="QVES-App/MainChart.cpp" line="76"/>
+        <location filename="QVES-App/MainChart.cpp" line="167"/>
         <source>Distancia AB/2 (m)</source>
         <translation>AB/2 distance (m)</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainChart.cpp" line="94"/>
+        <location filename="QVES-App/MainChart.cpp" line="95"/>
         <source>Resistividad (Ohm.m)</source>
         <translation>Resistivity (Ohm.m)</translation>
     </message>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <location filename="QVES-App/MainWindow.ui" line="160"/>
-        <location filename="QVES-App/MainWindow.cpp" line="276"/>
+        <location filename="QVES-App/MainWindow.cpp" line="263"/>
         <source>Abrir proyecto...</source>
         <translation>Open project...</translation>
     </message>
@@ -524,37 +524,37 @@
         <translation>About QVES.</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="41"/>
+        <location filename="QVES-App/MainWindow.cpp" line="42"/>
         <source>Datos del SEV</source>
         <translation>VES Data</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="43"/>
+        <location filename="QVES-App/MainWindow.cpp" line="44"/>
         <source>Propiedades del SEV</source>
         <translation>VES&apos;s properties</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="198"/>
+        <location filename="QVES-App/MainWindow.cpp" line="196"/>
         <source>Guardar gráfico como...</source>
         <translation>Save graphic as...</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="200"/>
+        <location filename="QVES-App/MainWindow.cpp" line="198"/>
         <source>Imágenes PNG (*.png)</source>
         <translation>PNG images (*.png)</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="278"/>
+        <location filename="QVES-App/MainWindow.cpp" line="265"/>
         <source>Proyectos QVS (*.qvs);; Proyectos antiguos de SEVs (*.sev)</source>
         <translation>QVS projects (*.qvs);;Old SEVs projects(*.sev)</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="173"/>
+        <location filename="QVES-App/MainWindow.cpp" line="176"/>
         <source>Guardar proyecto como...</source>
         <translation>Save project as...</translation>
     </message>
     <message>
-        <location filename="QVES-App/MainWindow.cpp" line="175"/>
+        <location filename="QVES-App/MainWindow.cpp" line="178"/>
         <source>Proyectos QVS (*.qvs)</source>
         <translation>QVS projects (*.qvs)</translation>
     </message>
@@ -562,22 +562,22 @@
 <context>
     <name>NewCustomModelDialog</name>
     <message>
-        <location filename="QVES-App/NewCustomModelDialog.ui" line="14"/>
+        <location filename="QVES-App/Dialogs/NewCustomModelDialog.ui" line="14"/>
         <source>Nuevo modelo</source>
         <translation>New model</translation>
     </message>
     <message>
-        <location filename="QVES-App/NewCustomModelDialog.ui" line="22"/>
+        <location filename="QVES-App/Dialogs/NewCustomModelDialog.ui" line="22"/>
         <source>Elija el número de capas del modelo:</source>
         <translation>Select the model&apos;s number of beds:</translation>
     </message>
     <message>
-        <location filename="QVES-App/NewCustomModelDialog.cpp" line="11"/>
+        <location filename="QVES-App/Dialogs/NewCustomModelDialog.cpp" line="11"/>
         <source>Aceptar</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="QVES-App/NewCustomModelDialog.cpp" line="12"/>
+        <location filename="QVES-App/Dialogs/NewCustomModelDialog.cpp" line="12"/>
         <source>Cancelar</source>
         <translation>Cancel</translation>
     </message>
@@ -608,180 +608,180 @@
 <context>
     <name>QVESSettingsDialog</name>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="20"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="20"/>
         <source>Configuración</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="30"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="30"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="36"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="36"/>
         <source>Idioma:</source>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="43"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="43"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Los cambios en el idioma se verán después de reiniciar QVES.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Language changes will take effect after restart QVES.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="50"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="50"/>
         <source>Nombre de nuevo SEV:</source>
         <translation>New VES name:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="60"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="60"/>
         <source>Borrar lista de proyectos recientes</source>
         <oldsource>Borar lista de proyectos recientes</oldsource>
         <translation>Clear recent projects</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="68"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="68"/>
         <source>Inversión</source>
         <translation>Inversion</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="74"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="74"/>
         <source>Opciones de Zohdy</source>
         <translation>Zohdy options</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="87"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="87"/>
         <source>Tolerancia:</source>
         <translation>Threshold:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="104"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="104"/>
         <source>Auto Dar Zarrouk</source>
         <translation>Auto Dar Zarrouk</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="97"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="97"/>
         <source>Filtro preferido:</source>
         <translation>Prefered filter:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="114"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="114"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sólo las capas contiguas cuya diferencia entre el logaritmo en base 10 de las resistividades sea menor a la tolerancia serán fusionadas.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sólo las capas contiguas cuya diferencia entre el logaritmo&lt;/p&gt;&lt;p&gt;en base 10 de las resistividades sea menor a la tolerancia&lt;/p&gt;&lt;p&gt;serán fusionadas.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SOnly contiguous beds wich difference between the 10 base logarithm of their resistivities is lower to selected threshold will be merged.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="136"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="136"/>
         <source>Número de capas por defecto:</source>
         <translation>Default number of beds:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="159"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="159"/>
         <source>Opciones de Very Fast Simulated Annealing</source>
         <translation>Very Fast Simulated Annealing options</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="186"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="186"/>
         <source>Cantidad de capas:</source>
         <translation>Number of beds:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="241"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="241"/>
         <source>Total de soluciones:</source>
         <translation>Total solutions:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="248"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="248"/>
         <source>Movimientos por temperatura:</source>
         <translation>Moves per temperature:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="255"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="255"/>
         <source>Iteraciones por solución:</source>
         <oldsource>Iteraciones por solución</oldsource>
         <translation>Iterations per solution:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="266"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="266"/>
         <source>Probabilidad mínima:</source>
         <translation>Minimum probability:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="339"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="339"/>
         <source>Temperatura inicial:</source>
         <translation>Initial temperature:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="346"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="346"/>
         <source>Error interno máximo:</source>
         <translation>Maximun internal error:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="359"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="359"/>
         <source>Gráficos</source>
         <translation>Graphics</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="365"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="365"/>
         <source>Tema del gráfico:</source>
         <translation>Graphic&apos;s theme:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="375"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="375"/>
         <source>Propiedades de las series</source>
         <translation>Series properties</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="393"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="393"/>
         <source>Seleccione un color...</source>
         <translation>Select a color...</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="400"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="400"/>
         <source>Tamaño:</source>
         <translation>Size:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="426"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="426"/>
         <source>Símbolo:</source>
         <translation>Symbol:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="441"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="441"/>
         <source>Animaciones:</source>
         <translation>Animations:</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.ui" line="457"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.ui" line="457"/>
         <source>Reestablecer</source>
         <translation>Reset</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="6"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="6"/>
         <source>Español</source>
         <translation>Spanish</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="7"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="7"/>
         <source>Inglés</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="14"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="14"/>
         <source>Claro (por defecto)</source>
         <translation>Light (by default)</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="15"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="15"/>
         <source>Azul claro</source>
         <translation>Light blue</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="16"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="16"/>
         <source>Oscuro</source>
         <translation>Dark</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="17"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="17"/>
         <source>Arena marrón</source>
         <translation>Brown sand</translation>
     </message>
@@ -802,82 +802,82 @@
         <translation type="vanished">Qt</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="20"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="20"/>
         <source>Sin animaciones</source>
         <translation>No animations</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="21"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="21"/>
         <source>Solo ejes animados</source>
         <translation>Only axis animations</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="22"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="22"/>
         <source>Solo series animadas</source>
         <translation>Only series animations</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="23"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="23"/>
         <source>Todas las animaciones</source>
         <translation>All animations</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="26"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="26"/>
         <source>Campo</source>
         <translation>Field</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="27"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="27"/>
         <source>Empalmes</source>
         <translation>Splices</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="28"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="28"/>
         <source>Calculados</source>
         <translation>Calculated</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="29"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="29"/>
         <source>Modelos</source>
         <translation>Models</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="30"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="30"/>
         <source>Resaltados</source>
         <translation>Highlighted</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="33"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="33"/>
         <source>Círculo</source>
         <translation>Circle</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="34"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="34"/>
         <source>Cuadrado</source>
         <translation>Square</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="35"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="35"/>
         <source>Estrella</source>
         <translation>Star</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="36"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="36"/>
         <source>Triángulo</source>
         <translation>Triangle</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="77"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="77"/>
         <source>Aceptar</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="78"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="78"/>
         <source>Cancelar</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="QVES-App/QVESSettingsDialog.cpp" line="363"/>
+        <location filename="QVES-App/Dialogs/QVESSettingsDialog.cpp" line="363"/>
         <source>Seleccione un color</source>
         <translation>Select a color</translation>
     </message>
@@ -885,17 +885,17 @@
 <context>
     <name>TableModel</name>
     <message>
-        <location filename="QVES-ModelDelegate/TableModel.cpp" line="32"/>
+        <location filename="QVES-ModelDelegate/TableModel.cpp" line="31"/>
         <source>Profundidad</source>
         <translation>Depth</translation>
     </message>
     <message>
-        <location filename="QVES-ModelDelegate/TableModel.cpp" line="34"/>
+        <location filename="QVES-ModelDelegate/TableModel.cpp" line="33"/>
         <source>Distancia AB/2</source>
         <translation>AB/2 distance</translation>
     </message>
     <message>
-        <location filename="QVES-ModelDelegate/TableModel.cpp" line="37"/>
+        <location filename="QVES-ModelDelegate/TableModel.cpp" line="36"/>
         <source>Resistividad</source>
         <translation>Resistivity</translation>
     </message>
@@ -979,6 +979,102 @@
         <location filename="QVES-App/VESPropertiesPanel.ui" line="238"/>
         <source>Propiedades del modelo seleccionado</source>
         <translation>Selected model&apos;s properties</translation>
+    </message>
+</context>
+<context>
+    <name>VFSACalculator</name>
+    <message>
+        <location filename="VES-Core/VFSA/VFSACalculator.cpp" line="177"/>
+        <source>Modelo promedio</source>
+        <translation>Average model</translation>
+    </message>
+    <message>
+        <location filename="VES-Core/VFSA/VFSACalculator.cpp" line="186"/>
+        <source>Modelo probable</source>
+        <translation>Most likely model</translation>
+    </message>
+</context>
+<context>
+    <name>VFSAInversionDialog</name>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="20"/>
+        <source>Configuración de la inversión VFSA</source>
+        <translation>VFSA inversion configuration</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="26"/>
+        <source>Parámetros del algoritmo</source>
+        <translation>Algorithm&apos;s parameters</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="34"/>
+        <source>Por defecto</source>
+        <translation>By default</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="44"/>
+        <source>Personalizado</source>
+        <translation>Custom</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="69"/>
+        <source>Probabilidad mínima:</source>
+        <translation>Minimum probability:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="114"/>
+        <source>Modelos por temperatura:</source>
+        <translation>Moves per temperature:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="121"/>
+        <source>Iteraciones por solución:</source>
+        <translation>Iterations per solution:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="144"/>
+        <source>Temperatura inicial:</source>
+        <translation>Initial temperature:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="164"/>
+        <source>Error máximo:</source>
+        <translation>Maximun error:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="215"/>
+        <source>Cantidad de soluciones:</source>
+        <translation>Total solutions:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="228"/>
+        <source>Parámetros del modelo</source>
+        <translation>Model&apos;s parameters</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="234"/>
+        <source>Cantidad de capas:</source>
+        <translation>Number of beds:</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="291"/>
+        <source>Proceso</source>
+        <translation>Process</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.ui" line="304"/>
+        <source>Procesar</source>
+        <translation>Process</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.cpp" line="15"/>
+        <source>Aceptar</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="QVES-App/Dialogs/VFSAInversionDialog.cpp" line="16"/>
+        <source>Cancelar</source>
+        <translation>Cancel</translation>
     </message>
 </context>
 </TS>

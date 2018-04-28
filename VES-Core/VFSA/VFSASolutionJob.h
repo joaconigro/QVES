@@ -7,8 +7,8 @@
 #include <QRandomGenerator>
 #include <QList>
 #include "VFSAJobResult.h"
-#include "VfsaParameters.h"
-#include "VfsaParameterLimit.h"
+#include "VFSAParameters.h"
+#include "VFSAParameterLimit.h"
 #include "../SpliceData.h"
 #include "../VFSAInversionModel.h"
 
@@ -16,7 +16,7 @@ class VFSASolutionJob : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
-    explicit VFSASolutionJob(const int threadNumber, const QList<SpliceData> &fieldData, const VfsaParameters *parameters, QObject *parent = nullptr);
+    explicit VFSASolutionJob(const int threadNumber, const QList<SpliceData> &fieldData, const VFSAParameters *parameters, QObject *parent = nullptr);
     void run() override;
 
 signals:
@@ -34,7 +34,7 @@ private:
     int mMovesPerTemperature;
     int mNumberOfParameters;
     int mNumberOfBeds;
-    QList<VfsaParameterLimit> mLimits;
+    QList<VFSAParameterLimit> mLimits;
     double mMaximunError;
     double mMinimunPdf;
     QRandomGenerator *randomGenerator;

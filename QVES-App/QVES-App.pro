@@ -30,17 +30,18 @@ SOURCES += \
     MainChart.cpp \
     VESPropertiesPanel.cpp \
     TableDelegate.cpp \
-    NewCustomModelDialog.cpp \
     QVESChartSerie.cpp \
     QVESSettings.cpp \
-    QVESSettingsDialog.cpp \
     Commands/ChangeCurrentVESCommand.cpp \
     Commands/ZohdyInversionCommand.cpp \
     PanelsDelegateMediator.cpp \
     Commands/EditVESNameCommand.cpp \
     Commands/EditVESDataCommand.cpp \
     Commands/CommandsManager.cpp \
-    Commands/VFSAInversionCommand.cpp
+    Commands/VFSAInversionCommand.cpp \
+    Dialogs/QVESSettingsDialog.cpp \
+    Dialogs/NewCustomModelDialog.cpp \
+    Dialogs/VFSAInversionDialog.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -48,24 +49,26 @@ HEADERS += \
     MainChart.h \
     VESPropertiesPanel.h \
     TableDelegate.h \
-    NewCustomModelDialog.h \
     QVESChartSerie.h \
     QVESSettings.h \
-    QVESSettingsDialog.h \
     Commands/ChangeCurrentVESCommand.h \
     Commands/ZohdyInversionCommand.h \
     PanelsDelegateMediator.h \
     Commands/EditVESNameCommand.h \
     Commands/EditVESDataCommand.h \
     Commands/CommandsManager.h \
-    Commands/VFSAInversionCommand.h
+    Commands/VFSAInversionCommand.h \
+    Dialogs/QVESSettingsDialog.h \
+    Dialogs/NewCustomModelDialog.h \
+    Dialogs/VFSAInversionDialog.h
 
 FORMS += \
         MainWindow.ui \
     DataPanel.ui \
     VESPropertiesPanel.ui \
-    NewCustomModelDialog.ui \
-    QVESSettingsDialog.ui
+    Dialogs/QVESSettingsDialog.ui \
+    Dialogs/NewCustomModelDialog.ui \
+    Dialogs/VFSAInversionDialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/release/ -lVES-Core
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../VES-Core/debug/ -lVES-Core

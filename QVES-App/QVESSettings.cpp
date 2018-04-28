@@ -361,7 +361,7 @@ void QVESSettings::defaultInversionSettings()
     mVFSAMovesPerTemperature = 20;
     mVFSASolutions = 10;
     mVFSANumberOfBeds = 3;
-    mVFSAMaximunError = 0.0001;
+    mVFSAMaximunError = 0.001;
     mVFSAMinimunPdf = 0.6825;
 }
 

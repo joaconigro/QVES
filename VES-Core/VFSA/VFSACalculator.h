@@ -1,27 +1,28 @@
 #ifndef VFSACALCULATOR_H
 #define VFSACALCULATOR_H
 
+#include "ves-core_global.h"
 #include <QObject>
 #include <QList>
 #include "VFSASolutionJob.h"
 #include "VFSAJobResult.h"
-#include "VfsaParameters.h"
+#include "VFSAParameters.h"
 #include "../VFSAInversionModel.h"
 #include "../SpliceData.h"
 
-class VFSACalculator: public QObject
+class VESCORESHARED_EXPORT VFSACalculator: public QObject
 {
 
     Q_OBJECT
 
 public:
-    explicit VFSACalculator(const QList<SpliceData> &fieldData, const VfsaParameters &parameters, QObject *parent = nullptr);
+    explicit VFSACalculator(const QList<SpliceData> &fieldData, const VFSAParameters &parameters, QObject *parent = nullptr);
     ~VFSACalculator() override;
 
     QList<VFSAInversionModel *> getFinalModels() const;
 
 signals:
-    void allCalculationsCompleted(QList<VFSAInversionModel *> inversionModels);
+    void allCalculationsCompleted();
     void abortAllJobs();
     void totalProgressReport(const int percentaje);
 
@@ -31,7 +32,8 @@ public slots:
     void jobProgressChanged(const double value);
 
 private:
-    VfsaParameters *mParameters;
+    double totalProgress;
+    VFSAParameters *mParameters;
     QList<SpliceData> mFieldData;
     QList<VFSAJobResult *> mFinishedJobs;
     QList<VFSAInversionModel *> finalModels;
@@ -41,6 +43,9 @@ private:
     VFSAInversionModel* averageModel(const QList<VFSAInversionModel*> models);
     void cleanByPDF();
     void allJobFinished();
+
+private slots:
+    //void allJobFinished();
 
 };
 

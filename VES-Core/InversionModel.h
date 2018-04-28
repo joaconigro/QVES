@@ -6,7 +6,7 @@
 #include "BasicData.h"
 #include "SpliceData.h"
 #include "ModelData.h"
-#include "VFSA/VfsaParameters.h"
+#include "VFSA/VFSAParameters.h"
 #include <QList>
 #include "Serializable.h"
 #include <QVector>

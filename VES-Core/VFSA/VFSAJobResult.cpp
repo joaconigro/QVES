@@ -56,8 +56,8 @@ VFSAJobResult::VFSAJobResult(QObject *parent) : QObject(parent)
 VFSAJobResult::~VFSAJobResult()
 {
     //Remove models.
-    do {
+    while (mAllModels.count() > 0) {
          delete mAllModels.at(0);
          mAllModels.removeAt(0);
-    } while (mAllModels.count() > 0);
+    }
 }

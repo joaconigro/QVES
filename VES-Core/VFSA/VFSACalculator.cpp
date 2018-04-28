@@ -2,11 +2,16 @@
 
 #include <QThreadPool>
 #include <QtMath>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QFutureWatcher>
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
 
-VFSACalculator::VFSACalculator(const QList<SpliceData> &fieldData, const VfsaParameters &parameters, QObject *parent) : QObject(parent),
+VFSACalculator::VFSACalculator(const QList<SpliceData> &fieldData, const VFSAParameters &parameters, QObject *parent) : QObject(parent),
     mFieldData(fieldData)
 {
-    mParameters = new VfsaParameters(parameters);
+    mParameters = new VFSAParameters(parameters);
 }
 
 VFSACalculator::~VFSACalculator()
@@ -17,6 +22,8 @@ VFSACalculator::~VFSACalculator()
 void VFSACalculator::startInversion()
 {
     clearJobs();
+    totalProgress = 0.0;
+    emit totalProgressReport((int)totalProgress);
 
     //poner mParameters->solutions() + 1, el 2 es solo para probar un solo thread
     for(int i = 1; i < mParameters->solutions() + 1; i++) {
@@ -31,13 +38,29 @@ void VFSACalculator::process(VFSAJobResult *jobResult)
     if (mFinishedJobs.count() < mParameters->solutions()){
        return;
     } else {
-       allJobFinished();
+//        QFutureWatcher<void> watcher;
+//        connect(&watcher, &QFutureWatcher::finished, this, &VFSACalculator::allCalculationsCompleted);
+
+        QFuture<void> future = QtConcurrent::run([=](){this->allJobFinished();});
+        future.waitForFinished();
+
+
+        emit allCalculationsCompleted();
+        //watcher.setFuture(future);
+
+       //allJobFinished();
     }
 }
 
 void VFSACalculator::jobProgressChanged(const double value)
 {
-    int partialProgress = value * 100.0 / mParameters->solutions();
+    QMutex mutex;
+    QMutexLocker locker(&mutex);
+
+    totalProgress += value;
+
+    emit totalProgressReport((int)totalProgress);
+    //int partialProgress = value * 100.0 / mParameters->solutions();
 }
 
 QList<VFSAInversionModel *> VFSACalculator::getFinalModels() const
@@ -77,7 +100,7 @@ VFSAInversionModel* VFSACalculator::averageModel(const QList<VFSAInversionModel*
         foreach (auto m, models) {
             sum += m->getVFSAParameters().at(i);
         }
-        sum /= mParameters->numberOfParameters();
+        sum /= models.count();
         model->addVFSAData(i, sum, mParameters->numberOfBeds());
     }
 

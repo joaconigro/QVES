@@ -12,7 +12,7 @@
 #include <QList>
 #include "Serializable.h"
 #include <QDate>
-#include "VFSA/VfsaParameters.h"
+#include "VFSA/VFSAParameters.h"
 
 class VESCORESHARED_EXPORT VES : public QObject, public Serializable
 {
@@ -31,8 +31,8 @@ private:
     QList<InversionModel *> mModels;
     InversionModel *mCurrentModel;
     int mCurrentIndexModel;
-    VfsaParameters mPreviousParameters;
-    VfsaParameters mCurrentParameters;
+    //VFSAParameters mPreviousParameters;
+    VFSAParameters mCurrentParameters;
     double mMinX;
     double mMinY;
     double mMaxX;
@@ -65,8 +65,8 @@ public:
     QList<InversionModel *> models() const;
     InversionModel *currentModel() const;
     int currentIndexModel() const;
-    VfsaParameters previousParameters() const;
-    VfsaParameters currentParameters() const;
+    //VFSAParameters previousParameters() const;
+    VFSAParameters currentParameters() const;
     double minX() const;
     double minY() const;
     double maxX() const;
@@ -82,6 +82,7 @@ public:
     void setCurrentIndexModel(const int value);
     void setFieldData(const QList<BasicData> &list);
     void setModels(const QList<InversionModel *> &list);
+    void setCurrentParameters(const VFSAParameters &paramters);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;

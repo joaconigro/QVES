@@ -92,7 +92,7 @@ VES::VES(const VES &ve)
     mLocation = ve.location();
     mModels = ve.models();
     mCurrentModel = ve.currentModel();
-    mPreviousParameters = ve.previousParameters();
+    //mPreviousParameters = ve.previousParameters();
     mCurrentParameters = ve.currentParameters();
     this->setParent(ve.parent());
 }
@@ -158,12 +158,12 @@ int VES::currentIndexModel() const
     return mCurrentIndexModel;
 }
 
-VfsaParameters VES::previousParameters() const
-{
-    return mPreviousParameters;
-}
+//VFSAParameters VES::previousParameters() const
+//{
+//    return mPreviousParameters;
+//}
 
-VfsaParameters VES::currentParameters() const
+VFSAParameters VES::currentParameters() const
 {
     return mCurrentParameters;
 }
@@ -251,7 +251,12 @@ void VES::setModels(const QList<InversionModel *> &list)
         InversionModel *newIm = list[i];
         newIm->setParent(this);
         mModels.append(newIm);
-  }
+    }
+}
+
+void VES::setCurrentParameters(const VFSAParameters &paramters)
+{
+    mCurrentParameters = paramters;
 }
 
 QVariant VES::toVariant() const
@@ -265,7 +270,7 @@ QVariant VES::toVariant() const
     map.insert("mDate", date());
     map.insert("mLocation", mLocation.toVariant());
     map.insert("mCurrentIndexModel", mCurrentIndexModel);
-    map.insert("mPreviousParameters", mPreviousParameters.toVariant());
+    //map.insert("mPreviousParameters", mPreviousParameters.toVariant());
     map.insert("mCurrentParameters", mCurrentParameters.toVariant());
 
     QVariantList basic;
@@ -299,7 +304,7 @@ void VES::fromVariant(const QVariant &variant)
     mComment = map.value("mComment").toString();
     setDate(map.value("mDate").toString());
     mLocation.fromVariant(map.value("mLocation"));
-    mPreviousParameters.fromVariant(map.value("mPreviousParameters"));
+    //mPreviousParameters.fromVariant(map.value("mPreviousParameters"));
     mCurrentParameters.fromVariant(map.value("mCurrentParameters"));
 
     QVariantList basic = map.value("mFieldData").toList();
@@ -352,7 +357,7 @@ VES &VES::operator =(const VES &rhs)
     mLocation = rhs.location();
     mModels = rhs.models();
     mCurrentModel = rhs.currentModel();
-    mPreviousParameters = rhs.previousParameters();
+    //mPreviousParameters = rhs.previousParameters();
     mCurrentParameters = rhs.currentParameters();
     this->setParent(rhs.parent());
     return *this;
@@ -524,6 +529,7 @@ void VES::newZohdyModel(const int numberOfBeds)
 
 void VES::addInversionModel(InversionModel *model)
 {
+    model->setParent(this);
     mModels.append(model);
     setCurrentIndexModel(mModels.indexOf(model));
 }

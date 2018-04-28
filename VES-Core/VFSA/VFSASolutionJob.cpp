@@ -4,7 +4,7 @@
 #include <QtMath>
 #include "../BasicData.h"
 
-VFSASolutionJob::VFSASolutionJob(const int threadNumber, const QList<SpliceData> &fieldData, const VfsaParameters *parameters, QObject *parent) : QObject(parent),
+VFSASolutionJob::VFSASolutionJob(const int threadNumber, const QList<SpliceData> &fieldData, const VFSAParameters *parameters, QObject *parent) : QObject(parent),
     mAbort(false),
     mFieldData(fieldData),
     mThreadNumber(threadNumber)
@@ -46,6 +46,7 @@ void VFSASolutionJob::run()
     auto previousModel = new VFSAInversionModel(*initialModel);
 
     //Iterations per temperature
+    double previousProgress = 0.0;
     for(int j = 1; j < mIterationsPerTemperature + 1; j++){
         //Loop throgh all other temperature levels
 
@@ -82,7 +83,8 @@ void VFSASolutionJob::run()
         }
 
         double partialProgress = ((double)j / (double)mIterationsPerTemperature) * 100.0 / mSolutions;
-        emit reportProgress(partialProgress);
+        emit reportProgress(partialProgress - previousProgress);
+        previousProgress = partialProgress;
 
     }
 

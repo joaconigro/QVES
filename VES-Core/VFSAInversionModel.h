@@ -28,8 +28,6 @@ public:
     void setVFSAError(double getVFSAError);
 
     void addVFSAData(int index, const double data, const int numberOfBeds);
-    bool getRemoveByPDF() const;
-    void setRemoveByPDF(const bool removeByPDF);
     QList<double> getParameterPDFs() const;
     void setParameterPDF(const int index, const double value);
 };

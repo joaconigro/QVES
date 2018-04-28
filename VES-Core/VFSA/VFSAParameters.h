@@ -3,11 +3,11 @@
 
 #include "ves-core_global.h"
 #include <QObject>
-#include "VfsaParameterLimit.h"
+#include "VFSAParameterLimit.h"
 #include <QList>
 #include "Serializable.h"
 
-class VESCORESHARED_EXPORT VfsaParameters : public QObject, public Serializable
+class VESCORESHARED_EXPORT VFSAParameters : public QObject, public Serializable
 {
     Q_OBJECT
 
@@ -17,14 +17,14 @@ class VESCORESHARED_EXPORT VfsaParameters : public QObject, public Serializable
     int mSolutions;
     int mNumberOfParameters;
     int mNumberOfBeds;
-    QList<VfsaParameterLimit> mLimits;
+    QList<VFSAParameterLimit> mLimits;
     double mMaximunError;
     double mMinimunPdf;
 
 public:
-    explicit VfsaParameters(QObject *parent = nullptr);
-    VfsaParameters(const VfsaParameters &vp);
-    VfsaParameters& operator =(const VfsaParameters &rhs);
+    explicit VFSAParameters(QObject *parent = nullptr);
+    VFSAParameters(const VFSAParameters &vp);
+    VFSAParameters& operator =(const VFSAParameters &rhs);
 
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
@@ -36,7 +36,7 @@ public:
     int solutions() const;
     int numberOfParameters() const;
     int numberOfBeds() const;
-    QList<VfsaParameterLimit> limits() const;
+    QList<VFSAParameterLimit> limits() const;
     double maximunError() const;
     double minimunPdf() const;
 
@@ -47,14 +47,16 @@ public:
     void setSolutions(const int &value);
     void setNumberOfParameters(const int &value);
     void setNumberOfBeds(const int &value);
-    void setLimits(const QList<VfsaParameterLimit> &value);
+    void setLimits(const QList<VFSAParameterLimit> &value);
     void setMaximunError(const double &value);
     void setMinimunPdf(const double &value);
+
+    bool isValid() const;
 
 signals:
 
 public slots:
 };
-Q_DECLARE_METATYPE(VfsaParameters)
+Q_DECLARE_METATYPE(VFSAParameters)
 
 #endif // VFSAPARAMETERS_H

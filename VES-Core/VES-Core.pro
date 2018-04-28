@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core network svg
+QT       += core network svg concurrent
 
 QT       -= gui
 
@@ -38,10 +38,10 @@ SOURCES += \
     ZohdyModel.cpp \
     VFSAInversionModel.cpp \
     VFSA/VFSASolutionJob.cpp \
-    VFSA/VfsaParameterLimit.cpp \
-    VFSA/VfsaParameters.cpp \
     VFSA/VFSAJobResult.cpp \
-    VFSA/VFSACalculator.cpp
+    VFSA/VFSACalculator.cpp \
+    VFSA/VFSAParameters.cpp \
+    VFSA/VFSAParameterLimit.cpp
 
 HEADERS += \
         VESCore.h \
@@ -60,10 +60,10 @@ HEADERS += \
     ZohdyModel.h \
     VFSAInversionModel.h \
     VFSA/VFSASolutionJob.h \
-    VFSA/VfsaParameterLimit.h \
-    VFSA/VfsaParameters.h \
     VFSA/VFSAJobResult.h \
-    VFSA/VFSACalculator.h
+    VFSA/VFSACalculator.h \
+    VFSA/VFSAParameters.h \
+    VFSA/VFSAParameterLimit.h
 
 #unix {
 #    target.path = /usr/lib
