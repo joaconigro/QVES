@@ -3,28 +3,28 @@
 QVariant ModelData::toVariant() const
 {
     QVariantMap map;
-    map.insert("mFrom", mFrom);
-    map.insert("mUntil", mUntil);
-    map.insert("mResistivity", mResistivity);
-    map.insert("mThickness", mThickness);
-    map.insert("mDepth", mDepth);
-    map.insert("mTransverseResistence", mTransverseResistence);
-    map.insert("mLongitudinalConductance", mLongitudinalConductance);
-    map.insert("mProbabilityDensityFunction", mProbabilityDensityFunction);
+    map.insert("From", mFrom);
+    map.insert("Until", mUntil);
+    map.insert("Resistivity", mResistivity);
+    map.insert("Thickness", mThickness);
+    map.insert("Depth", mDepth);
+//    map.insert("mTransverseResistence", mTransverseResistence);
+//    map.insert("mLongitudinalConductance", mLongitudinalConductance);
+//    map.insert("mProbabilityDensityFunction", mProbabilityDensityFunction);
     return map;
 }
 
 void ModelData::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mFrom = map.value("mFrom").toDouble();
-    mUntil = map.value("mUntil").toDouble();
-    mResistivity = map.value("mResistivity").toDouble();
-    mThickness = map.value("mThickness").toDouble();
-    mDepth = map.value("mDepth").toDouble();
-    mTransverseResistence = map.value("mTransverseResistence").toDouble();
-    mLongitudinalConductance = map.value("mLongitudinalConductance").toDouble();
-    mProbabilityDensityFunction = map.value("mProbabilityDensityFunction").toDouble();
+    mFrom = map.value("From").toDouble();
+    mUntil = map.value("Until").toDouble();
+    mResistivity = map.value("Resistivity").toDouble();
+    mThickness = map.value("Thickness").toDouble();
+    mDepth = map.value("Depth").toDouble();
+//    mTransverseResistence = map.value("mTransverseResistence").toDouble();
+//    mLongitudinalConductance = map.value("mLongitudinalConductance").toDouble();
+//    mProbabilityDensityFunction = map.value("mProbabilityDensityFunction").toDouble();
 }
 
 ModelData::ModelData(QObject *parent) : QObject(parent)

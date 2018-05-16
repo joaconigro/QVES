@@ -41,7 +41,6 @@ private:
     VFSASolutionJob *createJob(const int modelNumber);
     void clearJobs();
     VFSAInversionModel* averageModel(const QList<VFSAInversionModel*> models);
-    void cleanByPDF();
     void allJobFinished();
 
 private slots:

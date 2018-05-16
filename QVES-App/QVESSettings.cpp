@@ -119,16 +119,6 @@ void QVESSettings::setVFSAMaximunError(double vFSAMaximunError)
     mVFSAMaximunError = vFSAMaximunError;
 }
 
-double QVESSettings::vFSAMinimunPdf() const
-{
-    return mVFSAMinimunPdf;
-}
-
-void QVESSettings::setVFSAMinimunPdf(double vFSAMinimunPdf)
-{
-    mVFSAMinimunPdf = vFSAMinimunPdf;
-}
-
 int QVESSettings::chartTheme() const
 {
     return mChartTheme;
@@ -362,7 +352,6 @@ void QVESSettings::defaultInversionSettings()
     mVFSASolutions = 10;
     mVFSANumberOfBeds = 3;
     mVFSAMaximunError = 0.001;
-    mVFSAMinimunPdf = 0.6825;
 }
 
 void QVESSettings::defaultGraphicsSettings()
@@ -426,7 +415,6 @@ void QVESSettings::readInversionSettings()
     mVFSASolutions = mSettings->value("VFSASolutions").toInt();
     mVFSANumberOfBeds = mSettings->value("VFSANumberOfBeds").toInt();
     mVFSAMaximunError = mSettings->value("VFSAMaximunError").toDouble();
-    mVFSAMinimunPdf = mSettings->value("VFSAMinimunPdf").toDouble();
 }
 
 void QVESSettings::readGraphicsSettings()
@@ -479,7 +467,6 @@ void QVESSettings::writeInversionSettings() const
     mSettings->setValue("VFSASolutions", mVFSASolutions);
     mSettings->setValue("VFSANumberOfBeds", mVFSANumberOfBeds);
     mSettings->setValue("VFSAMaximunError", mVFSAMaximunError);
-    mSettings->setValue("VFSAMinimunPdf", mVFSAMinimunPdf);
 }
 
 void QVESSettings::writeGraphicsSettings() const

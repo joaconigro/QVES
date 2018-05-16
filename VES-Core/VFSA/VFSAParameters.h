@@ -19,7 +19,6 @@ class VESCORESHARED_EXPORT VFSAParameters : public QObject, public Serializable
     int mNumberOfBeds;
     QList<VFSAParameterLimit> mLimits;
     double mMaximunError;
-    double mMinimunPdf;
 
 public:
     explicit VFSAParameters(QObject *parent = nullptr);
@@ -38,7 +37,6 @@ public:
     int numberOfBeds() const;
     QList<VFSAParameterLimit> limits() const;
     double maximunError() const;
-    double minimunPdf() const;
 
     //Setters
     void setInitialTemperature(const double &value);
@@ -49,10 +47,11 @@ public:
     void setNumberOfBeds(const int &value);
     void setLimits(const QList<VFSAParameterLimit> &value);
     void setMaximunError(const double &value);
-    void setMinimunPdf(const double &value);
 
     bool isValid() const;
+    VFSAParameterLimit limitAt(const int index) const;
 
+    //void copyWithoutLimits(const VFSAParameters &rhs);
 signals:
 
 public slots:

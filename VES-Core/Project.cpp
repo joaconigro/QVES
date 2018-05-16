@@ -77,15 +77,15 @@ void Project::setCurrentIndex(const int value)
 QVariant Project::toVariant() const
 {
     QVariantMap map;
-    map.insert("mName", mName);
-    map.insert("mCurrentIndex", mCurrentIndex);
-    map.insert("mCurrentePath", mCurrentePath);
+    map.insert("Name", mName);
+    map.insert("CurrentIndex", mCurrentIndex);
+    map.insert("CurrentePath", mCurrentePath);
 
     QVariantList list;
     for (const auto& v : mVESs) {
     list.append(v->toVariant());
     }
-    map.insert("mVESs", list);
+    map.insert("VESs", list);
 
     return map;
 }
@@ -93,17 +93,17 @@ QVariant Project::toVariant() const
 void Project::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mName = map.value("mName").toString();
-    mCurrentePath = map.value("mCurrentePath").toString();
+    mName = map.value("Name").toString();
+    mCurrentePath = map.value("CurrentePath").toString();
 
-    QVariantList list = map.value("mVESs").toList();
+    QVariantList list = map.value("VESs").toList();
     for(const QVariant& data : list) {
-        VES* v = new VES(this);
+        auto* v = new VES(this);
         v->fromVariant(data);
         this->addVES(v);
     }
 
-    setCurrentIndex(map.value("mCurrentIndex").toInt());
+    setCurrentIndex(map.value("CurrentIndex").toInt());
 }
 
 void Project::addVES(VES* ves)

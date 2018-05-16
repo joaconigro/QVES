@@ -10,7 +10,6 @@ VFSAParameters::VFSAParameters(QObject *parent) : QObject(parent)
     mNumberOfParameters = 5;
     mNumberOfBeds = 3;
     mMaximunError = 0.001;
-    mMinimunPdf = 0.6825;
     mLimits.clear();
 }
 
@@ -23,7 +22,6 @@ VFSAParameters::VFSAParameters(const VFSAParameters &vp)
     mNumberOfParameters = vp.numberOfParameters();
     mNumberOfBeds = vp.numberOfBeds();
     mMaximunError = vp.maximunError();
-    mMinimunPdf = vp.minimunPdf();
     mLimits.append(vp.limits());
     this->setParent(vp.parent());
 }
@@ -37,7 +35,7 @@ VFSAParameters &VFSAParameters::operator =(const VFSAParameters &rhs)
     mNumberOfParameters = rhs.numberOfParameters();
     mNumberOfBeds = rhs.numberOfBeds();
     mMaximunError = rhs.maximunError();
-    mMinimunPdf = rhs.minimunPdf();
+    mLimits.clear();
     mLimits.append(rhs.limits());
     this->setParent(rhs.parent());
     return *this;
@@ -46,20 +44,19 @@ VFSAParameters &VFSAParameters::operator =(const VFSAParameters &rhs)
 QVariant VFSAParameters::toVariant() const
 {
     QVariantMap map;
-    map.insert("mInitialTemperature", mInitialTemperature);
-    map.insert("mIterationsPerTemperature", mIterationsPerTemperature);
-    map.insert("mMovesPerTemperature", mMovesPerTemperature);
-    map.insert("mSolutions", mSolutions);
-    map.insert("mNumberOfParameters", mNumberOfParameters);
-    map.insert("mNumberOfBeds", mNumberOfBeds);
-    map.insert("mMaximunError", mMaximunError);
-    map.insert("mMinimunPdf", mMinimunPdf);
+    map.insert("InitialTemperature", mInitialTemperature);
+    map.insert("IterationsPerTemperature", mIterationsPerTemperature);
+    map.insert("MovesPerTemperature", mMovesPerTemperature);
+    map.insert("Solutions", mSolutions);
+    map.insert("NumberOfParameters", mNumberOfParameters);
+    map.insert("NumberOfBeds", mNumberOfBeds);
+    map.insert("MaximunError", mMaximunError);
 
     QVariantList list;
     for (const auto& cd : mLimits) {
         list.append(cd.toVariant());
     }
-    map.insert("mLimits", list);
+    map.insert("Limits", list);
 
     return map;
 }
@@ -67,16 +64,15 @@ QVariant VFSAParameters::toVariant() const
 void VFSAParameters::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mInitialTemperature = map.value("mInitialTemperature").toDouble();
-    mIterationsPerTemperature = map.value("mIterationsPerTemperature").toInt();
-    mMovesPerTemperature = map.value("mMovesPerTemperature").toInt();
-    mSolutions = map.value("mSolutions").toInt();
-    mNumberOfParameters = map.value("mNumberOfParameters").toInt();
-    mNumberOfBeds = map.value("mNumberOfBeds").toInt();
-    mMaximunError = map.value("mMaximunError").toDouble();
-    mMinimunPdf = map.value("mMinimunPdf").toDouble();
+    mInitialTemperature = map.value("InitialTemperature").toDouble();
+    mIterationsPerTemperature = map.value("IterationsPerTemperature").toInt();
+    mMovesPerTemperature = map.value("MovesPerTemperature").toInt();
+    mSolutions = map.value("Solutions").toInt();
+    mNumberOfParameters = map.value("NumberOfParameters").toInt();
+    mNumberOfBeds = map.value("NumberOfBeds").toInt();
+    mMaximunError = map.value("MaximunError").toDouble();
 
-    QVariantList list = map.value("mLimits").toList();
+    QVariantList list = map.value("Limits").toList();
     for(const QVariant& data : list) {
         VFSAParameterLimit calc;
         calc.fromVariant(data);
@@ -125,11 +121,6 @@ double VFSAParameters::maximunError() const
     return mMaximunError;
 }
 
-double VFSAParameters::minimunPdf() const
-{
-    return mMinimunPdf;
-}
-
 void VFSAParameters::setInitialTemperature(const double &value)
 {
     mInitialTemperature = value;
@@ -170,15 +161,10 @@ void VFSAParameters::setMaximunError(const double &value)
     mMaximunError = value;
 }
 
-void VFSAParameters::setMinimunPdf(const double &value)
-{
-    mMinimunPdf = value;
-}
-
 bool VFSAParameters::isValid() const
 {
     bool result = mSolutions > 0 && mInitialTemperature > 0.0 && mIterationsPerTemperature > 0 && mMovesPerTemperature > 0
-            && mMaximunError > 0.0 && mMinimunPdf > 0.0 && mNumberOfBeds > 0 && mNumberOfParameters > 0 && mLimits.count() > 0;
+            && mMaximunError > 0.0 && mNumberOfBeds > 0 && mNumberOfParameters > 0 && mLimits.count() > 0;
 
     bool limitsResult = true;
     foreach (auto limit, mLimits) {
@@ -188,3 +174,29 @@ bool VFSAParameters::isValid() const
 
     return result && limitsResult;
 }
+
+VFSAParameterLimit VFSAParameters::limitAt(const int index) const
+{
+    if (index < mLimits.count()){
+        return mLimits.at(index);
+    } else {
+        VFSAParameterLimit newLimit;
+        return newLimit;
+    }
+
+}
+
+//void VFSAParameters::copyWithoutLimits(const VFSAParameters &rhs)
+//{
+//    mInitialTemperature = rhs.initialTemperature();
+//    mIterationsPerTemperature = rhs.iterationsPerTemperature();
+//    mMovesPerTemperature = rhs.movesPerTemperature();
+//    mSolutions = rhs.solutions();
+////    mNumberOfParameters = rhs.numberOfParameters();
+////    mNumberOfBeds = rhs.numberOfBeds();
+//    mMaximunError = rhs.maximunError();
+//    mMinimunPdf = rhs.minimunPdf();
+////    mLimits.clear();
+////    mLimits.append(rhs.limits());
+////    this->setParent(rhs.parent());
+//}

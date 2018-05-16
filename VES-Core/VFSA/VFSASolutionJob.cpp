@@ -3,6 +3,7 @@
 #include <QVector>
 #include <QtMath>
 #include "../BasicData.h"
+#include <QThread>
 
 VFSASolutionJob::VFSASolutionJob(const int threadNumber, const QList<SpliceData> &fieldData, const VFSAParameters *parameters, QObject *parent) : QObject(parent),
     mAbort(false),
@@ -17,16 +18,15 @@ VFSASolutionJob::VFSASolutionJob(const int threadNumber, const QList<SpliceData>
     mNumberOfBeds = parameters->numberOfBeds();
     mLimits = parameters->limits();
     mMaximunError = parameters->maximunError();
-    mMinimunPdf = parameters->minimunPdf();
 
-    //int seed = QTime::currentTime().msec();
-    randomGenerator = new QRandomGenerator();
+    int seed = QTime::currentTime().msec();
+    randomGenerator = new QRandomGenerator(seed + threadNumber);
 
+    mJobResult = new VFSAJobResult();
 }
 
 void VFSASolutionJob::run()
 {
-    mJobResult = new VFSAJobResult();
     double temperature = mInitialTemperature;
 
     //Create an initial model with initial temperature
@@ -48,15 +48,16 @@ void VFSASolutionJob::run()
     //Iterations per temperature
     double previousProgress = 0.0;
     for(int j = 1; j < mIterationsPerTemperature + 1; j++){
-        //Loop throgh all other temperature levels
 
-        int l = 1;
+        //Loop throgh all other temperature levels
+        int l = 0;
         int tries = 0;
-        while (l < mMovesPerTemperature + 1 && tries < 100) {
+        while (l < mMovesPerTemperature && tries < 50) {
             auto newModel = randomModel(previousModel, temperature);
 
             if (newModel->getVFSAError() < previousModel->getVFSAError()){
                 mJobResult->appendModel(newModel);
+                delete previousModel;
                 previousModel = new VFSAInversionModel(*newModel);
                 l += 1;
             } else {
@@ -65,6 +66,7 @@ void VFSASolutionJob::run()
                 double rr = randomGenerator->generateDouble();
                 if (pde > rr) {
                     mJobResult->appendModel(newModel);
+                    delete previousModel;
                     previousModel = new VFSAInversionModel(*newModel);
                     l += 1;
                 } else {
@@ -89,13 +91,12 @@ void VFSASolutionJob::run()
     }
 
     //Take the last model as the best model
-    mJobResult->setFinalModel(mJobResult->allModels().last());
-    mJobResult->finalModel()->setName("VFSA "+ QString::number(mThreadNumber));
+    mJobResult->setFinalModel(mThreadNumber);
 
-    mJobResult->discardErroneousModels(mMaximunError);
+    //Free used memory
+    mJobResult->clearModels();
 
     emit jobCompleted(mJobResult);
-
 }
 
 void VFSASolutionJob::abort()
@@ -107,10 +108,10 @@ double VFSASolutionJob::randomData(const double min, const double max) const
 {
     double difference = max - min;
     double result;
-    double iRand = randomGenerator->generateDouble();
 
     //Generate a random parameter between min and max values.
     do{
+        double iRand = randomGenerator->generateDouble();
         result = min + iRand * difference;
     }while(result > max || result < min);
 

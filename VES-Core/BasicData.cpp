@@ -3,18 +3,18 @@
 QVariant BasicData::toVariant() const
 {
     QVariantMap map;
-    map.insert("mAb2Distance", mAb2Distance);
-    map.insert("mResistivity", mResistivity);
-    map.insert("mStandardDeviation", mStandardDeviation);
+    map.insert("Ab2Distance", mAb2Distance);
+    map.insert("Resistivity", mResistivity);
+    map.insert("StandardDeviation", mStandardDeviation);
     return map;
 }
 
 void BasicData::fromVariant(const QVariant &variant)
 {
      QVariantMap map = variant.toMap();
-     mAb2Distance = map.value("mAb2Distance").toDouble();
-     mResistivity = map.value("mResistivity").toDouble();
-     mStandardDeviation = map.value("mStandardDeviation").toDouble();
+     mAb2Distance = map.value("Ab2Distance").toDouble();
+     mResistivity = map.value("Resistivity").toDouble();
+     mStandardDeviation = map.value("StandardDeviation").toDouble();
 }
 
 BasicData::BasicData(QObject *parent) : QObject(parent)

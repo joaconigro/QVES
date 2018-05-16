@@ -8,6 +8,7 @@
 #include "VES.h"
 #include "SpliceData.h"
 #include <QList>
+#include <QDoubleValidator>
 
 namespace Ui {
 class VFSAInversionDialog;
@@ -34,6 +35,7 @@ private:
     QList <VFSAInversionModel *> mFinalModels;
     QList <SpliceData> mFieldData;
 
+    QDoubleValidator *mValidator;
 
 
     void configureUiParameters();
@@ -47,10 +49,9 @@ private slots:
     void on_movesPerTemperatureSpinBox_valueChanged(int arg1);
     void on_solutionsSpinBox_valueChanged(int arg1);
     void on_errorDoubleSpinBox_valueChanged(double arg1);
-    void on_pdfDoubleSpinBox_valueChanged(double arg1);
     void on_bedsSpinBox_valueChanged(int arg1);
 
-    void onProcessProgressChanged(const int value);
+    //void onProcessProgressChanged(const int value);
     void onCalculationCompleted();
     void on_processPushButton_clicked();
     //void on_buttonBox_rejected();

@@ -33,6 +33,9 @@ void VFSACalculator::startInversion()
 
 void VFSACalculator::process(VFSAJobResult *jobResult)
 {
+    QMutex mutex;
+    QMutexLocker locker(&mutex);
+
     mFinishedJobs.append(jobResult);
 
     if (mFinishedJobs.count() < mParameters->solutions()){
@@ -41,9 +44,10 @@ void VFSACalculator::process(VFSAJobResult *jobResult)
 //        QFutureWatcher<void> watcher;
 //        connect(&watcher, &QFutureWatcher::finished, this, &VFSACalculator::allCalculationsCompleted);
 
-        QFuture<void> future = QtConcurrent::run([=](){this->allJobFinished();});
-        future.waitForFinished();
+//        QFuture<void> future = QtConcurrent::run([=](){this->allJobFinished();});
+//        future.waitForFinished();
 
+allJobFinished();
 
         emit allCalculationsCompleted();
         //watcher.setFuture(future);
@@ -75,7 +79,9 @@ VFSASolutionJob *VFSACalculator::createJob(const int modelNumber)
     connect(this, &VFSACalculator::abortAllJobs, job, &VFSASolutionJob::abort);
     connect(job, &VFSASolutionJob::jobCompleted, this, &VFSACalculator::process);
     connect(job, &VFSASolutionJob::reportProgress, this, &VFSACalculator::jobProgressChanged);
+    connect(job, &VFSASolutionJob::jobCompleted, job, &VFSASolutionJob::deleteLater);
 
+    job->setAutoDelete(false);
     return job;
 }
 
@@ -110,62 +116,6 @@ VFSAInversionModel* VFSACalculator::averageModel(const QList<VFSAInversionModel*
 
 }
 
-void VFSACalculator::cleanByPDF()
-{
-    const int numberOfParameters = mParameters->numberOfParameters();
-    QVector<double> maxValues(numberOfParameters);
-
-    double sum, mean, sd, maxPDF;
-    int modelCounter = 0;
-    for (int i = 0; i < numberOfParameters; i++){
-
-        sum = 0.0;
-        foreach (auto job, mFinishedJobs) {
-            foreach (auto m, job->allModels()) {
-                auto params = m->getVFSAParameters();
-                sum += log10(params.at(i));
-            }
-            modelCounter += job->allModels().count();
-        }
-        mean = sum / modelCounter;
-
-        sum = 0.0;
-        foreach (auto job, mFinishedJobs) {
-            foreach (auto m, job->allModels()) {
-                auto params = m->getVFSAParameters();
-                sum += pow(log10(params.at(i)) - mean, 2.0);
-            }
-        }
-        sd = sqrt(sum / modelCounter);
-
-        maxPDF = 0.0;
-        foreach (auto job, mFinishedJobs) {
-            foreach (auto m, job->allModels()) {
-                auto params = m->getVFSAParameters();
-                double pdf = exp(-(pow(log10(params.at(i)) - mean, 2.0) / (2.0 * pow(sd, 2.0)))) / ((params.at(i)) * sd * sqrt(2.0 * M_PI));
-                m->setParameterPDF(i, pdf);
-
-                if (pdf > maxPDF){
-                    maxPDF = pdf;
-                }
-            }
-        }
-        maxValues[i] = maxPDF;
-    }
-
-
-    for (int i = 0; i < numberOfParameters; i++){
-        double pdfThreshold = maxValues.at(i) * mParameters->minimunPdf();
-
-        foreach (auto job, mFinishedJobs) {
-            job->discardModelsByPDF(pdfThreshold, i);
-        }
-
-
-    }
-
-}
-
 void VFSACalculator::allJobFinished()
 {
 
@@ -176,15 +126,4 @@ void VFSACalculator::allJobFinished()
     auto meanModel = averageModel(finalModels);
     meanModel->setName(tr("Modelo promedio"));
     finalModels.append(meanModel);
-
-    cleanByPDF();
-    QList<VFSAInversionModel*> tempList;
-    foreach (auto job, mFinishedJobs) {
-        tempList.append(job->allModels());
-    }
-    auto likelyModel = averageModel(tempList);
-    likelyModel->setName(tr("Modelo probable"));
-    finalModels.append(likelyModel);
-
-
 }

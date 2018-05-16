@@ -6,7 +6,6 @@ VFSAInversionCommand::VFSAInversionCommand(const QVESModelDelegate *delegate, co
     mSettingsParameters.setInitialTemperature(settings->vFSAInitialTemperature());
     mSettingsParameters.setIterationsPerTemperature(settings->vFSAIterationsPerTemperature());
     mSettingsParameters.setMaximunError(settings->vFSAMaximunError());
-    mSettingsParameters.setMinimunPdf(settings->vFSAMinimunPdf());
     mSettingsParameters.setMovesPerTemperature(settings->vFSAMovesPerTemperature());
     mSettingsParameters.setNumberOfBeds(settings->vFSANumberOfBeds());
     mSettingsParameters.setNumberOfParameters(settings->vFSANumberOfBeds() * 2 - 1);

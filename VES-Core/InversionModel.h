@@ -29,7 +29,8 @@ protected:
     QList<ModelData> mModel;
 
 
-
+    QVariantMap internalToVariant() const;
+    void internalFromVariant(const QVariantMap &map);
     void calculateDepths(QList<ModelData> &model);
     void calculateThicknesses(QList<ModelData> &model);
     double calculateModelError(const QList<SpliceData> &fieldData, const QList<BasicData> &calculatedData) const;
@@ -39,8 +40,8 @@ public:
     explicit InversionModel(const QString &name, QObject *parent = nullptr);
     InversionModel(const InversionModel& im);
 
-    virtual QVariant toVariant() const override = 0;
-    virtual void fromVariant(const QVariant& variant) override = 0;
+     QVariant toVariant() const override = 0;
+     void fromVariant(const QVariant& variant) override = 0;
 
     //Getters
     QString name() const;

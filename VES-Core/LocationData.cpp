@@ -92,8 +92,8 @@ void LocationData::geographicToTransverseMercator()
     a = 6378137.0;
     ecc = 0.081819190843;
     ecc_pri = pow(0.082094437950, 2.0);
-    switch (mHem) {
-    case LocationData::Hemisphere::North:
+    switch (mHemisphere) {
+    case LocationData::HemisphereType::North:
         FN = 0.0;
         break;
     default:
@@ -130,8 +130,8 @@ void LocationData::transverseMercatorToGeographic()
     a = 6378137.0;
     ecc = 0.081819190843;
     ecc_pri = pow(0.082094437950, 2.0);
-    switch (mHem) {
-    case LocationData::Hemisphere::North:
+    switch (mHemisphere) {
+    case LocationData::HemisphereType::North:
         FN = 0.0;
         break;
     default:
@@ -164,7 +164,7 @@ LocationData::LocationData(QObject *parent) : QObject(parent)
 {
     mDecimalLatitude = mDecimalLongitude = mUtmX = mUtmY = mLocalX = mLocalY = mZ = 0.0;
     mUtmZone = 0;
-    mHem = LocationData::Hemisphere::South;
+    mHemisphere = LocationData::HemisphereType::South;
     mOnlyLocals = true;
     mGmsLatitude.clear();
     mGmsLongitude.clear();
@@ -183,9 +183,9 @@ LocationData::LocationData(const QString &lat, const QString &lng, const double 
 
     //Convert decimal lat-lng to UTM
     if (mDecimalLatitude < 0.0)
-        mHem = LocationData::Hemisphere::South;
+        mHemisphere = LocationData::HemisphereType::South;
     else
-        mHem = LocationData::Hemisphere::North;
+        mHemisphere = LocationData::HemisphereType::North;
     mUtmZone = trunc(mDecimalLongitude / 6.0 + 31.0);
     geographicToTransverseMercator();
     mOnlyLocals = false;
@@ -203,9 +203,9 @@ LocationData::LocationData(const double yOrlLat, const double xOrLng, const Loca
 
         //Convert decimal lat-lng to UTM
         if (mDecimalLatitude < 0.0)
-            mHem = LocationData::Hemisphere::South;
+            mHemisphere = LocationData::HemisphereType::South;
         else
-            mHem = LocationData::Hemisphere::North;
+            mHemisphere = LocationData::HemisphereType::North;
         mUtmZone = trunc(mDecimalLongitude / 6.0 + 31.0);
         geographicToTransverseMercator();
 
@@ -226,12 +226,12 @@ LocationData::LocationData(const double yOrlLat, const double xOrLng, const Loca
     mQLoc = new QLocale();
 }
 
-LocationData::LocationData(const double x, const double y, const int zone, const LocationData::Hemisphere hem, const double z, QObject *parent) : QObject(parent)
+LocationData::LocationData(const double x, const double y, const int zone, const LocationData::HemisphereType hem, const double z, QObject *parent) : QObject(parent)
 {
     mUtmX = x;
     mUtmY = y;
     mUtmZone = zone;
-    mHem = hem;
+    mHemisphere = hem;
     mZ = z;
 
     //Convert UTM to decimal lat-lng
@@ -257,7 +257,7 @@ LocationData::LocationData(const LocationData &ld)
     mLocalX = ld.localX();
     mLocalY = ld.localY();
     mZ = ld.z();
-    mHem = ld.Hem();
+    mHemisphere = ld.Hemisphere();
     mOnlyLocals = ld.onlyLocals();
     this->setParent(ld.parent());
 }
@@ -274,7 +274,7 @@ LocationData &LocationData::operator =(const LocationData &rhs)
     mLocalX = rhs.localX();
     mLocalY = rhs.localY();
     mZ = rhs.z();
-    mHem = rhs.Hem();
+    mHemisphere = rhs.Hemisphere();
     mOnlyLocals = rhs.onlyLocals();
     this->setParent(rhs.parent());
     return *this;
@@ -335,9 +335,9 @@ bool LocationData::onlyLocals() const
     return mOnlyLocals;
 }
 
-LocationData::Hemisphere LocationData::Hem() const
+LocationData::HemisphereType LocationData::Hemisphere() const
 {
-    return mHem;
+    return mHemisphere;
 }
 
 void LocationData::setGmsLatitude(const QString &value)
@@ -390,9 +390,9 @@ void LocationData::setZ(const double value)
     mZ = value;
 }
 
-void LocationData::setHem(const LocationData::Hemisphere value)
+void LocationData::setHemisphere(const LocationData::HemisphereType value)
 {
-    mHem = value;
+    mHemisphere = value;
 }
 
 bool LocationData::isEmpty() const
@@ -404,34 +404,34 @@ bool LocationData::isEmpty() const
 QVariant LocationData::toVariant() const
 {
     QVariantMap map;
-    map.insert("mDecimalLatitude", mDecimalLatitude);
-    map.insert("mDecimalLongitude", mDecimalLongitude);
-    map.insert("mGmsLatitude", mGmsLatitude);
-    map.insert("mGmsLongitude", mGmsLongitude);
-    map.insert("mUtmX", mUtmX);
-    map.insert("mUtmY", mUtmY);
-    map.insert("mUtmZone", mUtmZone);
-    map.insert("mLocalX", mLocalX);
-    map.insert("mLocalY", mLocalY);
-    map.insert("mZ", mZ);
-    map.insert("mHem", static_cast<int>(mHem));
-    map.insert("mOnlyLocals", mOnlyLocals);
+    map.insert("DecimalLatitude", mDecimalLatitude);
+    map.insert("DecimalLongitude", mDecimalLongitude);
+    map.insert("GmsLatitude", mGmsLatitude);
+    map.insert("GmsLongitude", mGmsLongitude);
+    map.insert("UtmX", mUtmX);
+    map.insert("UtmY", mUtmY);
+    map.insert("UtmZone", mUtmZone);
+    map.insert("LocalX", mLocalX);
+    map.insert("LocalY", mLocalY);
+    map.insert("Z", mZ);
+    map.insert("Hemisphere", static_cast<int>(mHemisphere));
+    map.insert("OnlyLocals", mOnlyLocals);
     return map;
 }
 
 void LocationData::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mGmsLatitude = map.value("mGmsLatitude").toString();
-    mGmsLongitude = map.value("mGmsLongitude").toString();
-    mDecimalLatitude = map.value("mDecimalLatitude").toDouble();
-    mDecimalLongitude = map.value("mDecimalLongitude").toDouble();
-    mUtmX = map.value("mUtmX").toDouble();
-    mUtmY = map.value("mUtmY").toDouble();
-    mUtmZone = map.value("mUtmZone").toInt();
-    mLocalX = map.value("mLocalX").toDouble();
-    mLocalY = map.value("mLocalY").toDouble();
-    mZ = map.value("mZ").toDouble();
-    mOnlyLocals = map.value("mOnlyLocals").toBool();
-    mHem = static_cast<Hemisphere>(map.value("mHem").toInt());
+    mGmsLatitude = map.value("GmsLatitude").toString();
+    mGmsLongitude = map.value("GmsLongitude").toString();
+    mDecimalLatitude = map.value("DecimalLatitude").toDouble();
+    mDecimalLongitude = map.value("DecimalLongitude").toDouble();
+    mUtmX = map.value("UtmX").toDouble();
+    mUtmY = map.value("UtmY").toDouble();
+    mUtmZone = map.value("UtmZone").toInt();
+    mLocalX = map.value("LocalX").toDouble();
+    mLocalY = map.value("LocalY").toDouble();
+    mZ = map.value("Z").toDouble();
+    mOnlyLocals = map.value("OnlyLocals").toBool();
+    mHemisphere = static_cast<HemisphereType>(map.value("Hemisphere").toInt());
 }

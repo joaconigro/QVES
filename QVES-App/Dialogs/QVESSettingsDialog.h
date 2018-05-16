@@ -39,7 +39,6 @@ class QVESSettingsDialog : public QDialog
     int mVFSASolutions;
     int mVFSANumberOfBeds;
     double mVFSAMaximunError;
-    double mVFSAMinimunPdf;
 
     int mChartTheme;
     int mChartAnimation;
@@ -80,7 +79,6 @@ private slots:
     void on_vfsaNumberOfBedSpinBox_valueChanged(int arg1);
     void on_vfsaInitialTemperatureDoubleSpinBox_valueChanged(double arg1);
     void on_vfsaMaxErrorDoubleSpinBox_valueChanged(double arg1);
-    void on_vfsaMinPDFDoubleSpinBox_valueChanged(double arg1);
     void on_chartThemeComboBox_currentIndexChanged(int index);
     void on_seriesListWidget_currentRowChanged(int currentRow);
     void on_sizeDoubleSpinBox_valueChanged(double arg1);

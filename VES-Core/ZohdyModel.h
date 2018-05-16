@@ -10,8 +10,8 @@ private:
 
     ZohdyFilters mZohdyFilter;
     bool mApplyDarZarrouk;
-    double mDarZarroukThreshold;
     bool mIsSmoothing;
+    double mDarZarroukThreshold;
 
     //Zohdy inversion functions
     void chooseFilter(const ZohdyFilters filter, QVector<double> &a, double &w, double &s, double &dx);

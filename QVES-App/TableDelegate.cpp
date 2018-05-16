@@ -8,11 +8,11 @@ QWidget *TableDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
 {
     Q_UNUSED(index)
     Q_UNUSED(option)
-    QDoubleValidator *dValidator = new QDoubleValidator(parent);
+    auto dValidator = new QDoubleValidator(parent);
     dValidator->setBottom(0.0001);
     dValidator->setNotation(QDoubleValidator::Notation::StandardNotation);
 
-    QLineEdit *editor = new QLineEdit(parent);
+    auto editor = new QLineEdit(parent);
     editor->setFrame(false);
     editor->setValidator(dValidator);
 
@@ -23,14 +23,14 @@ void TableDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
 {
     double value = index.model()->data(index, Qt::DisplayRole).toDouble();
 
-    QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+    auto lineEdit = static_cast<QLineEdit*>(editor);
     QLocale qLoc;
     lineEdit->setText(qLoc.toString(value));
 }
 
 void TableDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+    auto lineEdit = static_cast<QLineEdit*>(editor);
     QLocale qLoc;
     QString tempText = lineEdit->text();
     tempText.replace(".", qLoc.decimalPoint());

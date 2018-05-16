@@ -106,9 +106,6 @@ public:
     double vFSAMaximunError() const;
     void setVFSAMaximunError(double vFSAMaximunError);
 
-    double vFSAMinimunPdf() const;
-    void setVFSAMinimunPdf(double vFSAMinimunPdf);
-
     int chartTheme() const;
     void setChartTheme(int chartTheme);
 

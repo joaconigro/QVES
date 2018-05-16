@@ -262,34 +262,34 @@ void VES::setCurrentParameters(const VFSAParameters &paramters)
 QVariant VES::toVariant() const
 {
     QVariantMap map;
-    map.insert("mName", mName);
-    map.insert("mId", mId);
-    map.insert("mFieldOperator", mFieldOperator);
-    map.insert("mEquipment", mEquipment);
-    map.insert("mComment", mComment);
-    map.insert("mDate", date());
-    map.insert("mLocation", mLocation.toVariant());
-    map.insert("mCurrentIndexModel", mCurrentIndexModel);
+    map.insert("Name", mName);
+    map.insert("Id", mId);
+    map.insert("FieldOperator", mFieldOperator);
+    map.insert("Equipment", mEquipment);
+    map.insert("Comment", mComment);
+    map.insert("Date", date());
+    map.insert("Location", mLocation.toVariant());
+    map.insert("CurrentIndexModel", mCurrentIndexModel);
     //map.insert("mPreviousParameters", mPreviousParameters.toVariant());
-    map.insert("mCurrentParameters", mCurrentParameters.toVariant());
+    map.insert("CurrentParameters", mCurrentParameters.toVariant());
 
     QVariantList basic;
     for (const auto& cd : mFieldData) {
     basic.append(cd.toVariant());
     }
-    map.insert("mFieldData", basic);
+    map.insert("FieldData", basic);
 
     QVariantList spli;
     for (const auto& cd : mSplices) {
     spli.append(cd.toVariant());
     }
-    map.insert("mSplices", spli);
+    map.insert("Splices", spli);
 
     QVariantList modeled;
     for (const auto& md : mModels) {
         modeled.append(md->toVariant());
     }
-    map.insert("mModels", modeled);
+    map.insert("Models", modeled);
 
     return map;
 }
@@ -297,44 +297,44 @@ QVariant VES::toVariant() const
 void VES::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mName = map.value("mName").toString();
-    mId = map.value("mId").toString();
-    mFieldOperator = map.value("mFieldOperator").toString();
-    mEquipment = map.value("mEquipment").toString();
-    mComment = map.value("mComment").toString();
-    setDate(map.value("mDate").toString());
-    mLocation.fromVariant(map.value("mLocation"));
+    mName = map.value("Name").toString();
+    mId = map.value("Id").toString();
+    mFieldOperator = map.value("FieldOperator").toString();
+    mEquipment = map.value("Equipment").toString();
+    mComment = map.value("Comment").toString();
+    setDate(map.value("Date").toString());
+    mLocation.fromVariant(map.value("Location"));
     //mPreviousParameters.fromVariant(map.value("mPreviousParameters"));
-    mCurrentParameters.fromVariant(map.value("mCurrentParameters"));
+    mCurrentParameters.fromVariant(map.value("CurrentParameters"));
 
-    QVariantList basic = map.value("mFieldData").toList();
+    QVariantList basic = map.value("FieldData").toList();
     for(const QVariant& data : basic) {
         BasicData calc;
         calc.fromVariant(data);
         mFieldData.append(calc);
     }
 
-    QVariantList spli = map.value("mSplices").toList();
+    QVariantList spli = map.value("Splices").toList();
     for(const QVariant& data : spli) {
         SpliceData calc;
         calc.fromVariant(data);
         mSplices.append(calc);
     }
 
-    QVariantList modeled = map.value("mModels").toList();
+    QVariantList modeled = map.value("Models").toList();
     for(const QVariant& data : modeled) {
-        if (data.toMap().contains("mZohdyFilter")){
-             ZohdyModel* mod = new ZohdyModel(this);
+        if (data.toMap().contains("ZohdyFilter")){
+             auto* mod = new ZohdyModel(this);
              mod->fromVariant(data);
              mModels.append(mod);
         } else {
-            VFSAInversionModel* mod = new VFSAInversionModel(this);
+            auto* mod = new VFSAInversionModel(this);
             mod->fromVariant(data);
             mModels.append(mod);
         }       
     }
 
-    setCurrentIndexModel(map.value("mCurrentIndexModel").toInt());
+    setCurrentIndexModel(map.value("CurrentIndexModel").toInt());
 }
 
 VES &VES::operator =(const VES &rhs)

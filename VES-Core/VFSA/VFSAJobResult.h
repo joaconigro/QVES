@@ -17,13 +17,12 @@ public:
     ~VFSAJobResult() override;
 
     VFSAInversionModel *finalModel() const;
-    void setFinalModel(VFSAInversionModel *finalModel);
+    void setFinalModel(const int modelNumber);
 
     QList<VFSAInversionModel *> allModels() const;
     void appendModel(VFSAInversionModel *model);
 
-    void discardErroneousModels(const double maxError);
-    void discardModelsByPDF(const double threshold, const int pdfIndex);
+    void clearModels();
 
 signals:
 

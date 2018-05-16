@@ -54,7 +54,6 @@ void QVESSettingsDialog::readSettings()
     mVFSASolutions = mSettings->vFSASolutions();
     mVFSANumberOfBeds = mSettings->vFSANumberOfBeds();
     mVFSAMaximunError = mSettings->vFSAMaximunError();
-    mVFSAMinimunPdf = mSettings->vFSAMinimunPdf();
 
     mChartTheme = mSettings->chartTheme();
     mChartAnimation = mSettings->chartAnimation();
@@ -91,7 +90,6 @@ void QVESSettingsDialog::configureUi()
     ui->vfsaInitialTemperatureDoubleSpinBox->setValue(mVFSAInitialTemperature);
     ui->vfsaIterationPerSolutionsSpinBox->setValue(mVFSAIterationsPerTemperature);
     ui->vfsaMaxErrorDoubleSpinBox->setValue(mVFSAMaximunError);
-    ui->vfsaMinPDFDoubleSpinBox->setValue(mVFSAMinimunPdf);
     ui->vfsaMovesPerTemperatureSpinBox->setValue(mVFSAMovesPerTemperature);
     ui->vfsaNumberOfBedSpinBox->setValue(mVFSANumberOfBeds);
     ui->vfsaSolutionsSpinBox->setValue(mVFSASolutions);
@@ -228,7 +226,6 @@ void QVESSettingsDialog::on_buttonBox_accepted()
     mSettings->setVFSASolutions(mVFSASolutions);
     mSettings->setVFSANumberOfBeds(mVFSANumberOfBeds);
     mSettings->setVFSAMaximunError(mVFSAMaximunError);
-    mSettings->setVFSAMinimunPdf(mVFSAMinimunPdf);
 
 
     mSettings->setChartTheme(mChartTheme);
@@ -282,11 +279,6 @@ void QVESSettingsDialog::on_vfsaInitialTemperatureDoubleSpinBox_valueChanged(dou
 void QVESSettingsDialog::on_vfsaMaxErrorDoubleSpinBox_valueChanged(double arg1)
 {
     mVFSAMaximunError = arg1;
-}
-
-void QVESSettingsDialog::on_vfsaMinPDFDoubleSpinBox_valueChanged(double arg1)
-{
-    mVFSAMinimunPdf = arg1;
 }
 
 void QVESSettingsDialog::on_chartThemeComboBox_currentIndexChanged(int index)

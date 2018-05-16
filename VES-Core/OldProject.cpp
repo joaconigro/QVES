@@ -9,7 +9,7 @@
 
 void OldProject::readOldSev(QXmlStreamReader *reader, Project *newProject)
 {
-    VES *newVes = new VES(nullptr);
+    auto *newVes = new VES(nullptr);
     bool read = true;
     reader->readNextStartElement();
 
@@ -174,7 +174,7 @@ InversionModel * OldProject::readOldModelo(QXmlStreamReader *reader)
 
     bool read = true;
     QString tempName;
-    int inversionAlgorithm;
+    int inversionAlgorithm = 0;
     QList<BasicData> basicDataList;
     QList<ModelData> modeledList;
     reader->readNextStartElement();
@@ -215,10 +215,10 @@ InversionModel * OldProject::readOldModelo(QXmlStreamReader *reader)
 
     InversionModel* tempModel;
     if (inversionAlgorithm == 0){
-        ZohdyModel *zm = new ZohdyModel(tempName);
+        auto *zm = new ZohdyModel(tempName);
         tempModel = zm;
     } else {
-        VFSAInversionModel *vm = new VFSAInversionModel(tempName);
+        auto *vm = new VFSAInversionModel(tempName);
         tempModel = vm;
     }
     tempModel->setCalculatedData(basicDataList);
@@ -268,15 +268,15 @@ QList<ModelData> OldProject::readOldModeloSEVs(QXmlStreamReader *reader)
                     md.setDepth(tempVariant.toDouble());
                     reader->readNextStartElement();
                 }
-                if (reader->name() == "resistenciaTrasnveral") {
-                    tempVariant = reader->readElementText();
-                    md.setTransverseResistence(tempVariant.toDouble());
-                    reader->readNextStartElement();
-                }
-                if (reader->name() == "conductanciaLongitudinal") {
-                    tempVariant = reader->readElementText();
-                    md.setLongitudinalConductance(tempVariant.toDouble());
-                }
+//                if (reader->name() == "resistenciaTrasnveral") {
+//                    tempVariant = reader->readElementText();
+//                    md.setTransverseResistence(tempVariant.toDouble());
+//                    reader->readNextStartElement();
+//                }
+//                if (reader->name() == "conductanciaLongitudinal") {
+//                    tempVariant = reader->readElementText();
+//                    md.setLongitudinalConductance(tempVariant.toDouble());
+//                }
                 list.append(md);
             }
             reader->readNext();
@@ -312,7 +312,7 @@ Project *OldProject::readOldProject(const QString &filename)
     }
 
 
-    Project *newProject = new Project;
+    auto *newProject = new Project;
     reader->readNextStartElement();
     reader->readNextStartElement();
     bool read = true;

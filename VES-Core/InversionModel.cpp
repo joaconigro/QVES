@@ -215,6 +215,53 @@ InversionModel &InversionModel::operator =(const InversionModel &rhs)
     return *this;
 }
 
+QVariantMap InversionModel::internalToVariant() const
+{
+    QVariantMap map;
+    map.insert("Name", mName);
+    map.insert("Id", mId);
+    map.insert("ErrorResult", mErrorResult);
+    map.insert("ErrorString", mErrorString);
+    map.insert("UsedAlgorithm", static_cast<int>(mUsedAlgorithm));
+
+    QVariantList calculated;
+    for (const auto& cd : mCalculatedData) {
+        calculated.append(cd.toVariant());
+    }
+    map.insert("CalculatedData", calculated);
+
+    QVariantList modeled;
+    for (const auto& md : mModel) {
+        modeled.append(md.toVariant());
+    }
+    map.insert("Model", modeled);
+
+    return map;
+}
+
+void InversionModel::internalFromVariant(const QVariantMap &map)
+{
+    mName = map.value("Name").toString();
+    mId = map.value("Id").toString();
+    mErrorResult = map.value("ErrorResult").toDouble();
+    mErrorString = map.value("ErrorString").toString();
+    mUsedAlgorithm = static_cast<InversionModel::InversionAlgorithm>(map.value("UsedAlgorithm").toInt());
+
+    QVariantList calculated = map.value("CalculatedData").toList();
+    for(const QVariant& data : calculated) {
+        BasicData calc;
+        calc.fromVariant(data);
+        mCalculatedData.append(calc);
+    }
+
+    QVariantList modeled = map.value("Model").toList();
+    for(const QVariant& data : modeled) {
+        ModelData mod;
+        mod.fromVariant(data);
+        mModel.append(mod);
+    }
+}
+
 void InversionModel::updateModeledData(const int row, const int column, const double value)
 {
     if (column == 0){

@@ -3,20 +3,20 @@
 QVariant SpliceData::toVariant() const
 {
     QVariantMap map;
-    map.insert("mAb2Distance", mAb2Distance);
-    map.insert("mResistivity", mResistivity);
-    map.insert("mStandardDeviation", mStandardDeviation);
-    map.insert("mSection", mSection);
+    map.insert("Ab2Distance", mAb2Distance);
+    map.insert("Resistivity", mResistivity);
+    map.insert("StandardDeviation", mStandardDeviation);
+    map.insert("Section", mSection);
     return map;
 }
 
 void SpliceData::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mAb2Distance = map.value("mAb2Distance").toDouble();
-    mResistivity = map.value("mResistivity").toDouble();
-    mStandardDeviation = map.value("mStandardDeviation").toDouble();
-    mSection = map.value("mSection").toInt();
+    mAb2Distance = map.value("Ab2Distance").toDouble();
+    mResistivity = map.value("Resistivity").toDouble();
+    mStandardDeviation = map.value("StandardDeviation").toDouble();
+    mSection = map.value("Section").toInt();
 }
 
 SpliceData::SpliceData(QObject *parent) :
@@ -37,12 +37,12 @@ SpliceData::SpliceData(const double ab2, const double res, const double sd, QObj
     mSection = 1;
 }
 
-quint8 SpliceData::section() const
+int SpliceData::section() const
 {
     return mSection;
 }
 
-void SpliceData::setSection(quint8 sect)
+void SpliceData::setSection(int sect)
 {
     mSection = sect;
 }

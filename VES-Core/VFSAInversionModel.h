@@ -8,7 +8,6 @@ class VESCORESHARED_EXPORT VFSAInversionModel : public InversionModel
     Q_OBJECT
 
     double mVFSAError;
-    QList<double> mParameterPDFs;
 
 public:
     explicit VFSAInversionModel(QObject *parent = nullptr);
@@ -28,8 +27,6 @@ public:
     void setVFSAError(double getVFSAError);
 
     void addVFSAData(int index, const double data, const int numberOfBeds);
-    QList<double> getParameterPDFs() const;
-    void setParameterPDF(const int index, const double value);
 };
 
 Q_DECLARE_METATYPE(VFSAInversionModel)

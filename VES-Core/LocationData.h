@@ -13,7 +13,7 @@ class VESCORESHARED_EXPORT LocationData : public QObject, public Serializable
 
 public:
     enum class CoordinateType{GMSDegrees, DecimalDegrees, UTM, Local};
-    enum class Hemisphere{North, South};
+    enum class HemisphereType{North, South};
 
 private:
     QString mGmsLatitude;
@@ -27,7 +27,7 @@ private:
     double mLocalY;
     double mZ;
     QLocale *mQLoc;
-    LocationData::Hemisphere mHem;
+    LocationData::HemisphereType mHemisphere;
     bool mOnlyLocals;
 
     double gmsToDecimal(const QString &value);
@@ -40,7 +40,7 @@ public:
     explicit LocationData(QObject *parent = nullptr);
     explicit LocationData(const QString &lat, const QString &lng, const double z = 0.0, QObject *parent = nullptr);
     explicit LocationData(const double yOrlLat, const double xOrLng, const CoordinateType cType, const double z = 0.0, QObject *parent = nullptr);
-    explicit LocationData(const double x, const double y, const int zone, const Hemisphere hem, const double z = 0.0, QObject *parent = nullptr);
+    explicit LocationData(const double x, const double y, const int zone, const HemisphereType hem, const double z = 0.0, QObject *parent = nullptr);
     LocationData(const LocationData& ld);
 
     LocationData& operator =(const LocationData &rhs);
@@ -57,7 +57,7 @@ public:
     double localY() const;
     double z() const;
     bool onlyLocals() const;
-    Hemisphere Hem() const;
+    HemisphereType Hemisphere() const;
     
     //Setters
     void setGmsLatitude(const QString &value);
@@ -70,7 +70,7 @@ public:
     void setLocalX(const double value);
     void setLocalY(const double value);
     void setZ(const double value);
-    void setHem(const Hemisphere value);
+    void setHemisphere(const HemisphereType value);
 
     bool isEmpty() const;
 

@@ -8,7 +8,7 @@
 class VESCORESHARED_EXPORT SpliceData : public BasicData
 {
 
-    quint8 mSection;
+    int mSection;
 
 public:
     explicit SpliceData(QObject *parent = nullptr);
@@ -18,9 +18,9 @@ public:
     QVariant toVariant() const override;
     void fromVariant(const QVariant& variant) override;
 
-    quint8 section() const;
+    int section() const;
 
-    void setSection(quint8 sect);
+    void setSection(int sect);
 };
 
 Q_DECLARE_METATYPE(SpliceData)

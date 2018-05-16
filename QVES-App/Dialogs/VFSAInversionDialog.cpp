@@ -3,6 +3,7 @@
 #include <QtMath>
 #include <QTableWidgetItem>
 
+
 VFSAInversionDialog::VFSAInversionDialog(const VES *currentVES, const VFSAParameters settingsParameters, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::VFSAInversionDialog),
@@ -20,7 +21,11 @@ VFSAInversionDialog::VFSAInversionDialog(const VES *currentVES, const VFSAParame
         ui->bedsTableWidget->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
     }
 
+    ui->bedsTableWidget->setRowCount(mSettingsParameters.numberOfBeds());
     mCalculator = nullptr;
+    mValidator = new QDoubleValidator(0.01, qInf(), 2, this);
+    configureUiParameters();
+    //validate();
 
 //    connect(ui->buttonBox->button(QDialogButtonBox::Cancel)->clicked,
 //            mCalculator, &VFSACalculator::abortAllJobs);
@@ -52,11 +57,10 @@ void VFSAInversionDialog::configureUiParameters()
     ui->movesPerTemperatureSpinBox->setValue(mCurrentParameters.movesPerTemperature());
     ui->solutionsSpinBox->setValue(mCurrentParameters.solutions());
     ui->errorDoubleSpinBox->setValue(mCurrentParameters.maximunError());
-    ui->pdfDoubleSpinBox->setValue(mCurrentParameters.minimunPdf());
 
     ui->bedsSpinBox->setValue(mCurrentParameters.numberOfBeds());
     configureTableWidgetLimits();
-
+    validate();
 }
 
 void VFSAInversionDialog::configureTableWidgetLimits()
@@ -72,7 +76,7 @@ void VFSAInversionDialog::configureTableWidgetLimits()
             lowerLimitCell = new QTableWidgetItem;
             ui->bedsTableWidget->setItem(i, 2, lowerLimitCell);
         }
-        lowerLimitCell->setData(Qt::EditRole, mCurrentParameters.limits().at(i).lower());
+        lowerLimitCell->setData(Qt::EditRole, mCurrentParameters.limitAt(i).lower());
         lowerLimitCell->setTextAlignment(Qt::AlignRight);
 
         //Upper resistivity limit
@@ -82,7 +86,7 @@ void VFSAInversionDialog::configureTableWidgetLimits()
             upperLimitCell = new QTableWidgetItem;
             ui->bedsTableWidget->setItem(i, 3, upperLimitCell);
         }
-        upperLimitCell->setData(Qt::EditRole, mCurrentParameters.limits().at(i).upper());
+        upperLimitCell->setData(Qt::EditRole, mCurrentParameters.limitAt(i).upper());
         upperLimitCell->setTextAlignment(Qt::AlignRight);
     }
 
@@ -94,7 +98,7 @@ void VFSAInversionDialog::configureTableWidgetLimits()
             lowerThicknessLimitCell = new QTableWidgetItem;
             ui->bedsTableWidget->setItem(i - resistivityLimit, 0, lowerThicknessLimitCell);
         }
-        lowerThicknessLimitCell->setData(Qt::EditRole, mCurrentParameters.limits().at(i).lower());
+        lowerThicknessLimitCell->setData(Qt::EditRole, mCurrentParameters.limitAt(i).lower());
         lowerThicknessLimitCell->setTextAlignment(Qt::AlignRight);
 
         //Upper thickness limit
@@ -104,7 +108,7 @@ void VFSAInversionDialog::configureTableWidgetLimits()
             upperThicknessLimitCell = new QTableWidgetItem;
             ui->bedsTableWidget->setItem(i - resistivityLimit, 1, upperThicknessLimitCell);
         }
-        upperThicknessLimitCell->setData(Qt::EditRole, mCurrentParameters.limits().at(i).upper());
+        upperThicknessLimitCell->setData(Qt::EditRole, mCurrentParameters.limitAt(i).upper());
         upperThicknessLimitCell->setTextAlignment(Qt::AlignRight);
     }
 
@@ -179,12 +183,6 @@ void VFSAInversionDialog::on_errorDoubleSpinBox_valueChanged(double arg1)
     validate();
 }
 
-void VFSAInversionDialog::on_pdfDoubleSpinBox_valueChanged(double arg1)
-{
-    mCurrentParameters.setMinimunPdf(arg1);
-    validate();
-}
-
 void VFSAInversionDialog::on_bedsSpinBox_valueChanged(int arg1)
 {
     mCurrentParameters.setNumberOfBeds(arg1);
@@ -193,10 +191,10 @@ void VFSAInversionDialog::on_bedsSpinBox_valueChanged(int arg1)
     validate();
 }
 
-void VFSAInversionDialog::onProcessProgressChanged(const int value)
-{
-    ui->processProgressBar->setValue(value);
-}
+//void VFSAInversionDialog::onProcessProgressChanged(const int value)
+//{
+//    ui->processProgressBar->setValue(value);
+//}
 
 void VFSAInversionDialog::onCalculationCompleted()
 {
@@ -217,8 +215,8 @@ void VFSAInversionDialog::on_processPushButton_clicked()
 //        connect(this->ui->buttonBox->button(QDialogButtonBox::Cancel)->clicked,
 //                mCalculator, &VFSACalculator::abortAllJobs);
         connect(mCalculator, &VFSACalculator::allCalculationsCompleted, this, &VFSAInversionDialog::onCalculationCompleted);
-        //connect(mCalculator, &VFSACalculator::totalProgressReport, this->ui->processProgressBar, &QProgressBar::setValue);
-        connect(mCalculator, &VFSACalculator::totalProgressReport, this, &VFSAInversionDialog::onProcessProgressChanged);
+        connect(mCalculator, &VFSACalculator::totalProgressReport, this->ui->processProgressBar, &QProgressBar::setValue);
+        //connect(mCalculator, &VFSACalculator::totalProgressReport, this, &VFSAInversionDialog::onProcessProgressChanged);
 
         mCalculator->startInversion();
 

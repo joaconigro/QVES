@@ -33,7 +33,7 @@ bool VESCore::openProject(const QString &filename)
     }
 
     if (filename.endsWith(".sev", Qt::CaseInsensitive)){
-        OldProject *old = new OldProject;
+        auto *old = new OldProject;
         mProject = old->readOldProject(filename);
         mProjectFileName = "";
         emit projectLoaded();

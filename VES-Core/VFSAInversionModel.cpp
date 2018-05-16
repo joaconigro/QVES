@@ -44,16 +44,6 @@ void VFSAInversionModel::addVFSAData(int index, const double data, const int num
     }
 }
 
-QList<double> VFSAInversionModel::getParameterPDFs() const
-{
-    return mParameterPDFs;
-}
-
-void VFSAInversionModel::setParameterPDF(const int index, const double value)
-{
-    mParameterPDFs.insert(index, value);
-}
-
 VFSAInversionModel::VFSAInversionModel(QObject *parent): InversionModel(parent)
 {
     mUsedAlgorithm = InversionAlgorithm::Vfsa;
@@ -84,25 +74,28 @@ VFSAInversionModel::VFSAInversionModel(const VFSAInversionModel &vm)
 
 QVariant VFSAInversionModel::toVariant() const
 {
-    QVariantMap map;
-    map.insert("mName", mName);
-    map.insert("mId", mId);
-    map.insert("mErrorResult", mErrorResult);
-    map.insert("mErrorString", mErrorString);
-    map.insert("mUsedAlgorithm", static_cast<int>(mUsedAlgorithm));
+//    QVariantMap map;
+//    map.insert("Name", mName);
+//    map.insert("Id", mId);
+//    map.insert("ErrorResult", mErrorResult);
+//    map.insert("ErrorString", mErrorString);
+//    map.insert("UsedAlgorithm", static_cast<int>(mUsedAlgorithm));
 
-    QVariantList calculated;
-    for (const auto& cd : mCalculatedData) {
-        calculated.append(cd.toVariant());
-    }
-    map.insert("mCalculatedData", calculated);
+//    QVariantList calculated;
+//    for (const auto& cd : mCalculatedData) {
+//        calculated.append(cd.toVariant());
+//    }
+//    map.insert("CalculatedData", calculated);
 
-    QVariantList modeled;
-    for (const auto& md : mModel) {
-        modeled.append(md.toVariant());
-    }
-    map.insert("mModel", modeled);
+//    QVariantList modeled;
+//    for (const auto& md : mModel) {
+//        modeled.append(md.toVariant());
+//    }
+//    map.insert("Model", modeled);
 
+//    return map;
+
+    auto map = internalToVariant();
     return map;
 }
 
@@ -110,25 +103,26 @@ QVariant VFSAInversionModel::toVariant() const
 void VFSAInversionModel::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mName = map.value("mName").toString();
-    mId = map.value("mId").toString();
-    mErrorResult = map.value("mErrorResult").toDouble();
-    mErrorString = map.value("mErrorString").toString();
-    mUsedAlgorithm = static_cast<InversionModel::InversionAlgorithm>(map.value("mUsedAlgorithm").toInt());
+    internalFromVariant(map);
+//    mName = map.value("Name").toString();
+//    mId = map.value("Id").toString();
+//    mErrorResult = map.value("ErrorResult").toDouble();
+//    mErrorString = map.value("ErrorString").toString();
+//    mUsedAlgorithm = static_cast<InversionModel::InversionAlgorithm>(map.value("UsedAlgorithm").toInt());
 
-    QVariantList calculated = map.value("mCalculatedData").toList();
-    for(const QVariant& data : calculated) {
-        BasicData calc;
-        calc.fromVariant(data);
-        mCalculatedData.append(calc);
-    }
+//    QVariantList calculated = map.value("CalculatedData").toList();
+//    for(const QVariant& data : calculated) {
+//        BasicData calc;
+//        calc.fromVariant(data);
+//        mCalculatedData.append(calc);
+//    }
 
-    QVariantList modeled = map.value("mModel").toList();
-    for(const QVariant& data : modeled) {
-        ModelData mod;
-        mod.fromVariant(data);
-        mModel.append(mod);
-    }
+//    QVariantList modeled = map.value("Model").toList();
+//    for(const QVariant& data : modeled) {
+//        ModelData mod;
+//        mod.fromVariant(data);
+//        mModel.append(mod);
+//    }
 }
 
 void VFSAInversionModel::inversion(const QList<SpliceData> &fieldData)

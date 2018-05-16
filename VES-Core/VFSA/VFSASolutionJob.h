@@ -22,6 +22,7 @@ public:
 signals:
     void jobCompleted(VFSAJobResult *jobResult);
     void reportProgress(double progress);
+    void runFinished();
 
 public slots:
     void abort();
@@ -36,14 +37,12 @@ private:
     int mNumberOfBeds;
     QList<VFSAParameterLimit> mLimits;
     double mMaximunError;
-    double mMinimunPdf;
     QRandomGenerator *randomGenerator;
     QList<SpliceData> mFieldData;
     VFSAJobResult *mJobResult;
     int mThreadNumber;
 
     double randomData(const double min, const double max) const;
-    //void calculateResistivity(VFSAInversionModel *model) const;
     void vfsaInternalError(VFSAInversionModel *model) const;
     VFSAInversionModel *randomModel(const VFSAInversionModel *previousModel, const double temperature);
 };

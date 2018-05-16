@@ -2,7 +2,8 @@
 
 VFSAParameterLimit::VFSAParameterLimit(QObject *parent) : QObject(parent)
 {
-    mLower = mUpper = 1.0;
+    mLower = 1.0;
+    mUpper = 2.0;
 }
 
 VFSAParameterLimit::VFSAParameterLimit(const double low, const double upp, QObject *parent) : QObject(parent)
@@ -21,16 +22,16 @@ VFSAParameterLimit::VFSAParameterLimit(const VFSAParameterLimit &vpf)
 QVariant VFSAParameterLimit::toVariant() const
 {
     QVariantMap map;
-    map.insert("mLower", mLower);
-    map.insert("mUpper", mUpper);
+    map.insert("Lower", mLower);
+    map.insert("Upper", mUpper);
     return map;
 }
 
 void VFSAParameterLimit::fromVariant(const QVariant &variant)
 {
     QVariantMap map = variant.toMap();
-    mLower = map.value("mLower").toDouble();
-    mUpper = map.value("mUpper").toDouble();
+    mLower = map.value("Lower").toDouble();
+    mUpper = map.value("Upper").toDouble();
 }
 
 double VFSAParameterLimit::lower() const
