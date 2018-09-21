@@ -89,7 +89,7 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
 
         XYData current(mTable.at(index.row()));
         if (temp != current){
-            mTable.replace(index.row(), &temp);
+            //mTable.replace(index.row(), &temp);
             emit restoreSelection(index);
             emit myTableChanged(index, static_cast<int>(mTypeOfData), oldValue, tempValue);
             emit dataChanged(index, index);

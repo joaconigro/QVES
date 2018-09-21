@@ -1,5 +1,6 @@
 #include "VFSAInversionDialog.h"
 #include "ui_VFSAInversionDialog.h"
+#include <QApplication>
 #include <QtMath>
 #include <QTableWidgetItem>
 
@@ -60,6 +61,7 @@ void VFSAInversionDialog::configureUiParameters()
 
     ui->bedsSpinBox->setValue(mCurrentParameters.numberOfBeds());
     configureTableWidgetLimits();
+    qApp->processEvents();
     validate();
 }
 
@@ -133,6 +135,7 @@ void VFSAInversionDialog::configureTableWidgetLimits()
     upperThicknessLimitCell->setData(Qt::DisplayRole, qInf());
     upperThicknessLimitCell->setTextAlignment(Qt::AlignRight);
 
+    ui->bedsTableWidget->repaint();
 }
 
 void VFSAInversionDialog::validate()
