@@ -1,6 +1,7 @@
 #include "OldProject.h"
 #include "VES.h"
 #include <QString>
+#include <QFile>
 #include "LocationData.h"
 #include <QVariant>
 #include "XmlSerializer.h"
