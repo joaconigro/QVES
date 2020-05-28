@@ -2,6 +2,7 @@
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 #include <QtCore/QtMath>
+#include <QPainterPath>
 
 QImage QVESChartSerie::getStarMarker() const
 {
