@@ -80,7 +80,7 @@ void VFSASolutionJob::run()
         temperature = mInitialTemperature * qExp(-(pow((double)j, 0.4)));
 
         //On cancel requested
-        if (mAbort.load()) {
+        if (mAbort.loadRelaxed()) {
             return;
         }
 
@@ -101,7 +101,7 @@ void VFSASolutionJob::run()
 
 void VFSASolutionJob::abort()
 {
-    mAbort.store(true);
+    mAbort.storeRelaxed(true);
 }
 
 double VFSASolutionJob::randomData(const double min, const double max) const

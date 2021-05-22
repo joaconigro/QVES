@@ -2,12 +2,11 @@
 #define QVESCHARTSERIE_H
 
 #include <QObject>
+#include <QtCharts>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QScatterSeries>
 //#include "QVESModelDelegate.h"
 #include <QVXYModelMapper>
-
-QT_CHARTS_USE_NAMESPACE
 
 class QVESChartSerie : public QObject
 {

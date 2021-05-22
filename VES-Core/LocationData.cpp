@@ -6,7 +6,7 @@ double LocationData::gmsToDecimal(const QString &value)
 {
     QString resultValue;
     QChar signChar;
-    QChar decimalChar = mQLoc->decimalPoint();
+    QString decimalChar = mQLoc->decimalPoint();
     resultValue.clear();
 
     //Make a clean QString to convert to number.
@@ -14,9 +14,9 @@ double LocationData::gmsToDecimal(const QString &value)
         if (c.isDigit()){
             resultValue.append(c);
         } else if (c == '.' || c == ',') {
-            if (decimalChar == '.'){
+            if (decimalChar == "."){
                 resultValue.append(decimalChar);
-            } else if (decimalChar == ','){
+            } else if (decimalChar == ","){
                 resultValue.append(decimalChar);
             }
         } else if (c == 'S' || c == 's' || c == 'W' || c == 'w' || c == 'O' || c == 'o') {
@@ -29,7 +29,7 @@ double LocationData::gmsToDecimal(const QString &value)
     }
 
     //Make a list from previous generated QString.
-    QStringList tempList = resultValue.split(' ', QString::SkipEmptyParts);
+    QStringList tempList = resultValue.split(' ', Qt::SkipEmptyParts);
     double result = 0.0;
 
     //Calculate degrees, minutes and seconds.

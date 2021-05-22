@@ -1,3 +1,4 @@
+#include <QtCharts>
 #include "MainChart.h"
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QLegendMarker>
@@ -6,8 +7,6 @@
 #include <QVXYModelMapper>
 #include <QLegend>
 #include <QtMath>
-
-QT_CHARTS_USE_NAMESPACE
 
 void MainChart::createFieldSeries()
 {

@@ -1,6 +1,7 @@
 #ifndef MAINCHART_H
 #define MAINCHART_H
 
+#include <QtCharts>
 #include <QWidget>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLogValueAxis>
@@ -10,8 +11,6 @@
 #include "VES.h"
 #include <QVXYModelMapper>
 #include "QVESSettings.h"
-
-QT_CHARTS_USE_NAMESPACE
 
 class MainChart : public QWidget
 {

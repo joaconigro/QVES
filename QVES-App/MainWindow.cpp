@@ -13,7 +13,7 @@
 #include <QDir>
 #include "Dialogs/QVESSettingsDialog.h"
 
-QT_CHARTS_USE_NAMESPACE
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
